@@ -53,7 +53,7 @@ passport.deserializeUser(function (obj, cb) {
 
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(
-  "/dashboard-assets",
+  "/dashboard-assets",  
   express.static(path.join(__dirname, "dashboard-assets"))
 );
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -70,6 +70,8 @@ app.use("/", authRoute); // Add this line
 app.get("/", (req, res) => {
   res.render("index", { user: req.user });
 });
+
+console.log('hello index')
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
