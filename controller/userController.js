@@ -337,6 +337,71 @@ const updateProfile = async (req, res) => {
   }
 };
 
+
+// const loadForgotPassword = async(req,res) => {
+//   try {
+//     res.render('forgot-pas')
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
+// const crypto = require("crypto");
+// const forgotPasswordSubmit = async (req, res) => {
+//   const { email } = req.body;
+//   try {
+//     const user = await userModel.findOne({ email });
+//     if (!user) {
+//       return res.render("forgot-pas", { message: "Email not found." });
+//     }
+
+//     const token = crypto.randomBytes(32).toString("hex");
+//     user.resetPasswordToken = token;
+//     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+//     await user.save();
+
+//     const resetLink = `http://${req.headers.host}/reset-password/${token}`;
+//     await sendOTPEmail(email, `Click the following link to reset your password: ${resetLink}`);
+
+//     res.render("forgot-pas", { message: "A reset link has been sent to your email." });
+//   } catch (error) {
+//     console.error("Error in forgotPasswordSubmit:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
+
+
+// const loadResetPassword = (req, res) => {
+//   const { token } = req.params;
+//   res.render("resetPassword", { token });
+// };
+
+// const resetPasswordSubmit = async (req, res) => {
+//   const { token, password } = req.body;
+//   try {
+//     const user = await userModel.findOne({
+//       resetPasswordToken: token,
+//       resetPasswordExpires: { $gt: Date.now() },
+//     });
+
+//     if (!user) {
+//       return res.render("resetPassword", { message: "Password reset token is invalid or has expired." });
+//     }
+
+//     user.password = await securePassword(password);
+//     user.resetPasswordToken = undefined;
+//     user.resetPasswordExpires = undefined;
+//     await user.save();
+
+//     res.redirect("/login");
+//   } catch (error) {
+//     console.error("Error in resetPasswordSubmit:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
+
+
+
 module.exports = {
   loadHome,
   loadRegister,
@@ -354,5 +419,5 @@ module.exports = {
   loadProduct,
   loadProductList,
   setRedirectUrl,
-  updateProfile,
+  updateProfile
 };

@@ -27,7 +27,7 @@ adminRoute.post(
   adminController.addProduct
 );
 adminRoute.get("/product-list", isAdminAuthenticated, adminController.loadProductList);
-adminRoute.put('/update-product/:id', isAdminAuthenticated, adminController.updateProduct);
+adminRoute.patch('/update-product/:id', isAdminAuthenticated, adminController.updateProduct);
 
 adminRoute.get("/category-list", isAdminAuthenticated, adminController.getCategory);
 adminRoute.post(
@@ -38,7 +38,7 @@ adminRoute.post(
 );
 adminRoute.get("/category-list", isAdminAuthenticated, adminController.loadCategoryList);
 adminRoute.post("/categories/edit/:id", isAdminAuthenticated, adminController.updateCategory);
-adminRoute.put("/category/:id/status", isAdminAuthenticated, adminController.changeStatus);
+adminRoute.patch("/category/:id/status", isAdminAuthenticated, adminController.changeStatus);
 
 adminRoute.get("/order-list", isAdminAuthenticated, adminController.loadOrderList);
 adminRoute.get("/order-details", isAdminAuthenticated, adminController.loadOrderDeatails);

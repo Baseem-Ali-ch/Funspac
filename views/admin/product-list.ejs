@@ -917,7 +917,7 @@ document.getElementById('editProductForm').addEventListener('submit', async (eve
   try {
     // Send PUT request to server
     const response = await fetch(`/admin/update-product/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -1009,7 +1009,7 @@ function updateTableRow(updatedProduct) {
 
     $.ajax({
       url: `/products/${productId}`,
-      type: 'PUT',
+      type: 'PATCH',
       contentType: 'application/json',
       data: JSON.stringify(updatedProduct),
       success: function(response) {

@@ -982,7 +982,7 @@
   
     function changeStatus(categoryId, status) {
       fetch(`/admin/category/${categoryId}/status`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
         },

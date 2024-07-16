@@ -46,6 +46,11 @@ userRoute.get("/profile", userController.breadcrumbs);
 userRoute.get("/product/:id", userController.loadProduct);
 userRoute.get("/product-list", userController.loadProductList);
 
+// userRoute.get('/forgot-password', userController.loadForgotPassword);
+// userRoute.post('/forgot-password', userController.forgotPasswordSubmit);
+// userRoute.get('/reset-password/:token', userController.loadResetPassword);
+// userRoute.post('/reset-password', userController.resetPasswordSubmit);
+
 
 // Add Google authentication routes
 const authRoute = require("./authRoutes"); // Update the path if necessary
