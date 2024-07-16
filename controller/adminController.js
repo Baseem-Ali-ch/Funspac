@@ -357,25 +357,23 @@ const addProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const { id } = req.params; // Extract product ID from URL params
-  const { name, description, categoryId, price, stock } = req.body; // Extract updated product data
+  const productId = req.params.id;
+  const { name, description, category, price, stock } = req.body;
 
   try {
-    // Find product by ID and update its fields
     const updatedProduct = await Product.findByIdAndUpdate(
-      id,
-      { name, description, category: categoryId, price, stock },
+      productId,
+      { name, description, category, price, stock },
       { new: true } // Return the updated document
     );
 
     if (!updatedProduct) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).send('Product not found');
     }
 
-    return res.json(updatedProduct); // Send updated product as JSON response
+    res.send(updatedProduct);
   } catch (error) {
-    console.error("Error updating product:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).send('Error updating product: ' + error.message);
   }
 };
 
@@ -387,6 +385,8 @@ const logout = (req, res) => {
     return res.redirect("/admin/login");
   });
 };
+
+
 
 module.exports = {
   loadLogin,
@@ -407,5 +407,5 @@ module.exports = {
   changeCustomer,
   addProduct,
   updateProduct,
-  logout,
+  logout
 };

@@ -407,6 +407,17 @@
           class="navbar-nav-right d-flex align-items-center"
           id="navbar-collapse"
         >
+        <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+          <div class="container breadcrumbs">
+            <ol class="breadcrumb">
+              <% breadcrumbs.forEach(crumb => { %>
+                <li class="breadcrumb-item">
+                  <a href="<%= crumb.url %>"> <%= crumb.name %> </a>
+                </li>
+              <% }); %>
+            </ol>
+          </div>
+        </nav>
           <!-- Search -->
           <!-- <div class="navbar-nav align-items-center">
             <div class="nav-item navbar-search-wrapper mb-0">

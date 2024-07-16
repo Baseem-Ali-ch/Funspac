@@ -113,56 +113,27 @@ const verifyLogin = async (req, res) => {
 
 let otpStore = {};
 
-// const insertUser = async (req, res) => {
-//   console.log("insertUser called for email:", req.body.email);
-//   try {
-//     const { name, phone, email, password, confirmPassword } = req.body;
-
-//     if (password !== confirmPassword) {
-//       return res.render("register", { message: "Passwords does not match!" });
-//     } else {
-//       const spassword = await securePassword(password);
-
-//       if (!otpStore[email]) {
-//         const otp = generateOTP();
-//         otpStore[email] = {
-//           otp,
-//           userData: { name, phone, email, password: spassword },
-//         };
-
-//         await sendOTPEmail(email, otp);
-//       } else {
-//         console.log(`OTP already exists for email: ${email}`);
-//       }
-
-//       res.redirect(`/verify-otp?email=${email}`);
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
 const insertUser = async (req, res) => {
   console.log("insertUser called for email:", req.body.email);
   try {
     const { name, phone, email, password, confirmPassword } = req.body;
 
-    // Check if passwords match
-    // if (password !== confirmPassword) {
-    //   return res.render('register', { message: "Passwords do not match!" });
-    // }
+    const user = await userModel.findOne({ email: email });
+    if (user) {
+      return res.render("register", { message: "The email already exists." });
+    } else {
+      const spassword = await securePassword(password);
 
-    const spassword = await securePassword(password);
+      const otp = generateOTP();
+      otpStore[email] = {
+        otp,
+        userData: { name, phone, email, password: spassword },
+      };
 
-    const otp = generateOTP();
-    otpStore[email] = {
-      otp,
-      userData: { name, phone, email, password: spassword },
-    };
+      await sendOTPEmail(email, otp);
 
-    await sendOTPEmail(email, otp);
-
-    res.redirect(`/verify-otp?email=${email}`);
+      res.redirect(`/verify-otp?email=${email}`);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
@@ -299,6 +270,7 @@ const Category = require("../model/categoryModel");
 const loadProduct = async (req, res) => {
   try {
     const productId = req.params.id;
+    const user = req.session.user || req.user;
     const product = await Product.findById(productId).populate(
       "category",
       "title"
@@ -308,7 +280,7 @@ const loadProduct = async (req, res) => {
       return res.status(404).send("Product not found");
     }
 
-    res.render("product", { product });
+    res.render("product", { product, user });
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
@@ -319,7 +291,8 @@ const loadProductList = async (req, res) => {
   try {
     const categories = await Category.find({});
     const products = await Product.find({}).populate("category", "title");
-    res.render("product-list", { products, categories });
+    const user = req.session.user || req.user;
+    res.render("product-list", { products, categories, user });
   } catch (error) {
     console.log(error);
   }

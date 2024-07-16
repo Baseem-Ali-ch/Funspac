@@ -34,11 +34,19 @@
                 </li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="/contact-us">Contact Us</a></li>
-                <li>
-                  <a href="#signin-modal" data-toggle="modal"
-                    ><i class="icon-user"></i>Login</a
-                  >
-                </li>
+                <% if(user){ %>
+                  <li>
+                    <a href="/profile"
+                      ><i class="icon-user"></i>
+                      <%= user.name %>
+                    </a>
+                    <% }else{ %>
+                  </li>
+  
+                  <li>
+                    <a href="/login"><i class="icon-user"></i>Login</a>
+                    <% } %>
+                  </li>
               </ul>
             </li>
           </ul>

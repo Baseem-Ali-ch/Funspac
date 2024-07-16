@@ -201,7 +201,19 @@
                 <ul>
                   <li><a href="about.html">About</a></li>
                   <li><a href="contact.html">Contact</a></li>
-                  <li><a href="login.html">Login</a></li>
+                  <% if(user){ %>
+                    <li>
+                      <a href="/profile"
+                        ><i class="icon-user"></i>
+                        <%= user.name %>
+                      </a>
+                      <% }else{ %>
+                    </li>
+    
+                    <li>
+                      <a href="/login"><i class="icon-user"></i>Login</a>
+                      <% } %>
+                    </li>
 
                   <li><a href="coming-soon.html">Coming Soon</a></li>
                 </ul>

@@ -100,9 +100,19 @@
                     </li>
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="/contact-us">Contact Us</a></li>
-                    <li>
-                      <a href="/login"><i class="icon-user"></i>Login</a>
-                    </li>
+                    <% if(user){ %>
+                      <li>
+                        <a href="/profile"
+                          ><i class="icon-user"></i>
+                          <%= user.name %>
+                        </a>
+                        <% }else{ %>
+                      </li>
+      
+                      <li>
+                        <a href="/login"><i class="icon-user"></i>Login</a>
+                        <% } %>
+                      </li>
                   </ul>
                 </li>
               </ul>
@@ -469,32 +479,19 @@
                       <div class="product-nav product-nav-thumbs">
                         <a href="#" class="active">
                           <img
-                            src="assets/images/products/single/1-thumb.jpg"
+                            src="<%= product.imageUrl_2 %>"
                             alt="product desc"
                           />
                         </a>
                         <a href="#">
                           <img
-                            src="assets/images/products/single/2-thumb.jpg"
+                            src="<%= product.imageUrl_3 %>"
                             alt="product desc"
                           />
                         </a>
                       </div>
                     </div>
-                    <div class="details-filter-row details-row-size">
-                      <label for="size">Size:</label>
-                      <div class="select-custom">
-                        <select name="size" id="size" class="form-control">
-                          <option value="#" selected="selected">
-                            Select a size
-                          </option>
-                          <option value="s">Small</option>
-                        </select>
-                      </div>
-                      <a href="#" class="size-guide"
-                        ><i class="icon-th-list"></i>size guide</a
-                      >
-                    </div>
+                    
                     <div class="details-filter-row details-row-size">
                       <label for="qty">Qty:</label>
                       <div class="product-details-quantity">
@@ -1420,21 +1417,21 @@
             <figure class="product-media">
               <a href="product.html">
                 <img
-                  src="assets/images/products/sticky/product-1.jpg"
+                  src="<%= product.imageUrl_1 %>"
                   alt="Product image"
                 />
               </a>
             </figure>
             <!-- End .product-media -->
             <h4 class="product-title">
-              <a href="product.html">Dark yellow lace cut out swing dress</a>
+              <a href="product.html"><%= product.name %></a>
             </h4>
             <!-- End .product-title -->
           </div>
           <!-- End .col-6 -->
 
           <div class="col-6 justify-content-end">
-            <div class="product-price">$84.00</div>
+            <div class="product-price"><%= product.price %></div>
             <!-- End .product-price -->
             <div class="product-details-quantity">
               <input

@@ -355,7 +355,7 @@
                                 
                                         <label class="" >Have an account <a href="/login">LOG IN</a></label>
                                         <% if(message){ %>
-                                            <p style="color: red;"><%= message %></p>
+                                            <p style="color: red; margin-left: 131px;"><%= message %></p>
                                             <% } %>
                                         
                                     </div>
@@ -364,24 +364,7 @@
 
                                 
                                 
-                                <div class="form-choice">
-                                    <p class="text-center">or sign in with</p>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <a href="/auth/google" class="btn btn-login btn-g">
-                                                <i class="icon-google"></i>
-                                                Login With Google
-                                            </a>
-                                        </div><!-- End .col-6 -->
-                                        <div class="col-sm-6">
-                                            <a href="#" class="btn btn-login  btn-f">
-                                                <i class="icon-facebook-f"></i>
-                                                Login With Facebook
-                                            </a>
-                                        </div><!-- End .col-6 -->
-
-                                    </div><!-- End .row -->
-                                </div><!-- End .form-choice -->
+                               
                             </div><!-- .End .tab-pane -->
                         </div><!-- End .tab-content -->
                     </div><!-- End .form-tab -->
@@ -739,9 +722,10 @@
   const confirmPasswordError = document.getElementById('confirm-passwordError');
   const signUpButton = document.querySelector('.btn.btn-outline-primary-2'); // Select the sign-up button
 
-  if (confirmPassword !== password) {
+
+  if(confirmPassword !== password) {
     confirmPasswordError.textContent = 'Passwords do not match';
-    signUpButton.disabled = true;
+    signUpButton.disabled = true
     return false;
   } else {
     confirmPasswordError.textContent = '';
@@ -785,7 +769,6 @@ document.getElementById('confirm-password-toggle').addEventListener('click', fun
      
 </script>
         
-    
 
 
 

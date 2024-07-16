@@ -2,8 +2,10 @@ const express = require("express");
 const adminController = require("../controller/adminController");
 const upload = require("../middleware/multer");
 const {isAdminAuthenticated} = require('../middleware/userAuth'); 
+const breadcrumbs = require("../middleware/breadcrumbs");
 
 const adminRoute = express();
+adminRoute.use(breadcrumbs);
 
 adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
