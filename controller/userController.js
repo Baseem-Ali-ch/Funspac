@@ -83,12 +83,45 @@ const setRedirectUrl = (req, res, next) => {
   next();
 };
 
+// const verifyLogin = async (req, res) => {
+//   try {
+  
+//     const { "login-email": email, "login-password": password } = req.body;
+//     const userData = await userModel.findOne({ email });
+
+//     if (userData && userData.isListed === true) {
+//       const passwordMatch = await bcrypt.compare(password, userData.password);
+//       if (passwordMatch) {
+//         if (userData.is_verified) {
+//           req.session.user = userData; // Set user data in session
+//           const redirectUrl = req.session.redirectUrl || "/home";
+//           delete req.session.redirectUrl;
+//           return res.redirect(redirectUrl);
+//         } else {
+//           res.redirect("/register");
+//         }
+//       } else {
+//         res.render("login", { message: "Email and Password is incorrect" });
+//       }
+//     } else {
+//       res.render("login", { message: "Email and Password is incorrect" });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
+
 const verifyLogin = async (req, res) => {
   try {
     const { "login-email": email, "login-password": password } = req.body;
     const userData = await userModel.findOne({ email });
 
-    if (userData && userData.isListed === true) {
+    if (userData) {
+      if (userData.isListed === false) {
+        return res.render("login", { message: "Your account has been blocked. Please Make another account." });
+      }
+
       const passwordMatch = await bcrypt.compare(password, userData.password);
       if (passwordMatch) {
         if (userData.is_verified) {
@@ -97,17 +130,17 @@ const verifyLogin = async (req, res) => {
           delete req.session.redirectUrl;
           return res.redirect(redirectUrl);
         } else {
-          res.redirect("/register");
+          return res.redirect("/register");
         }
       } else {
-        res.render("login", { message: "Email and Password is incorrect" });
+        return res.render("login", { message: "Email and Password is incorrect" });
       }
     } else {
-      res.render("login", { message: "Email and Password is incorrect" });
+      return res.render("login", { message: "Email and Password is incorrect" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 };
 

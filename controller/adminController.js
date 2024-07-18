@@ -204,32 +204,21 @@ const loadAllUser = async (req, res) => {
 const updateCustomer = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, phone, address } = req.body;
+    const { name, email, phone } = req.body;
 
-    const updatedCustomer = await userModel.findByIdAndUpdate(
-      id,
-      {
-        name,
-        email,
-        phone,
-        address,
-      },
-      { new: true }
-    );
+    const updatedCustomer = await userModel.findByIdAndUpdate(id, { name, email, phone }, { new: true });
 
     if (!updatedCustomer) {
-      return res.status(404).json({ error: "Customer not found" });
+      return res.status(404).json({ error: 'Customer not found' });
     }
 
-    res.json({
-      message: "Customer updated successfully",
-      customer: updatedCustomer,
-    });
+    res.json(updatedCustomer);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 const changeCustomer = async (req, res) => {
   const customerId = req.params.id;
@@ -256,6 +245,7 @@ const changeCustomer = async (req, res) => {
   }
 };
 
+
 const addProduct = async (req, res) => {
   try {
     const {
@@ -264,6 +254,7 @@ const addProduct = async (req, res) => {
       productPrice,
       productDiscountedPrice,
       category: categoryId,
+      isListed,
       stock,
     } = req.body;
 
@@ -298,7 +289,7 @@ const addProduct = async (req, res) => {
     };
 
     // Crop and resize each image if it exists
-    if (req.files["productImage1"]) {
+    if (req.files && req.files["productImage1"]) {
       const croppedImageUrl_1 = await cropAndResizeImage(
         req.files["productImage1"][0].path
       );
@@ -324,6 +315,7 @@ const addProduct = async (req, res) => {
       price: productPrice,
       discountedPrice: productDiscountedPrice,
       category: category._id, // Store the category ID
+      isListed: isListed === "true", // Convert string to boolean
       stock: stock,
       imageUrl_1: imageUrl_1,
       imageUrl_2: imageUrl_2,
@@ -357,23 +349,79 @@ const addProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
+  console.log("edit start...");
   const productId = req.params.id;
-  const { name, description, category, price, stock } = req.body;
+  const { name, description, category, price, stock, isListed } = req.body;
 
   try {
+    // Fetch the existing product
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+
+    // Handle multiple images
+    let imageUrl_1 = product.imageUrl_1;
+    let imageUrl_2 = product.imageUrl_2;
+    let imageUrl_3 = product.imageUrl_3;
+
+    const cropAndResizeImage = async (imagePath) => {
+      const outputFileName = `cropped-${path.basename(imagePath)}`;
+      await sharp(imagePath)
+        .resize({ width: 300, height: 300 })
+        .extract({ width: 300, height: 300, left: 0, top: 0 }) // Use extract for cropping
+        .toFile(path.join(path.dirname(imagePath), outputFileName));
+
+      return outputFileName;
+    };
+
+    if (req.files["productImage1"]) {
+      const croppedImageUrl_1 = await cropAndResizeImage(
+        req.files["productImage1"][0].path
+      );
+      imageUrl_1 = `/assets/images/add-product/${croppedImageUrl_1}`;
+    }
+    if (req.files["productImage2"]) {
+      const croppedImageUrl_2 = await cropAndResizeImage(
+        req.files["productImage2"][0].path
+      );
+      imageUrl_2 = `/assets/images/add-product/${croppedImageUrl_2}`;
+    }
+    if (req.files["productImage3"]) {
+      const croppedImageUrl_3 = await cropAndResizeImage(
+        req.files["productImage3"][0].path
+      );
+      imageUrl_3 = `/assets/images/add-product/${croppedImageUrl_3}`;
+    }
+
+    // Prepare the update data
+    const updateData = {
+      name,
+      description,
+      category,
+      price,
+      stock,
+      isListed: isListed === "true",
+      imageUrl_1,
+      imageUrl_2,
+      imageUrl_3,
+    };
+
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { name, description, category, price, stock },
-      { new: true } // Return the updated document
+      updateData,
+      { new: true }
     );
 
     if (!updatedProduct) {
-      return res.status(404).send('Product not found');
+      return res.status(404).send("Product not found");
     }
 
     res.send(updatedProduct);
   } catch (error) {
-    res.status(500).send('Error updating product: ' + error.message);
+    console.error("Error updating product:", error);
+    res.status(500).send("Error updating product: " + error.message);
   }
 };
 
@@ -385,8 +433,6 @@ const logout = (req, res) => {
     return res.redirect("/admin/login");
   });
 };
-
-
 
 module.exports = {
   loadLogin,
@@ -407,5 +453,5 @@ module.exports = {
   changeCustomer,
   addProduct,
   updateProduct,
-  logout
+  logout,
 };

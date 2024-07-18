@@ -407,7 +407,7 @@
           class="navbar-nav-right d-flex align-items-center"
           id="navbar-collapse"
         >
-        <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <!-- <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
           <div class="container breadcrumbs">
             <ol class="breadcrumb">
               <% breadcrumbs.forEach(crumb => { %>
@@ -417,7 +417,7 @@
               <% }); %>
             </ol>
           </div>
-        </nav>
+        </nav> -->
           <!-- Search -->
           <!-- <div class="navbar-nav align-items-center">
             <div class="nav-item navbar-search-wrapper mb-0">
@@ -1344,141 +1344,74 @@ function showDangerAlert(title, message) {
 
 
 function toggleEdit(customerId) {
-    console.log(`Toggle edit for customer: ${customerId}`);
-    const editInputs = document.querySelectorAll(`#row-${customerId} .edit-input`);
-    const staticTexts = document.querySelectorAll(`#row-${customerId} .static-text`);
-    const editBtn = document.getElementById(`editBtn-${customerId}`);
-    const saveBtn = document.getElementById(`saveBtn-${customerId}`);
+  const editInputs = document.querySelectorAll(`#row-${customerId} .edit-input`);
+  const staticTexts = document.querySelectorAll(`#row-${customerId} .static-text`);
+  const editBtn = document.getElementById(`editBtn-${customerId}`);
+  const saveBtn = document.getElementById(`saveBtn-${customerId}`);
 
-   
-    const isInEditMode = editInputs[0].style.display === 'inline-block'; 
+  const isInEditMode = editInputs[0].style.display === 'inline-block';
 
-    if (isInEditMode) {
-      // Switch to view mode
-      editInputs.forEach(input => {
-        input.style.display = 'none';
-      });
-
-      staticTexts.forEach(text => {
-        text.style.display = 'inline-block'; // Show static text
-      });
-
-      editBtn.style.display = 'inline-block'; // Show edit button
-      saveBtn.style.display = 'none'; // Hide save button
-    } else {
-      // Switch to edit mode
-      editInputs.forEach(input => {
-        input.style.display = 'inline-block'; // Show edit inputs
-      });
-
-      staticTexts.forEach(text => {
-        text.style.display = 'none'; // Hide static text
-      });
-
-      editBtn.style.display = 'none'; // Hide edit button
-      saveBtn.style.display = 'inline-block'; // Show save button
-    }
+  if (isInEditMode) {
+    editInputs.forEach(input => input.style.display = 'none');
+    staticTexts.forEach(text => text.style.display = 'inline-block');
+    editBtn.style.display = 'inline-block';
+    saveBtn.style.display = 'none';
+  } else {
+    editInputs.forEach(input => input.style.display = 'inline-block');
+    staticTexts.forEach(text => text.style.display = 'none');
+    editBtn.style.display = 'none';
+    saveBtn.style.display = 'inline-block';
   }
+}
 
-  async function saveChanges(customerId) {
+
+
+async function saveChanges(customerId) {
   try {
     const editNameElem = document.getElementById(`edit-name-${customerId}`);
     const editEmailElem = document.getElementById(`edit-email-${customerId}`);
     const editPhoneElem = document.getElementById(`edit-phone-${customerId}`);
 
-    const editName = editNameElem.value;
-    const editEmail = editEmailElem.value;
-    const editPhone = editPhoneElem.value;
-
-
-
+    const editName = editNameElem.value.trim();
+    const editEmail = editEmailElem.value.trim();
+    const editPhone = editPhoneElem.value.trim();
 
     if (!isValidName(editName)) {
-      showDangerAlert('Invalid name format. Only alphabets and spaces are allowed. Do not start with space');
+      showDangerAlert('Invalid name format. Only alphabets and spaces are allowed.');
       return;
     }
 
-    // Email validation using regex
     if (!isValidEmail(editEmail)) {
-      showDangerAlert('Invalid email format');
+      showDangerAlert('Invalid email format.');
       return;
     }
 
-    // Phone number validation: should not start with 0 and must be 10 digits
     if (!isValidPhone(editPhone)) {
-      showDangerAlert('Invalid phone number format. Must not start with 0 and should be 10 digits. Do not start with space');
-      return;
-    }
-
-
-
-
-
-    console.log(`Saving changes for customer: ${customerId}`);
-    console.log(`Name: ${editName}, Email: ${editEmail}, Phone: ${editPhone}`);
-
-    // Check if any fields have been edited
-    const originalNameElem = document.getElementById(`name-text-${customerId}`);
-    const originalEmailElem = document.getElementById(`email-text-${customerId}`);
-    const originalPhoneElem = document.getElementById(`phone-text-${customerId}`);
-
-    const originalName = originalNameElem.textContent;
-    const originalEmail = originalEmailElem.textContent;
-    const originalPhone = originalPhoneElem.textContent;
-
-    if (editName === originalName && editEmail === originalEmail && editPhone === originalPhone) {
-      Swal.fire({
-        icon: 'info',
-        title: 'No Changes',
-        text: 'No changes detected. Nothing to save.'
-      });
+      showDangerAlert('Invalid phone number format. Must be 10 digits.');
       return;
     }
 
     const response = await fetch(`/admin/update-customer/${customerId}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: editName,
-        email: editEmail,
-        phone: editPhone
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: editName, email: editEmail, phone: editPhone })
     });
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
+    if (!response.ok) throw new Error('Network response was not ok');
 
     const updatedCustomer = await response.json();
-    console.log('Updated customer:', updatedCustomer);
 
-    // Update static texts with edited values
-    originalNameElem.textContent = updatedCustomer.name;
-    originalEmailElem.textContent = updatedCustomer.email;
-    originalPhoneElem.textContent = updatedCustomer.phone;
+    document.getElementById(`name-text-${customerId}`).textContent = updatedCustomer.name;
+    document.getElementById(`email-text-${customerId}`).textContent = updatedCustomer.email;
+    document.getElementById(`phone-text-${customerId}`).textContent = updatedCustomer.phone;
 
-    // Show static texts and hide edit inputs
-    editNameElem.style.display = 'none';
-    editEmailElem.style.display = 'none';
-    editPhoneElem.style.display = 'none';
-
-    originalNameElem.style.display = 'inline-block';
-    originalEmailElem.style.display = 'inline-block';
-    originalPhoneElem.style.display = 'inline-block';
-
-    // Show edit button and hide save button
-    document.getElementById(`editBtn-${customerId}`).style.display = 'inline-block';
-    document.getElementById(`saveBtn-${customerId}`).style.display = 'none';
+    toggleEdit(customerId);
 
     Swal.fire({
       icon: 'success',
       title: 'Success',
       text: 'Customer updated successfully!'
-      
     });
-    window.location.href = '/admin/allCustomer'
   } catch (error) {
     console.error('Error updating customer:', error);
     Swal.fire({
@@ -1489,57 +1422,88 @@ function toggleEdit(customerId) {
   }
 }
 
-
-
 function isValidName(name) {
-  // Only allow alphabetic characters and spaces
   return /^[a-zA-Z][a-zA-Z\s]*$/.test(name);
 }
 
 function isValidEmail(email) {
-  
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.trim());
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function isValidPhone(phone) {
-  // Phone number validation: should not start with 0 and must be 10 digits
-  return /^[1-9]\d{9}$/.test(phone.trim());
+  return /^[1-9]\d{9}$/.test(phone);
 }
 
 
 
 
-  async function changeStatus(customerId, status) {
-    try {
-      const response = await fetch(`/admin/change-status/${customerId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ isListed: status === 'true' })
-      });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
 
-      const result = await response.json();
-      console.log(result);
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Status updated successfully!'
-      });
-    } catch (error) {
-      console.error('Error updating status:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to update status. Please try again.'
-      });
+async function changeStatus(customerId, status) {
+  try {
+    const response = await fetch(`/admin/change-status/${customerId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ isListed: status === 'true' })
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+
+    const result = await response.json();
+    console.log(result);
+
+    // Update the status text in the table
+    const statusElem = document.querySelector(`#row-${customerId} .status`);
+    if (statusElem) {
+      statusElem.textContent = result.customer.isListed ? 'Listed' : 'Unlisted';
+    }
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'Status updated successfully!'
+    });
+  } catch (error) {
+    console.error('Error updating status:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to update status. Please try again.'
+    });
   }
+}
+
+const changeCustomer = async (req, res) => {
+  const customerId = req.params.id;
+  const { isListed } = req.body;
+
+  try {
+    const updatedCustomer = await userModel.findByIdAndUpdate(
+      customerId,
+      { isListed },
+      { new: true }
+    );
+
+    if (!updatedCustomer) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    res.json({
+      message: "Listing status updated successfully",
+      customer: updatedCustomer,
+    });
+  } catch (error) {
+    console.error("Error updating listing status:", error);
+    return res.status(500).json({ error: "Server Error" });
+  }
+};
+
+
+
 
 
 

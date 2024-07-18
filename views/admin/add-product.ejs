@@ -430,7 +430,7 @@
 
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
 
-        <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <!-- <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
           <div class="container breadcrumbs">
             <ol class="breadcrumb">
               <% breadcrumbs.forEach(crumb => { %>
@@ -440,7 +440,8 @@
               <% }); %>
             </ol>
           </div>
-        </nav>
+        </nav> -->
+        
        
         
         
@@ -629,31 +630,12 @@
     
     
 
-      <div class="row">
-        <!-- Price -->
-        <div class="form-floating mb-3 col-md-6">
-          <input type="number" class="form-control" id="productPrice" name="productPrice" placeholder="Product Price" required>
-          <label for="productPrice">Price</label>
-        </div>
-
-        <!-- Discounted Price -->
-        <div class="form-floating mb-3 col-md-6">
-          <input type="number" class="form-control" id="productDiscountedPrice" name="productDiscountedPrice" placeholder="Discounted Price">
-          <label for="productDiscountedPrice">Discounted Price</label>
-        </div>
-      </div>
-
-      <!-- Category and Status -->
+      <!-- Price and Stock -->
       <div class="row">
         <div class="col-md-6">
           <div class="mb-3">
-            <label for="category" class="form-label">Category:</label>
-            <select class="form-select" id="category" name="category" required>
-              <option value="" disabled selected>Select category</option>
-              <% categories.forEach(category => { %>
-                <option value="<%= category._id %>"><%= category.title %></option>
-              <% }) %>
-            </select>
+            <label for="productPrice" class="form-label">Price:</label>
+            <input type="number" class="form-control" id="productPrice" name="productPrice" required>
           </div>
         </div>
         <div class="col-md-6">
@@ -663,6 +645,34 @@
           </div>
         </div>
       </div>
+
+      <!-- Category and Status -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <label for="category" class="form-label">Category:</label>
+      <select class="form-select" id="category" name="category" required>
+        <option value="" disabled selected>Select category</option>
+        <% categories.forEach(category => { %>
+          <option value="<%= category._id %>"><%= category.title %></option>
+        <% }) %>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="mb-3">
+      <label for="publishStatus" class="form-label">Status</label>
+      <select class="form-select" id="publishStatus" name="isListed" required>
+        <option value="" disabled selected>Select status</option>
+        <option value="true">List</option>
+        <option value="false">UnList</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+      
       
 
       <!-- Submit Button -->

@@ -47,7 +47,11 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true },
   imageUrl_1: { type: String },
   imageUrl_2: { type: String },
-  imageUrl_3: { type: String }
+  imageUrl_3: { type: String },
+  isListed:{
+    type:Boolean,
+    required:true
+  }
 });
 
 const Product = mongoose.model('Product', productSchema);

@@ -326,7 +326,7 @@
       
 
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-        <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <!-- <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
           <div class="container breadcrumbs">
             <ol class="breadcrumb">
               <% breadcrumbs.forEach(crumb => { %>
@@ -336,7 +336,7 @@
               <% }); %>
             </ol>
           </div>
-        </nav>
+        </nav> -->
         
         <!-- Search -->
         
@@ -693,7 +693,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
       </div>
-      <form id="editProductForm">
+      <form id="editProductForm" enctype="multipart/form-data">
         <div class="modal-body">
           <input type="hidden" id="edit-product-id">
           <div class="form-group">
@@ -720,12 +720,20 @@
             <label for="edit-product-stock">Stock</label>
             <input type="number" class="form-control" id="edit-product-stock" required>
           </div>
+          <div class="form-group">
+            <label for="edit-product-status">Status</label>
+            <select class="form-control" id="edit-product-status" required>
+              <option value="true">Listed</option>
+              <option value="false">Unlisted</option>
+            </select>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" onclick="refreshPage()">Save changes</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
       </form>
+      
     </div>
   </div>
 </div>
@@ -873,25 +881,27 @@ function populateProductTable(products) {
 }
 
 
-function editProduct(productId, name, description, categoryId, price, stock) {
-  const newUrl = `${window.location.pathname}/${productId}`;
-  history.pushState({}, '', newUrl);
-  populateModal(productId, name, description, categoryId, price, stock);
+// function editProduct(productId, name, description, categoryId, price, stock) {
+//   const newUrl = `${window.location.pathname}/${productId}`;
+//   history.pushState({}, '', newUrl);
+//   populateModal(productId, name, description, categoryId, price, stock);
+// }
+
+function editProduct(productId, name, description, categoryId, price, stock, status) {
+  populateModal(productId, name, description, categoryId, price, stock, status);
 }
 
-function editProduct(productId, name, description, categoryId, price, stock) {
-  populateModal(productId, name, description, categoryId, price, stock);
-}
-
-function populateModal(id, name, description, category, price, stock) {
+function populateModal(id, name, description, category, price, stock, status) {
   document.getElementById('edit-product-id').value = id;
   document.getElementById('edit-product-name').value = name;
   document.getElementById('edit-product-description').value = description;
   document.getElementById('edit-product-category').value = category;
   document.getElementById('edit-product-price').value = price;
   document.getElementById('edit-product-stock').value = stock;
+  document.getElementById('edit-product-status').value = status;
   $('#editProductModal').modal('show');
 }
+
 
 document.getElementById('editProductForm').addEventListener('submit', async (event) => {
   event.preventDefault(); // Prevent default form submission
@@ -903,16 +913,21 @@ document.getElementById('editProductForm').addEventListener('submit', async (eve
   let categoryId = document.getElementById('edit-product-category').value;
   let price = document.getElementById('edit-product-price').value;
   let stock = document.getElementById('edit-product-stock').value;
+  // let status = document.getElementById('edit-product-status').value;
+  let status = document.getElementById('edit-product-status').value === 'true';
 
   // Prepare data object
   let formData = {
     id: id,
     name: name,
     description: description,
-    categoryId: categoryId,
+    category: categoryId,
     price: price,
-    stock: stock
+    stock: stock,
+    isListed: status
   };
+
+  console.log('Form Data:', formData); // Add this line to log form data for debugging
 
   try {
     // Send PUT request to server
@@ -957,6 +972,7 @@ document.getElementById('editProductForm').addEventListener('submit', async (eve
 
 
 
+
 function updateTableRow(updatedProduct) {
   let productId = updatedProduct._id;
 
@@ -969,6 +985,7 @@ function updateTableRow(updatedProduct) {
     tableRow.querySelector('.category').textContent = updatedProduct.category ? updatedProduct.category.title : 'No Category';
     tableRow.querySelector('.price').textContent = updatedProduct.price;
     tableRow.querySelector('.stock').textContent = updatedProduct.stock;
+    tableRow.querySelector('.status').textContent = updatedProduct.isListed ? 'Listed' : 'Unlisted'; // Update status text
   }
 }
 
