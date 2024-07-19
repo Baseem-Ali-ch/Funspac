@@ -5,8 +5,7 @@ const path = require("path");
 const fs = require("fs").promises;
 const Category = require("../model/categoryModel");
 const Product = require("../model/productModel");
-const mongoose = require('mongoose')
-
+const mongoose = require("mongoose");
 
 const loadLogin = async (req, res) => {
   try {
@@ -62,43 +61,95 @@ const loadHome = async (req, res) => {
   }
 };
 
+// const loadProductList = async (req, res) => {
+//   try {
+//     const user = req.session.user;
+//     const products = await Product.find().populate("category");
+//     const categories = await Category.find();
+//     return res.render("product-list", { products, categories, user });
+//   } catch (error) {
+//     console.error("Error retrieving product list:", error);
+//     return res.status(500).send("Server Error");
+//   }
+// };
 const loadProductList = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const limit = 10; // Number of products per page
+    const skip = (page - 1) * limit; // Number of products to skip
+
     const user = req.session.user;
-    const products = await Product.find().populate("category");
+    const products = await Product.find()
+      .populate("category")
+      .skip(skip)
+      .limit(limit);
     const categories = await Category.find();
-    return res.render("product-list", { products, categories, user });
+    const totalProducts = await Product.countDocuments();
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    return res.render("product-list", {
+      products,
+      categories,
+      user,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.error("Error retrieving product list:", error);
     return res.status(500).send("Server Error");
   }
 };
 
-
 const loadAddProduct = async (req, res) => {
   try {
     const user = req.session.user;
     const categories = await Category.find({});
-    return res.render("add-product", { categories,user });
+    return res.render("add-product", { categories, user });
   } catch (error) {
     console.log(error);
   }
 };
 
+// const loadCategoryList = async (req, res) => {
+//   try {
+//     const user = req.session.user;
+//     const categories = await Category.find();
+//     return res.render("category-list", { categories,user });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 const loadCategoryList = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const limit = 10; // Number of categories per page
+    const skip = (page - 1) * limit; // Number of categories to skip
+    
+
+    // Get categories with pagination
+    const categories = await Category.find().skip(skip).limit(limit);
+    const totalCategories = await Category.countDocuments();
+    const totalPages = Math.ceil(totalCategories / limit);
+    
     const user = req.session.user;
-    const categories = await Category.find();
-    return res.render("category-list", { categories,user });
+
+    return res.render("category-list", {
+      categories: categories,
+      user,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.log(error);
+    return res.status(500).send("Internal Server Error");
   }
 };
 
 const loadOrderList = async (req, res) => {
   try {
     const user = req.session.user;
-    return res.render("order-list",{user});
+    return res.render("order-list", { user });
   } catch (error) {
     console.log(error);
   }
@@ -107,7 +158,7 @@ const loadOrderList = async (req, res) => {
 const loadOrderDeatails = async (req, res) => {
   try {
     const user = req.session.user;
-    return res.render("order-details",{user});
+    return res.render("order-details", { user });
   } catch (error) {
     console.log(error);
   }
@@ -115,8 +166,7 @@ const loadOrderDeatails = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    
-    const { title, slug } = req.body;
+    const { title, slug, isListed } = req.body;
     const image = req.file ? req.file.filename : null;
 
     const existingCategory = await Category.findOne({ title });
@@ -128,6 +178,7 @@ const addCategory = async (req, res) => {
       title,
       slug,
       image,
+      isListed,
     });
 
     await newCategory.save();
@@ -138,73 +189,72 @@ const addCategory = async (req, res) => {
   }
 };
 
-const getCategory = async (req, res) => {
-  try {
-    const categories = await Category.find({ isListed: true });
-    return res.render("category-list", { categories });
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return res.status(500).send("Server Error");
-  }
-};
+// const getCategory = async (req, res) => {
+//   try {
+//     const categories = await Category.find({ isListed: true });
+//     return res.render("category-list", { categories });
+//   } catch (error) {
+//     console.error("Error fetching categories:", error);
+//     return res.status(500).send("Server Error");
+//   }
+// };
 
 const updateCategory = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    const category = await Category.findById(req.params.id);
+    const { title, description, status } = req.body;
+    const categoryId = req.params.id;
+    const image = req.file ? req.file.filename : undefined;
 
-    if (!category) {
-      return res.status(404).send("Category not found");
+    const updateData = { title, description, status };
+    if (image) {
+      updateData.image = image;
     }
 
-    // Check if another category with the same title exists
-    const existingCategory = await Category.findOne({ title });
-    if (existingCategory && existingCategory._id.toString() !== req.params.id) {
-      return res.status(400).send("Category with this title already exists");
-    }
-    category.title = title;
-    category.description = description;
-    await category.save();
-
-    return res.json({
-      title: category.title,
-      description: category.description,
-    });
-  } catch (error) {
-    return res.status(500).send("Server Error");
-  }
-};
-
-const changeStatus = async (req, res) => {
-  const categoryId = req.params.id;
-  const { isListed } = req.body;
-
-  try {
     const updatedCategory = await Category.findByIdAndUpdate(
       categoryId,
-      { isListed },
+      updateData,
       { new: true }
     );
 
-    if (!updatedCategory) {
-      return res.status(404).json({ error: "Category not found" });
+    if (updatedCategory) {
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: "Category not found" });
     }
-
-    res.json({
-      message: "Listing status updated successfully",
-      category: updatedCategory,
-    });
   } catch (error) {
-    console.error("Error updating listing status:", error);
-    return res.status(500).json({ error: "Server Error" });
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
+// const loadAllUser = async (req, res) => {
+//   try {
+//     const userData = await userModel.find(); // Fetch all user data from MongoDB
+//     const user = req.session.user;
+//     return res.render("all-customer", { customers: userData,user });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).send("Internal Server Error");
+//   }
+// };
+
 const loadAllUser = async (req, res) => {
   try {
-    const userData = await userModel.find(); // Fetch all user data from MongoDB
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const limit = 10; // Number of users per page
+    const skip = (page - 1) * limit; // Number of users to skip
+
+    const userData = await userModel.find().skip(skip).limit(limit); // Fetch paginated user data
+    const totalUsers = await userModel.countDocuments(); // Get total number of users
+    const totalPages = Math.ceil(totalUsers / limit); // Calculate total pages
+
     const user = req.session.user;
-    return res.render("all-customer", { customers: userData,user });
+    return res.render("all-customer", {
+      customers: userData,
+      user,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal Server Error");
@@ -216,19 +266,22 @@ const updateCustomer = async (req, res) => {
     const { id } = req.params;
     const { name, email, phone } = req.body;
 
-    const updatedCustomer = await userModel.findByIdAndUpdate(id, { name, email, phone }, { new: true });
+    const updatedCustomer = await userModel.findByIdAndUpdate(
+      id,
+      { name, email, phone },
+      { new: true }
+    );
 
     if (!updatedCustomer) {
-      return res.status(404).json({ error: 'Customer not found' });
+      return res.status(404).json({ error: "Customer not found" });
     }
 
     res.json(updatedCustomer);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: "Server error" });
   }
 };
-
 
 const changeCustomer = async (req, res) => {
   const customerId = req.params.id;
@@ -254,7 +307,6 @@ const changeCustomer = async (req, res) => {
     return res.status(500).json({ error: "Server Error" });
   }
 };
-
 
 const addProduct = async (req, res) => {
   try {
@@ -362,54 +414,53 @@ const updateProduct = async (req, res) => {
   const productId = req.params.id;
   const { name, description, category, price, stock, status } = req.body;
 
-
-    try {
-      // Validate ObjectId format
-      if (!mongoose.Types.ObjectId.isValid(category)) {
-        return res.status(400).json({ success: false, message: 'Invalid category ID' });
-      }
-  
-      const product = await Product.findById(productId);
-  
-      if (product) {
-        product.name = name;
-        product.description = description;
-        product.category = new mongoose.Types.ObjectId(category); // Ensure category is an ObjectId
-        product.price = price;
-        product.stock = stock;
-        product.status = status;
-  
-        if (req.files.productImage1) {
-          product.imageUrl_1 = '/uploads/' + req.files.productImage1[0].filename;
-        }
-        if (req.files.productImage2) {
-          product.imageUrl_2 = '/uploads/' + req.files.productImage2[0].filename;
-        }
-        if (req.files.productImage3) {
-          product.imageUrl_3 = '/uploads/' + req.files.productImage3[0].filename;
-        }
-  
-        await product.save();
-        res.json({ success: true, product });
-      } else {
-        res.json({ success: false, message: 'Product not found' });
-      }
-    } catch (error) {
-      console.error('Error updating product:', error);
-      res.status(500).json({ success: false, message: 'Server error' });
+  try {
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(category)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid category ID" });
     }
+
+    const product = await Product.findById(productId);
+
+    if (product) {
+      product.name = name;
+      product.description = description;
+      product.category = new mongoose.Types.ObjectId(category); // Ensure category is an ObjectId
+      product.price = price;
+      product.stock = stock;
+      product.status = status;
+
+      if (req.files.productImage1) {
+        product.imageUrl_1 = "/uploads/" + req.files.productImage1[0].filename;
+      }
+      if (req.files.productImage2) {
+        product.imageUrl_2 = "/uploads/" + req.files.productImage2[0].filename;
+      }
+      if (req.files.productImage3) {
+        product.imageUrl_3 = "/uploads/" + req.files.productImage3[0].filename;
+      }
+
+      await product.save();
+      res.json({ success: true, product });
+    } else {
+      res.json({ success: false, message: "Product not found" });
+    }
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 };
 
-
-const loadAdmProfile = async(req,res) => {
+const loadAdmProfile = async (req, res) => {
   try {
     const user = req.session.user;
-    res.render('admin-profile',{user})
+    res.render("admin-profile", { user });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
-
+};
 
 const logout = (req, res) => {
   req.session.destroy((err) => {
@@ -430,14 +481,14 @@ module.exports = {
   loadOrderList,
   loadOrderDeatails,
   addCategory,
-  getCategory,
+
   updateCategory,
-  changeStatus,
+
   loadAllUser,
   updateCustomer,
   changeCustomer,
   addProduct,
   updateProduct,
   logout,
-  loadAdmProfile
+  loadAdmProfile,
 };

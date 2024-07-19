@@ -667,9 +667,6 @@
                           <th class="text-lg-center sorting_disabled" rowspan="1" colspan="1" style="width: 75px;" aria-label="Actions">Actions</th>
                         </tr>
                       </thead>
-                      
-
-
                         <tbody id="category-table-body">
                           <% categories.forEach(category => { %>
                             <tr class="odd" id="row-<%= category._id %>">
@@ -697,31 +694,86 @@
                               <td>
                                   <div class="text-sm-end"></div>
                               </td>
-                              <td>
-                                  <div class="d-flex align-items-sm-center justify-content-sm-center">
-                                    <button id="editBtn-<%= category._id %>" class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill" onclick="toggleEdit('<%= category._id %>')">
-                                      <i class="ri-edit-box-line ri-20px"></i>
-                                  </button>
-                                  <button id="saveBtn-<%= category._id %>" class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill" onclick="saveChanges('<%= category._id %>')" style="display: none;">
-                                      <i class="ri-save-line ri-20px save-btn"></i>
-                                  </button>
-                                  <!-- Delete button -->
-                                  
-                                  <select name="status" id="status-<%= category._id %>" style="border: none; background-color: transparent; outline: none;" onchange="changeStatus('<%= category._id %>', this.value)">
-                                    <option value="true" <%= category.isListed ? 'selected' : '' %>>Listed</option>
-                                    <option value="false" <%= !category.isListed ? 'selected' : '' %>>UnListed</option>
-                                </select>
-                                
-                                      
+                              <td>   
+                                <!-- <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill" onclick="populateCategoryModal({ _id: '<%= category._id %>', title: '<%= category.title %>', description: '<%= category.slug %>', image: '<%= category.image %>' })">
+                                  Edit
+                                </button> -->
+                                <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill" onclick="populateCategoryModal({ _id: '<%= category._id %>', title: '<%= category.title %>', description: '<%= category.slug %>', image: '<%= category.image %>' })">
+                                  Edit
+                                </button>
                                   </div>
                               </td>
                           </tr>
                           <% }) %>
                       </tbody>
-
-                        
-
                     </table>
+
+                    <!-- Pagination Controls -->
+                    <nav aria-label="Page navigation">
+                      <ul class="pagination justify-content-center">
+                        <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                          <a class="page-link page-link-prev" href="?page=<%= currentPage - 1 %>" aria-label="Previous" tabindex="-1" aria-disabled="<%= currentPage === 1 %>">
+                            <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span> Prev
+                          </a>
+                        </li>
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                          <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                          </li>
+                        <% } %>
+                        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                          <a class="page-link page-link-next" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                            Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                          </a>
+                        </li>
+                      </ul>
+                    </nav>
+
+
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form id="editCategoryForm" enctype="multipart/form-data">
+                          <div class="mb-3">
+                            <label for="categoryTitle" class="form-label">Category Title</label>
+                            <input type="text" class="form-control" id="categoryTitle" name="title">
+                          </div>
+                          <div class="mb-3">
+                            <label for="categoryDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="categoryDescription" name="description"></textarea>
+                          </div>
+                          <div class="mb-3">
+                            <label for="productStatus" class="form-label">Status</label>
+                            <select class="form-control" id="productStatus" name="status">
+                              <option value="active">Active</option>
+                              <option value="inactive">Inactive</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            
+                            <div id="categoryImageWrapper" class="mb-3">
+                              <img id="modalCategoryImage" src="#" alt="Category Image" class="img-thumbnail">
+                              <input type="file" class="form-control mt-2" id="modalInputCategoryImage" name="categoryImage" onchange="replaceModalImage(this, 'modalCategoryImage')">
+                            </div>
+                          </div>
+                          <button type="button" class="btn btn-primary" id="saveCategoryButton" onclick="location.reload()">Save</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                
+                
+    
 
                 
                     
@@ -734,7 +786,7 @@
               </div>
             </div>
 
-            <!-- Offcanvas to add new customer -->
+            <!-- Offcanvas to add new category -->
             
 
 
@@ -750,21 +802,36 @@
                 <form class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="eCommerceCategoryListForm" action="/admin/categories/add" method="post" novalidate="novalidate">
                   <!-- Title -->
           
+                  <label for="ecommerce-category-title">Title</label>
                   <div class="form-floating form-floating-outline mb-5 fv-plugins-icon-container">
                     <input type="text" class="form-control" id="ecommerce-category-title" name="title" placeholder="Enter category title" required >
-                    <label for="ecommerce-category-title">Title</label>
+                    
                   <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
           
                   <!-- Slug -->
+                  <label for="ecommerce-category-slug">Description</label>
                   <div class="form-floating form-floating-outline mb-5 fv-plugins-icon-container">
                     <input type="text" id="ecommerce-category-slug" class="form-control" placeholder="Enter slug" name="slug" required>
-                    <label for="ecommerce-category-slug">Description</label>
-                  <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                    
+                  <!-- <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div> -->
           
+                                  <!-- Status -->
+                  <div class="col-md-6 mb-5">
+                    <div class="mb-3">
+                      <label for="publishStatus" class="form-label">Status</label>
+                      <select class="form-select" id="publishStatus" name="isListed" required>
+                        <option value="" disabled selected>Select status</option>
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <!-- Image -->
+                  <label for="ecommerce-category-image">Category Image</label>
                   <div class="form-floating form-floating-outline mb-5">
                     <input type="file" class="form-control" id="ecommerce-category-image" name="image" accept="image/*">
-                    <label for="ecommerce-category-image">Category Image</label>
+                    
                   </div>
                   
                  
@@ -780,34 +847,14 @@
           </div>
           <!-- / Content -->
 
+
+        
+
+
           
           
 
-<!-- Footer -->
-<!-- <footer class="content-footer footer bg-footer-theme">
-  <div class="container-xxl">
-    <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-      <div class="text-body mb-2 mb-md-0">
-        © <script>
-        document.write(new Date().getFullYear())
 
-        </script>, made with <span class="text-danger"><i class="tf-icons ri-heart-fill"></i></span> by <a href="https://themeselection.com/" target="_blank" class="footer-link">ThemeSelection</a>
-      </div>
-      <div class="d-none d-lg-inline-block">
-        
-        <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-        <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-        
-        <a href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/documentation/" target="_blank" class="footer-link me-4">Documentation</a>
-        
-        
-        <a href="https://themeselection.com/support/" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
-        
-      </div>
-    </div>
-  </div>
-</footer> -->
-<!-- / Footer -->
 
           
           <div class="content-backdrop fade"></div>
@@ -866,136 +913,89 @@
   <!-- <script src="/dashboard-assets/js/app-ecommerce-category-list.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
-  <script>
-    function toggleEdit(rowId) {
-      console.log(`Toggle edit for row: ${rowId}`);
-      const editInputs = document.querySelectorAll(`#row-${rowId} .edit-input`);
-      const staticTexts = document.querySelectorAll(`#row-${rowId} .static-text`);
-      const editBtn = document.getElementById(`editBtn-${rowId}`);
-      const saveBtn = document.getElementById(`saveBtn-${rowId}`);
-  
-      // Check if currently in edit mode
-      const isInEditMode = editBtn.style.display === 'none';
-  
-      if (isInEditMode) {
-        // Switch to view mode
-        editInputs.forEach(input => {
-          input.style.display = 'none'; // Hide edit inputs
-        });
-  
-        staticTexts.forEach(text => {
-          text.style.display = 'inline-block'; // Show static text
-        });
-  
-        editBtn.style.display = 'inline-block'; // Show edit button
-        saveBtn.style.display = 'none'; // Hide save button
-      } else {
-        // Switch to edit mode
-        editInputs.forEach(input => {
-          input.style.display = 'inline-block'; // Show edit inputs
-        });
-  
-        staticTexts.forEach(text => {
-          text.style.display = 'none'; // Hide static text
-        });
-  
-        editBtn.style.display = 'none'; // Hide edit button
-        saveBtn.style.display = 'inline-block'; // Show save button
-      }
-    }
-  
-    async function saveChanges(rowId) {
-      const editTitle = document.getElementById(`edit-title-${rowId}`).value;
-      const editDescription = document.getElementById(`edit-description-${rowId}`).value;
-  
-      console.log(`Saving changes for row: ${rowId}`);
-      console.log(`Title: ${editTitle}, Description: ${editDescription}`);
-      
-      
 
-      try {
-        const response = await fetch(`/admin/categories/edit/${rowId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            title: editTitle,
-            description: editDescription
-          })
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to update category');
-        }
-  
-        const updatedCategory = await response.json();
-        document.getElementById(`title-text-${rowId}`).textContent = updatedCategory.title;
-        document.getElementById(`description-text-${rowId}`).textContent = updatedCategory.description;
-  
-        // Toggle back to view mode after saving
-        toggleEdit(rowId);
-  
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Category updated successfully!'
-        });
-      } catch (error) {
-        console.error('Error updating category:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to update category. Please try again.'
-        });
-      }
-    }
-  
-    function changeStatus(categoryId, status) {
-      fetch(`/admin/category/${categoryId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ isListed: status === 'true' })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to update status. Please try again.'
-          });
-        } else {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Status updated successfully!'
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error updating status:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to update status. Please try again.'
-        });
+  <script>
+  document.getElementById('saveCategoryButton').addEventListener('click', editCategory);
+
+function populateCategoryModal(category) {
+  document.getElementById('categoryTitle').value = category.title;
+  document.getElementById('categoryDescription').value = category.description;
+  document.getElementById('productStatus').value = category.status;
+
+  const categoryImage = category.image ? `/uploads/${category.image}` : '#';
+  document.getElementById('modalCategoryImage').src = categoryImage;
+
+  document.getElementById('editCategoryForm').dataset.categoryId = category._id;
+
+  // Show the modal
+  new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+}
+
+function editCategory() {
+  const form = document.getElementById('editCategoryForm');
+  const categoryId = form.dataset.categoryId;
+  const formData = new FormData(form);
+
+  fetch(`/admin/category-list/${categoryId}`, {
+    method: 'PATCH',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      swal({
+        title: "Success",
+        text: "Category updated successfully",
+        icon: "success",
+        button: "OK"
+      }).then(() => {
+        location.reload();
+      });
+    } else {
+      swal({
+        title: "Error",
+        text: "Error updating category: " + (data.message || "Unknown error"),
+        icon: "error",
+        button: "OK"
       });
     }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    swal({
+      title: "Error",
+      text: "Error updating category: " + error.message,
+      icon: "error",
+      button: "OK"
+    });
+  });
+}
+
+function replaceModalImage(input, imageId) {
+  const file = input.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    document.getElementById(imageId).src = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+}
 
 
 
+</script>
 
+
+  <script>
 
     function searchTable() {
-  const input = document.getElementById('search-input');
-  const filter = input.value.toLowerCase();
-  const tableBody = document.getElementById('category-table-body');
-  const rows = tableBody.getElementsByTagName('tr');
+    const input = document.getElementById('search-input');
+    const filter = input.value.toLowerCase();
+    const tableBody = document.getElementById('category-table-body');
+    const rows = tableBody.getElementsByTagName('tr');
 
-  for (let i = 0; i < rows.length; i++) {
+    for (let i = 0; i < rows.length; i++) {
     const title = rows[i].querySelector('.static-text[id^="title-text"]').textContent.toLowerCase();
     const description = rows[i].querySelector('.static-text[id^="description-text"]').textContent.toLowerCase();
     
@@ -1006,13 +1006,9 @@
     }
   }
 }
-
-
-
-
-
   </script>
   
+  <!-- add category -->
   <script>
     document.getElementById('eCommerceCategoryListForm').addEventListener('submit', async function(event) {
       event.preventDefault(); // Prevent default form submission

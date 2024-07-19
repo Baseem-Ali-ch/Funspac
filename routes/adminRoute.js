@@ -48,11 +48,11 @@ adminRoute.post(
 );
 
 
-adminRoute.get(
-  "/category-list",
-  isAdminAuthenticated,
-  adminController.getCategory
-);
+// adminRoute.get(
+//   "/category-list",
+//   isAdminAuthenticated,
+//   adminController.getCategory
+// );
 adminRoute.post(
   "/categories/add",
   isAdminAuthenticated,
@@ -64,16 +64,18 @@ adminRoute.get(
   isAdminAuthenticated,
   adminController.loadCategoryList
 );
-adminRoute.post(
-  "/categories/edit/:id",
+adminRoute.patch(
+  '/category-list/:id',
   isAdminAuthenticated,
+  upload.single('categoryImage'), // Handle the image upload
   adminController.updateCategory
 );
-adminRoute.patch(
-  "/category/:id/status",
-  isAdminAuthenticated,
-  adminController.changeStatus
-);
+
+// adminRoute.patch(
+//   "/category/:id/status",
+//   isAdminAuthenticated,
+//   adminController.changeStatus
+// );
 
 adminRoute.get(
   "/order-list",

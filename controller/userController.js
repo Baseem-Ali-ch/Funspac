@@ -38,7 +38,7 @@ const sendOTPEmail = (email, otp) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "OTP Verification",
-    
+
     text: `Your OTP for verification is: ${otp}`,
   };
 
@@ -86,7 +86,7 @@ const setRedirectUrl = (req, res, next) => {
 
 // const verifyLogin = async (req, res) => {
 //   try {
-  
+
 //     const { "login-email": email, "login-password": password } = req.body;
 //     const userData = await userModel.findOne({ email });
 
@@ -120,7 +120,10 @@ const verifyLogin = async (req, res) => {
 
     if (userData) {
       if (userData.isListed === false) {
-        return res.render("login", { message: "Your account has been blocked. Please Make another account." });
+        return res.render("login", {
+          message:
+            "Your account has been blocked. Please Make another account.",
+        });
       }
 
       const passwordMatch = await bcrypt.compare(password, userData.password);
@@ -134,10 +137,14 @@ const verifyLogin = async (req, res) => {
           return res.redirect("/register");
         }
       } else {
-        return res.render("login", { message: "Email and Password is incorrect" });
+        return res.render("login", {
+          message: "Email and Password is incorrect",
+        });
       }
     } else {
-      return res.render("login", { message: "Email and Password is incorrect" });
+      return res.render("login", {
+        message: "Email and Password is incorrect",
+      });
     }
   } catch (error) {
     console.log(error);
@@ -163,8 +170,7 @@ const insertUser = async (req, res) => {
         otp,
         userData: { name, phone, email, password: spassword },
       };
-      console.log(otp),
-      await sendOTPEmail(email, otp);
+      console.log(otp), await sendOTPEmail(email, otp);
 
       res.redirect(`/verify-otp?email=${email}`);
     }
@@ -321,16 +327,51 @@ const loadProduct = async (req, res) => {
   }
 };
 
+// const loadProductList = async (req, res) => {
+//   try {
+//     const categories = await Category.find({});
+//     const products = await Product.find({}).populate("category", "title");
+//     const user = req.session.user || req.user;
+//     res.render("product-list", { products, categories, user });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 const loadProductList = async (req, res) => {
   try {
-    const categories = await Category.find({});
-    const products = await Product.find({}).populate("category", "title");
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const limit = 9; // Number of products per page
+    const skip = (page - 1) * limit; // Number of products to skip
+
+    const categories = await Category.find({isListed:true}).select('_id');
+    const listedCategories = await Category.find({ isListed: true }).select('_id');
+
+    const products = await Product.find({isListed:true})
+    .populate({
+      path: 'category',
+      match: { isListed: true },
+      select: 'title'
+    })
+      .skip(skip)
+      .limit(limit);
+
+    const totalProducts = await Product.countDocuments({isListed:true, category: { $in: listedCategories.map(cat => cat._id) }});
+    const totalPages = Math.ceil(totalProducts / limit);
+
     const user = req.session.user || req.user;
-    res.render("product-list", { products, categories, user });
+
+    res.render("product-list", {
+      products,
+      categories:listedCategories ,
+      user,
+      currentPage: page,
+      totalPages
+    });
   } catch (error) {
     console.log(error);
   }
 };
+
 
 const updateProfile = async (req, res) => {
   try {
@@ -371,7 +412,6 @@ const updateProfile = async (req, res) => {
   }
 };
 
-
 // const loadForgotPassword = async(req,res) => {
 //   try {
 //     res.render('forgot-pas')
@@ -404,7 +444,6 @@ const updateProfile = async (req, res) => {
 //   }
 // };
 
-
 // const loadResetPassword = (req, res) => {
 //   const { token } = req.params;
 //   res.render("resetPassword", { token });
@@ -434,17 +473,18 @@ const updateProfile = async (req, res) => {
 //   }
 // };
 
-const filterProduct = async(req,res) => {
+const filterProduct = async (req, res) => {
   try {
     const { categories } = req.body;
-    const products = await Product.find({ category: { $in: categories } }).populate('category');
+    const products = await Product.find({
+      category: { $in: categories },
+    }).populate("category");
     res.json({ products });
   } catch (error) {
-    console.error('Error fetching filtered products:', error);
-    res.status(500).json({ error: 'Server Error' });
+    console.error("Error fetching filtered products:", error);
+    res.status(500).json({ error: "Server Error" });
   }
-}
-
+};
 
 module.exports = {
   loadHome,
@@ -464,5 +504,5 @@ module.exports = {
   loadProductList,
   setRedirectUrl,
   updateProfile,
-  filterProduct
+  filterProduct,
 };
