@@ -477,7 +477,7 @@
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <h6 class="mb-0 small">John Doe</h6>
+                      <h6 class="mb-0 small"><%= user.name %></h6>
                       <small class="text-muted">Admin</small>
 
                     </div>
@@ -488,44 +488,15 @@
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="pages-profile-user.html">
+                <a class="dropdown-item" href="/admin/admin-profile">
                   <i class="ri-user-3-line ri-22px me-2"></i>
                   <span class="align-middle">My Profile</span>
                 </a>
               </li>
-              <li>
-                <a class="dropdown-item" href="pages-account-settings-account.html">
-                  <i class="ri-settings-4-line ri-22px me-2"></i>
-                  <span class="align-middle">Settings</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="pages-account-settings-billing.html">
-                  <span class="d-flex align-items-center align-middle">
-                    <i class="flex-shrink-0 ri-file-text-line ri-22px me-2"></i>
-                    <span class="flex-grow-1 align-middle">Billing</span>
-                    <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger h-px-20 d-flex align-items-center justify-content-center">4</span>
-                  </span>
-                </a>
-              </li>
-              <li>
-                <div class="dropdown-divider"></div>
-              </li>
-              <li>
-                <a class="dropdown-item" href="pages-pricing.html">
-                  <i class="ri-money-dollar-circle-line ri-22px me-2"></i>
-                  <span class="align-middle">Pricing</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="pages-faq.html">
-                  <i class="ri-question-line ri-22px me-2"></i>
-                  <span class="align-middle">FAQ</span>
-                </a>
-              </li>
+              
               <li>
                 <div class="d-grid px-4 pt-2 pb-1">
-                  <a class="btn btn-danger d-flex" href="auth-login-cover.html" target="_blank">
+                  <a class="btn btn-danger d-flex" href="/admin" target="_blank">
                     <small class="align-middle">Logout</small>
                     <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
                   </a>
@@ -599,7 +570,7 @@
      
 
       
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label for="productImage1" class="form-label">Product Images:</label>
         <div class="row">
           <div class="col-md-4 mb-3">
@@ -624,8 +595,42 @@
             </div>
           </div>
         </div>
+      </div> -->
+      <div class="mb-3">
+        <label for="productImage1" class="form-label">Product Images:</label>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="image-input-container">
+              <input type="file" class="form-control image-input" id="productImage1" name="productImage1" accept="image/*" required onchange="previewImage(this, 'imagePreview1');">
+              <label for="productImage1" class="image-placeholder">Click to upload</label>
+              <img id="imagePreview1" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+              <div class="image-actions" id="replaceLink1" style="display: none;">
+                <a href="#" onclick="triggerInputClick('productImage1'); return false;">Replace</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="image-input-container">
+              <input type="file" class="form-control image-input" id="productImage2" name="productImage2" accept="image/*" required onchange="previewImage(this, 'imagePreview2');">
+              <label for="productImage2" class="image-placeholder">Click to upload</label>
+              <img id="imagePreview2" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+              <div class="image-actions" id="replaceLink2" style="display: none;">
+                <a href="#" onclick="triggerInputClick('productImage2'); return false;">Replace</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="image-input-container">
+              <input type="file" class="form-control image-input" id="productImage3" name="productImage3" accept="image/*" onchange="previewImage(this, 'imagePreview3');">
+              <label for="productImage3" class="image-placeholder">Click to upload</label>
+              <img id="imagePreview3" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+              <div class="image-actions" id="replaceLink3" style="display: none;">
+                <a href="#" onclick="triggerInputClick('productImage3'); return false;">Replace</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    
     
     
     
@@ -665,8 +670,8 @@
       <label for="publishStatus" class="form-label">Status</label>
       <select class="form-select" id="publishStatus" name="isListed" required>
         <option value="" disabled selected>Select status</option>
-        <option value="true">List</option>
-        <option value="false">UnList</option>
+        <option value="true">Active</option>
+        <option value="false">Inactive</option>
       </select>
     </div>
   </div>
@@ -789,7 +794,7 @@
 </script>
 
 
-<script>
+<!-- <script>
   function previewImage(input, imgId) {
     var imgElement = document.getElementById(imgId);
     if (input.files && input.files[0]) {
@@ -805,21 +810,41 @@
     }
   }
 
+</script> -->
 
 
+<script>
+  function previewImage(input, imgId, replaceLinkId) {
+    var imgElement = document.getElementById(imgId);
+    var replaceLink = document.getElementById(replaceLinkId);
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        imgElement.src = e.target.result;
+        imgElement.style.display = 'block';
+        replaceLink.style.display = 'block'; // Show the replace link
+      };
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      imgElement.src = "#";
+      imgElement.style.display = 'none';
+      replaceLink.style.display = 'none'; // Hide the replace link
+    }
+  }
 
+  function triggerInputClick(inputId) {
+    document.getElementById(inputId).click();
+  }
 
+  function deleteImage(inputId, previewId, replaceLinkId) {
+    const input = document.getElementById(inputId);
+    input.value = '';
+    const preview = document.getElementById(previewId);
+    preview.src = '#';
+    preview.style.display = 'none';
+    document.getElementById(replaceLinkId).style.display = 'none';
+  }
 </script>
-
-
-
-
-  
-  
-
-
-  
-  
 
 
 

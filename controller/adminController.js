@@ -5,6 +5,8 @@ const path = require("path");
 const fs = require("fs").promises;
 const Category = require("../model/categoryModel");
 const Product = require("../model/productModel");
+const mongoose = require('mongoose')
+
 
 const loadLogin = async (req, res) => {
   try {
@@ -62,19 +64,22 @@ const loadHome = async (req, res) => {
 
 const loadProductList = async (req, res) => {
   try {
+    const user = req.session.user;
     const products = await Product.find().populate("category");
     const categories = await Category.find();
-    return res.render("product-list", { products, categories });
+    return res.render("product-list", { products, categories, user });
   } catch (error) {
     console.error("Error retrieving product list:", error);
     return res.status(500).send("Server Error");
   }
 };
 
+
 const loadAddProduct = async (req, res) => {
   try {
+    const user = req.session.user;
     const categories = await Category.find({});
-    return res.render("add-product", { categories });
+    return res.render("add-product", { categories,user });
   } catch (error) {
     console.log(error);
   }
@@ -82,8 +87,9 @@ const loadAddProduct = async (req, res) => {
 
 const loadCategoryList = async (req, res) => {
   try {
+    const user = req.session.user;
     const categories = await Category.find();
-    return res.render("category-list", { categories });
+    return res.render("category-list", { categories,user });
   } catch (error) {
     console.log(error);
   }
@@ -91,7 +97,8 @@ const loadCategoryList = async (req, res) => {
 
 const loadOrderList = async (req, res) => {
   try {
-    return res.render("order-list");
+    const user = req.session.user;
+    return res.render("order-list",{user});
   } catch (error) {
     console.log(error);
   }
@@ -99,7 +106,8 @@ const loadOrderList = async (req, res) => {
 
 const loadOrderDeatails = async (req, res) => {
   try {
-    return res.render("order-details");
+    const user = req.session.user;
+    return res.render("order-details",{user});
   } catch (error) {
     console.log(error);
   }
@@ -107,6 +115,7 @@ const loadOrderDeatails = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
+    
     const { title, slug } = req.body;
     const image = req.file ? req.file.filename : null;
 
@@ -194,7 +203,8 @@ const changeStatus = async (req, res) => {
 const loadAllUser = async (req, res) => {
   try {
     const userData = await userModel.find(); // Fetch all user data from MongoDB
-    return res.render("all-customer", { customers: userData });
+    const user = req.session.user;
+    return res.render("all-customer", { customers: userData,user });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal Server Error");
@@ -349,81 +359,57 @@ const addProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  console.log("edit start...");
   const productId = req.params.id;
-  const { name, description, category, price, stock, isListed } = req.body;
+  const { name, description, category, price, stock, status } = req.body;
 
-  try {
-    // Fetch the existing product
-    const product = await Product.findById(productId);
 
-    if (!product) {
-      return res.status(404).send("Product not found");
+    try {
+      // Validate ObjectId format
+      if (!mongoose.Types.ObjectId.isValid(category)) {
+        return res.status(400).json({ success: false, message: 'Invalid category ID' });
+      }
+  
+      const product = await Product.findById(productId);
+  
+      if (product) {
+        product.name = name;
+        product.description = description;
+        product.category = new mongoose.Types.ObjectId(category); // Ensure category is an ObjectId
+        product.price = price;
+        product.stock = stock;
+        product.status = status;
+  
+        if (req.files.productImage1) {
+          product.imageUrl_1 = '/uploads/' + req.files.productImage1[0].filename;
+        }
+        if (req.files.productImage2) {
+          product.imageUrl_2 = '/uploads/' + req.files.productImage2[0].filename;
+        }
+        if (req.files.productImage3) {
+          product.imageUrl_3 = '/uploads/' + req.files.productImage3[0].filename;
+        }
+  
+        await product.save();
+        res.json({ success: true, product });
+      } else {
+        res.json({ success: false, message: 'Product not found' });
+      }
+    } catch (error) {
+      console.error('Error updating product:', error);
+      res.status(500).json({ success: false, message: 'Server error' });
     }
-
-    // Handle multiple images
-    let imageUrl_1 = product.imageUrl_1;
-    let imageUrl_2 = product.imageUrl_2;
-    let imageUrl_3 = product.imageUrl_3;
-
-    const cropAndResizeImage = async (imagePath) => {
-      const outputFileName = `cropped-${path.basename(imagePath)}`;
-      await sharp(imagePath)
-        .resize({ width: 300, height: 300 })
-        .extract({ width: 300, height: 300, left: 0, top: 0 }) // Use extract for cropping
-        .toFile(path.join(path.dirname(imagePath), outputFileName));
-
-      return outputFileName;
-    };
-
-    if (req.files["productImage1"]) {
-      const croppedImageUrl_1 = await cropAndResizeImage(
-        req.files["productImage1"][0].path
-      );
-      imageUrl_1 = `/assets/images/add-product/${croppedImageUrl_1}`;
-    }
-    if (req.files["productImage2"]) {
-      const croppedImageUrl_2 = await cropAndResizeImage(
-        req.files["productImage2"][0].path
-      );
-      imageUrl_2 = `/assets/images/add-product/${croppedImageUrl_2}`;
-    }
-    if (req.files["productImage3"]) {
-      const croppedImageUrl_3 = await cropAndResizeImage(
-        req.files["productImage3"][0].path
-      );
-      imageUrl_3 = `/assets/images/add-product/${croppedImageUrl_3}`;
-    }
-
-    // Prepare the update data
-    const updateData = {
-      name,
-      description,
-      category,
-      price,
-      stock,
-      isListed: isListed === "true",
-      imageUrl_1,
-      imageUrl_2,
-      imageUrl_3,
-    };
-
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
-      updateData,
-      { new: true }
-    );
-
-    if (!updatedProduct) {
-      return res.status(404).send("Product not found");
-    }
-
-    res.send(updatedProduct);
-  } catch (error) {
-    console.error("Error updating product:", error);
-    res.status(500).send("Error updating product: " + error.message);
-  }
 };
+
+
+const loadAdmProfile = async(req,res) => {
+  try {
+    const user = req.session.user;
+    res.render('admin-profile',{user})
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 const logout = (req, res) => {
   req.session.destroy((err) => {
@@ -443,7 +429,6 @@ module.exports = {
   loadCategoryList,
   loadOrderList,
   loadOrderDeatails,
-
   addCategory,
   getCategory,
   updateCategory,
@@ -454,4 +439,5 @@ module.exports = {
   addProduct,
   updateProduct,
   logout,
+  loadAdmProfile
 };

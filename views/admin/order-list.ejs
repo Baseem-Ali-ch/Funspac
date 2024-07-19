@@ -1675,18 +1675,19 @@
                 <img src="/dashboard-assets/img/avatars/1.png" alt="" class="rounded-circle">
               </div>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
+            <ul class="dropdown-menu dropdown-menu-end mt-3 py-2">
               <li>
-                <a class="dropdown-item waves-effect" href="pages-account-settings-account.html">
-                  <div class="d-flex">
+                <a class="dropdown-item" href="pages-account-settings-account.html">
+                  <div class="d-flex align-items-center">
                     <div class="flex-shrink-0 me-2">
                       <div class="avatar avatar-online">
-                        <img src="/dashboard-assets/img/avatars/1.png" alt="" class="rounded-circle">
+                        <img src="/dashboard-assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle">
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <span class="fw-medium d-block small">John Doe</span>
+                      <h6 class="mb-0 small"><%= user.name %></h6>
                       <small class="text-muted">Admin</small>
+
                     </div>
                   </div>
                 </a>
@@ -1695,40 +1696,15 @@
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item waves-effect" href="pages-profile-user.html">
-                  <i class="ri-user-3-line ri-22px me-3"></i><span class="align-middle">My Profile</span>
+                <a class="dropdown-item" href="/admin/admin-profile">
+                  <i class="ri-user-3-line ri-22px me-2"></i>
+                  <span class="align-middle">My Profile</span>
                 </a>
               </li>
-              <li>
-                <a class="dropdown-item waves-effect" href="pages-account-settings-account.html">
-                  <i class="ri-settings-4-line ri-22px me-3"></i><span class="align-middle">Settings</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item waves-effect" href="pages-account-settings-billing.html">
-                  <span class="d-flex align-items-center align-middle">
-                    <i class="flex-shrink-0 ri-file-text-line ri-22px me-3"></i>
-                    <span class="flex-grow-1 align-middle">Billing</span>
-                    <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger">4</span>
-                  </span>
-                </a>
-              </li>
-              <li>
-                <div class="dropdown-divider"></div>
-              </li>
-              <li>
-                <a class="dropdown-item waves-effect" href="pages-pricing.html">
-                  <i class="ri-money-dollar-circle-line ri-22px me-3"></i><span class="align-middle">Pricing</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item waves-effect" href="pages-faq.html">
-                  <i class="ri-question-line ri-22px me-3"></i><span class="align-middle">FAQ</span>
-                </a>
-              </li>
+              
               <li>
                 <div class="d-grid px-4 pt-2 pb-1">
-                  <a class="btn btn-sm btn-danger d-flex waves-effect waves-light" href="auth-login-cover.html" target="_blank">
+                  <a class="btn btn-danger d-flex" href="/admin" target="_blank">
                     <small class="align-middle">Logout</small>
                     <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
                   </a>

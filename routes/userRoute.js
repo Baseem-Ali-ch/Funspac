@@ -51,7 +51,7 @@ userRoute.get("/product-list", userController.loadProductList);
 // userRoute.get('/reset-password/:token', userController.loadResetPassword);
 // userRoute.post('/reset-password', userController.resetPasswordSubmit);
 
-
+userRoute.post('/filter-products',userController.filterProduct)
 // Add Google authentication routes
 const authRoute = require("./authRoutes"); // Update the path if necessary
 userRoute.use("/", authRoute);

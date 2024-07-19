@@ -38,6 +38,7 @@ const sendOTPEmail = (email, otp) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "OTP Verification",
+    
     text: `Your OTP for verification is: ${otp}`,
   };
 
@@ -162,7 +163,7 @@ const insertUser = async (req, res) => {
         otp,
         userData: { name, phone, email, password: spassword },
       };
-
+      console.log(otp),
       await sendOTPEmail(email, otp);
 
       res.redirect(`/verify-otp?email=${email}`);
@@ -433,6 +434,16 @@ const updateProfile = async (req, res) => {
 //   }
 // };
 
+const filterProduct = async(req,res) => {
+  try {
+    const { categories } = req.body;
+    const products = await Product.find({ category: { $in: categories } }).populate('category');
+    res.json({ products });
+  } catch (error) {
+    console.error('Error fetching filtered products:', error);
+    res.status(500).json({ error: 'Server Error' });
+  }
+}
 
 
 module.exports = {
@@ -452,5 +463,6 @@ module.exports = {
   loadProduct,
   loadProductList,
   setRedirectUrl,
-  updateProfile
+  updateProfile,
+  filterProduct
 };

@@ -371,7 +371,7 @@
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <h6 class="mb-0 small">John Doe</h6>
+                      <h6 class="mb-0 small"><%= user.name %></h6>
                       <small class="text-muted">Admin</small>
 
                     </div>
@@ -382,44 +382,15 @@
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="pages-profile-user.html">
+                <a class="dropdown-item" href="/profile">
                   <i class="ri-user-3-line ri-22px me-2"></i>
                   <span class="align-middle">My Profile</span>
                 </a>
               </li>
-              <li>
-                <a class="dropdown-item" href="pages-account-settings-account.html">
-                  <i class="ri-settings-4-line ri-22px me-2"></i>
-                  <span class="align-middle">Settings</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="pages-account-settings-billing.html">
-                  <span class="d-flex align-items-center align-middle">
-                    <i class="flex-shrink-0 ri-file-text-line ri-22px me-2"></i>
-                    <span class="flex-grow-1 align-middle">Billing</span>
-                    <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger h-px-20 d-flex align-items-center justify-content-center">4</span>
-                  </span>
-                </a>
-              </li>
-              <li>
-                <div class="dropdown-divider"></div>
-              </li>
-              <li>
-                <a class="dropdown-item" href="pages-pricing.html">
-                  <i class="ri-money-dollar-circle-line ri-22px me-2"></i>
-                  <span class="align-middle">Pricing</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="pages-faq.html">
-                  <i class="ri-question-line ri-22px me-2"></i>
-                  <span class="align-middle">FAQ</span>
-                </a>
-              </li>
+              
               <li>
                 <div class="d-grid px-4 pt-2 pb-1">
-                  <a class="btn btn-danger d-flex" href="auth-login-cover.html" target="_blank">
+                  <a class="btn btn-danger d-flex" href="/admin" target="_blank">
                     <small class="align-middle">Logout</small>
                     <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
                   </a>
@@ -585,51 +556,7 @@
     
     
 
-<!-- <table class="datatables-products table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-  <thead>
-    <tr>
-      <th class="control sorting_disabled" style="width: 5px;" aria-label=""></th>
-      <th class="sorting sorting_asc" aria-label="Image" aria-sort="ascending" style="width: 100px;">Image</th>
-      <th class="sorting sorting_asc product-title" aria-label="Product Name" aria-sort="ascending" style="width: 200px;">Product Name</th>
-      <th class="sorting_disabled" style="width: 200px;" aria-label="Description">Description</th>
-      <th class="sorting" style="width: 136px;" aria-label="Category">Category</th>
-      <th class="sorting_disabled" style="width: 80px;" aria-label="Price">Price</th>
-      <th class="sorting_disabled" style="width: 80px;" aria-label="Stock">Stock</th>
-      <th class="sorting_disabled" style="width: 80px;" aria-label="Action">Action</th>
-      <th class="sorting_disabled" style="width: 80px;" aria-label="Status">Status</th>
-    </tr>
-  </thead>
-  <tbody id="product-list">
-    <% products.forEach(product => { %>
-      <tr data-product-id="<%= product._id %>">
-        <td></td>
-        <td><img src="<%= product.imageUrl_1 %>" alt="<%= product.name %>" style="width: 50px; height: 50px;"></td>
-        <td class="product-title"><%= product.name %></td>
-        <td class="description"><%= product.description %></td>
-        <td class="category"><%= product.category ? product.category.title : 'No Category' %></td>
-        <td class="price"><%= product.price %></td>
-        <td class="stock"><%= product.stock %></td>
-        <td>
-          <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn"
-            onclick="editProduct('<%= product._id %>',
-                                 '<%= product.name %>',
-                                 '<%= product.description %>',
-                                 '<%= product.category ? product.category._id : '' %>',
-                                 '<%= product.price %>',
-                                 '<%= product.stock %>')">
-            Edit
-          </button>
-        </td>
-        <td>
-          <select class="status" name="status" style="border: none; background-color: transparent; outline: none;">
-            <option value="true" <%= product.status ? 'selected' : '' %>>Listed</option>
-            <option value="false" <%= !product.status ? 'selected' : '' %>>Unlisted</option>
-          </select>
-        </td>
-      </tr>
-    <% }) %>
-  </tbody>
-</table> -->
+
 
 <table class="datatables-products table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 1043px;">
   <thead>
@@ -665,15 +592,13 @@
       
       <td><%= product.price %></td>
       <td>
-        <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn"
-          onclick="editProduct('<%= product._id %>',
-                               '<%= product.name %>',
-                               '<%= product.description %>',
-                               '<%= product.category ? product.category._id : '' %>',
-                               '<%= product.price %>',
-                               '<%= product.stock %>')">
+        <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="populateModal(<%= JSON.stringify(product) %>)">
           Edit
         </button>
+      
+
+
+
       </td>
     </tr>
     <% }) %>
@@ -682,12 +607,7 @@
 
 
 <!-- Edit Product Modal -->
-
-
-
-
-<!-- Edit Product Modal -->
-<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -736,7 +656,89 @@
       
     </div>
   </div>
+</div> -->
+
+<!-- Modal -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editProductForm" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="productName" class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="productName" name="name">
+          </div>
+          <div class="mb-3">
+            <label for="productDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="productDescription" name="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="productCategory" class="form-label">Category</label>
+            <!-- <input type="text" class="form-control" id="productCategory" name="category" readonly> -->
+            <select class="form-control" id="productCategory" name="category">
+              <% categories.forEach(category => { %>
+                <option value="<%= category._id %>" <%= category._id.equals(category._id) ? 'selected' : '' %>>
+                  <%= category.title %>
+                </option>
+              <% }) %>
+            </select>
+             
+          </div>
+          <div class="mb-3">
+            <label for="productPrice" class="form-label">Price</label>
+            <input type="number" class="form-control" id="productPrice" name="price">
+          </div>
+          <div class="mb-3">
+            <label for="productStock" class="form-label">Stock</label>
+            <input type="number" class="form-control" id="productStock" name="stock">
+          </div>
+          <div class="mb-3">
+            <label for="productStatus" class="form-label">Status</label>
+            <select class="form-control" id="productStatus" name="status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="productImages" class="form-label">Product Images</label>
+            <div id="productImages" class="row">
+              <div class="col-md-4 mb-3">
+                <img id="modalImage1" src="#" alt="Product Image 1" class="img-thumbnail">
+                <input type="file" class="form-control mt-2" id="modalInputImage1" name="productImage1" onchange="replaceModalImage(this, 'modalImage1')">
+              </div>
+              <div class="col-md-4 mb-3">
+                <img id="modalImage2" src="#" alt="Product Image 2" class="img-thumbnail">
+                <input type="file" class="form-control mt-2" id="modalInputImage2" name="productImage2" onchange="replaceModalImage(this, 'modalImage2')">
+              </div>
+              <div class="col-md-4 mb-3">
+                <img id="modalImage3" src="#" alt="Product Image 3" class="img-thumbnail">
+                <input type="file" class="form-control mt-2" id="modalInputImage3" name="productImage3" onchange="replaceModalImage(this, 'modalImage3')">
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="editProduct()">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -826,241 +828,77 @@
   <!-- Main JS -->
   <script src="/dashboard-assets/js/main.js"></script>
   
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
   <!-- Page JS -->
   <!-- <script src="/dashboard-assets/js/app-ecommerce-product-list.js"></script> -->
 
 
-  <script>
+
 
     
-
-
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const response = await fetch('/products');
-    if (!response.ok) {
-      throw new Error('Error fetching products');
-    }
-    const products = await response.json();
-    populateProductTable(products);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-});
-
-function populateProductTable(products) {
-  const productList = document.getElementById('product-list');
-  productList.innerHTML = '';
-  products.forEach(product => {
-    const row = document.createElement('tr');
-    row.setAttribute('data-product-id', product._id);
-    row.innerHTML = `
-      <td></td>
-      <td><img src="${product.imageUrl_1}" alt="${product.name}" style="width: 50px; height: 50px;"></td>
-      <td class="product-title">${product.name}</td>
-      <td class="description">${product.description}</td>
-      <td class="category">${product.category ? product.category.title : 'No Category'}</td>
-      <td class="price">${product.price}</td>
-      <td class="stock">${product.stock}</td>
-      <td>
-        <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn"
-          onclick="editProduct('${product._id}', '${product.name}', '${product.description}', '${product.category ? product.category._id : ''}', '${product.price}', '${product.stock}')">
-          Edit
-        </button>
-      </td>
-      <td>
-        <select class="status" name="status" style="border: none; background-color: transparent; outline: none;">
-          <option value="true" ${product.status ? 'selected' : ''}>Listed</option>
-          <option value="false" ${!product.status ? 'selected' : ''}>Unlisted</option>
-        </select>
-      </td>
-    `;
-    productList.appendChild(row);
-  });
-}
-
-
-// function editProduct(productId, name, description, categoryId, price, stock) {
-//   const newUrl = `${window.location.pathname}/${productId}`;
-//   history.pushState({}, '', newUrl);
-//   populateModal(productId, name, description, categoryId, price, stock);
-// }
-
-function editProduct(productId, name, description, categoryId, price, stock, status) {
-  populateModal(productId, name, description, categoryId, price, stock, status);
-}
-
-function populateModal(id, name, description, category, price, stock, status) {
-  document.getElementById('edit-product-id').value = id;
-  document.getElementById('edit-product-name').value = name;
-  document.getElementById('edit-product-description').value = description;
-  document.getElementById('edit-product-category').value = category;
-  document.getElementById('edit-product-price').value = price;
-  document.getElementById('edit-product-stock').value = stock;
-  document.getElementById('edit-product-status').value = status;
-  $('#editProductModal').modal('show');
-}
-
-
-document.getElementById('editProductForm').addEventListener('submit', async (event) => {
-  event.preventDefault(); // Prevent default form submission
-
-  // Retrieve form data
-  let id = document.getElementById('edit-product-id').value;
-  let name = document.getElementById('edit-product-name').value;
-  let description = document.getElementById('edit-product-description').value;
-  let categoryId = document.getElementById('edit-product-category').value;
-  let price = document.getElementById('edit-product-price').value;
-  let stock = document.getElementById('edit-product-stock').value;
-  // let status = document.getElementById('edit-product-status').value;
-  let status = document.getElementById('edit-product-status').value === 'true';
-
-  // Prepare data object
-  let formData = {
-    id: id,
-    name: name,
-    description: description,
-    category: categoryId,
-    price: price,
-    stock: stock,
-    isListed: status
-  };
-
-  console.log('Form Data:', formData); // Add this line to log form data for debugging
-
-  try {
-    // Send PUT request to server
-    const response = await fetch(`/admin/update-product/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update product');
-    }
-
-    const updatedProduct = await response.json();
-
-    // Update the corresponding row in the table
-    updateTableRow(updatedProduct);
-
-    // Show success message with SweetAlert
-    Swal.fire({
-      icon: 'success',
-      title: 'Product Updated Successfully',
-      showConfirmButton: false,
-      timer: 1500
-    });
-
-    // Hide the modal
-    $('#editProductModal').modal('hide');
-  } catch (error) {
-    console.error('Error:', error);
-
-    // Handle errors or show error message with SweetAlert
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops... Something went wrong!',
-      text: 'Failed to update product.',
-    });
-  }
-});
-
-
-
-
-function updateTableRow(updatedProduct) {
-  let productId = updatedProduct._id;
-
-  // Find the table row corresponding to the updated product
-  let tableRow = document.querySelector(`#product-list tr[data-product-id="${productId}"]`);
-  if (tableRow) {
-    // Update the table row cells with updated product data
-    tableRow.querySelector('.product-title').textContent = updatedProduct.name;
-    tableRow.querySelector('.description').textContent = updatedProduct.description;
-    tableRow.querySelector('.category').textContent = updatedProduct.category ? updatedProduct.category.title : 'No Category';
-    tableRow.querySelector('.price').textContent = updatedProduct.price;
-    tableRow.querySelector('.stock').textContent = updatedProduct.stock;
-    tableRow.querySelector('.status').textContent = updatedProduct.isListed ? 'Listed' : 'Unlisted'; // Update status text
-  }
-}
-
-
-  
-</script>
-
-
-<!--to display the modal-->
-
-<script>
-  $(document).ready(function() {
-  // Populate the edit form when clicking the edit button
-  $('.edit-product-btn').on('click', function() {
-    const index = $(this).data('index');
-    const product = products[index];
-
-    $('#edit-product-id').val(product._id);
-    $('#edit-product-name').val(product.name);
-    $('#edit-product-description').val(product.description);
-    $('#edit-product-category').val(product.category._id);
-    $('#edit-product-price').val(product.price);
-    $('#edit-product-stock').val(product.stock);
-
-    $('#editProductModal').modal('show');
-  });
-
-  // Handle form submission
-  $('#saveButton').on('click', function() {
-    const productId = $('#edit-product-id').val();
-    const updatedProduct = {
-      name: $('#edit-product-name').val(),
-      description: $('#edit-product-description').val(),
-      category: $('#edit-product-category').val(),
-      price: $('#edit-product-price').val(),
-      stock: $('#edit-product-stock').val()
-    };
-
-    $.ajax({
-      url: `/products/${productId}`,
-      type: 'PATCH',
-      contentType: 'application/json',
-      data: JSON.stringify(updatedProduct),
-      success: function(response) {
-        alert('Product updated successfully');
-        $('#editProductModal').modal('hide');
-         
-      },
-      error: function(xhr, status, error) {
-        console.error('Failed to update product:', error);
-        alert('Failed to update product');
-        refreshPage()
+    
+    <script>
+      function populateModal(product) {
+        document.getElementById('productName').value = product.name;
+        document.getElementById('productDescription').value = product.description;
+        document.getElementById('productCategory').value = product.category ? product.category._id : ''; // Use the category ID
+        document.getElementById('productPrice').value = product.price;
+        document.getElementById('productStock').value = product.stock;
+        document.getElementById('productStatus').value = product.status;
+    
+        document.getElementById('modalImage1').src = product.imageUrl_1;
+        document.getElementById('modalImage2').src = product.imageUrl_2;
+        document.getElementById('modalImage3').src = product.imageUrl_3;
+    
+        document.getElementById('editProductForm').dataset.productId = product._id;
       }
+    
+      
+      function editProduct() {
+    const form = document.getElementById('editProductForm');
+    const productId = form.dataset.productId;
+    const formData = new FormData(form);
+
+    fetch(`/admin/update-product/${productId}`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        swal({
+          title: "Success",
+          text: "Product updated successfully",
+          icon: "success",
+          button: "OK"
+        }).then(() => {
+          location.reload();
+        });
+      } else {
+        swal({
+          title: "Error",
+          text: "Error updating product: " + (data.message || "Unknown error"),
+          icon: "error",
+          button: "OK"
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      swal({
+        title: "Error",
+        text: "Error updating product: " + error.message,
+        icon: "error",
+        button: "OK"
+      });
     });
-  });
-
-  // Prevent form submission on Enter key
-  $('#editProductForm').on('submit', function(e) {
-    e.preventDefault();
-  });
-});
-
-function refreshPage(){
-  location.reload()
-}
-
-
-
-
-</script>
-
-
-  
+  }
+    </script>
     
     
+
+
+
 
 
 

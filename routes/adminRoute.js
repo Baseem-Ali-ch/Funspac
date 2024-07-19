@@ -35,11 +35,18 @@ adminRoute.get(
   isAdminAuthenticated,
   adminController.loadProductList
 );
-adminRoute.patch(
+
+
+adminRoute.post(
   "/update-product/:id",
-  isAdminAuthenticated,
+  upload.fields([
+    { name: "productImage1", maxCount: 1 },
+    { name: "productImage2", maxCount: 1 },
+    { name: "productImage3", maxCount: 1 }
+  ]),
   adminController.updateProduct
 );
+
 
 adminRoute.get(
   "/category-list",
@@ -95,6 +102,8 @@ adminRoute.post(
   adminController.changeCustomer
 );
 adminRoute.get("/logout", isAdminAuthenticated, adminController.logout);
+adminRoute.get("/admin-profile", isAdminAuthenticated, adminController.loadAdmProfile);
+
 
 adminRoute.get("*", (req, res) => {
   res.redirect("/admin");

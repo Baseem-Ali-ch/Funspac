@@ -68,7 +68,7 @@
 
           <a href="index.html" class="logo">
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/furnspace logo black.png"
               alt="Molla Logo"
               width="105"
               height="25"
@@ -648,22 +648,23 @@
                     <div class="filter-items filter-items-count">
                       <div class="filter-item">
                         <% categories.forEach((category, index) => { %>
-                        <div class="custom-control custom-checkbox">
-                          <input
-                            type="checkbox"
-                            class="custom-control-input"
-                            id="cat-<%= index %>"
-                            value="<%= category._id %>"
-                          />
-                          <label
-                            class="custom-control-label"
-                            for="cat-<%= index %>"
-                          >
-                            <%= category.title %>
-                          </label>
-                        </div>
+                          <div class="custom-control custom-checkbox">
+                            <input
+                              type="checkbox"
+                              class="custom-control-input"
+                              id="cat-<%= index %>"
+                              value="<%= category._id %>"
+                              onchange="filterProducts()"
+                            />
+                            <label
+                              class="custom-control-label"
+                              for="cat-<%= index %>"
+                            >
+                              <%= category.title %>
+                            </label>
+                          </div>
                         <% }); %>
-
+                      </div>
                         <!-- End .custom-checkbox -->
                       </div>
                       <!-- End .filter-item -->
@@ -827,7 +828,7 @@
           <div class="col-sm-6 col-lg-3">
             <div class="widget widget-about">
               <img
-                src="/assets/images/logo.png"
+                src="/assets/images/furnspace logo black.png"
                 class="footer-logo"
                 alt="Footer Logo"
                 width="105"
@@ -1419,5 +1420,38 @@
 <script src="/assets/js/nouislider.min.js"></script>
 <!-- Main JS File -->
 <script src="/assets/js/main.js"></script>
+
+
+<script>
+    function filterProducts() {
+      const selectedCategories = [];
+      $('.custom-control-input:checked').each(function() {
+        selectedCategories.push($(this).val());
+      });
+
+      $.ajax({
+        url: '/filter-products',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ categories: selectedCategories }),
+        success: function(response) {
+          $('#product-list').html('');
+          response.products.forEach(product => {
+            $('#product-list').append(`
+              <div class="product-item">
+                <img src="${product.imageUrl_1}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p>${product.description}</p>
+                <p>Price: $${product.price}</p>
+              </div>
+            `);
+          });
+        },
+        error: function(error) {
+          console.error('Error fetching products:', error);
+        }
+      });
+    }
+  </script>
 
 <%- include('../layout/footer.ejs') %>
