@@ -176,24 +176,26 @@
 
         <div class="header-right">
           <div class="header-search">
-            <a href="#" class="search-toggle" role="button" title="Search"
-              ><i class="icon-search"></i
-            ></a>
+            <a href="#" class="search-toggle" role="button" title="Search">
+              <i class="icon-search"></i>
+            </a>
             <form action="#" method="get">
               <div class="header-search-wrapper">
-                <label for="q" class="sr-only">Search</label>
+                <label for="search-input" class="sr-only">Search</label>
                 <input
                   type="search"
                   class="form-control"
                   name="q"
-                  id="q"
+                  id="search-input"
                   placeholder="Search in..."
                   required
+                  onkeyup="searchWishlist()"
                 />
               </div>
               <!-- End .header-search-wrapper -->
             </form>
           </div>
+          
           <!-- End .header-search -->
           <div class="dropdown compare-dropdown">
             <a
@@ -374,26 +376,25 @@
               <th></th>
             </tr>
           </thead>
-
           <tbody>
             <% wishlistItems.forEach(item => { %>
             <tr data-wishlist-item-id="<%= item.productId._id %>">
               <td class="product-col">
-                <div class="product">     
+                <div class="product">
                   <% if(item.productId && item.productId.imageUrl_1){ %>
-                  <figure class="product-media">   
-                    <a href="#">                  
+                  <figure class="product-media">
+                    <a href="#">
                       <img src="<%= item.productId.imageUrl_1 %>" alt="Product image">
                     </a>
                   </figure>
-                  <% }else{ %>
+                  <% } else { %>
                   <p>no image available</p>
-                  <% } %> 
+                  <% } %>
                   <% if(item.productId){ %>
                   <h3 class="product-title">
                     <a href="#"><%= item.productId.name %></a>
                   </h3><!-- End .product-title -->
-                  <% }else{ %>
+                  <% } else { %>
                   <p>Product details unavailable</p>
                   <% } %>
                 </div><!-- End .product -->
@@ -426,6 +427,7 @@
             <% }); %>
           </tbody>
         </table>
+
         <div id="alertMessage" class="alert-message" style="display:none;"></div>
         <!-- End .table table-wishlist -->
         <div class="wishlist-share">
@@ -1111,6 +1113,33 @@ function showAlert(message, type) {
 }
 
 </script>
+
+
+<script>
+  function searchWishlist() {
+    // Get the search input and filter value
+    const input = document.getElementById('search-input');
+    const filter = input.value.toLowerCase();
+    
+    // Get the table body and rows
+    const tableBody = document.querySelector('.table-wishlist tbody');
+    const rows = tableBody.getElementsByTagName('tr');
+    
+    // Loop through rows to filter based on search query
+    for (let i = 0; i < rows.length; i++) {
+      const productTitle = rows[i].querySelector('.product-title a') ? rows[i].querySelector('.product-title a').textContent.toLowerCase() : '';
+      
+      // Show or hide rows based on the search query
+      if (productTitle.includes(filter)) {
+        rows[i].style.display = '';
+      } else {
+        rows[i].style.display = 'none';
+      }
+    }
+  }
+</script>
+
+
 
 
 <%- include('../layout/footer') %>
