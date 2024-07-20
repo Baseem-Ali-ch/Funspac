@@ -37,7 +37,7 @@ adminRoute.get(
 );
 
 
-adminRoute.post(
+adminRoute.patch(
   "/update-product/:id",
   upload.fields([
     { name: "productImage1", maxCount: 1 },

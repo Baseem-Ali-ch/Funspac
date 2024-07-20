@@ -26,14 +26,14 @@ userRoute.get("/resend-otp", userController.resentOTP); // Changed to GET for re
 userRoute.get(
   "/wishlist",
   auth.isLogin,
-  
   userController.loadWishlist
 );
+
+userRoute.post('/wishlist', userController.addToWishlist);
 
 userRoute.get(
   "/contact-us",
   auth.isLogin,
-
   userController.loadContact
 );
 

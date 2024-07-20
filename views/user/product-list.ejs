@@ -1,5 +1,27 @@
 <%- include('../layout/header.ejs') %>
 
+<style>
+  /* CSS for alert messages */
+.alert-message {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 20px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: none; /* Initially hidden */
+}
+
+.alert-error {
+  background-color: #f44336; /* Red for errors */
+}
+
+</style>
+
 <div class="page-wrapper">
   <header class="header">
     <div class="header-top">
@@ -249,6 +271,7 @@
 
     <div class="page-content">
       <div class="container">
+        <div id="alertMessage" class="alert-message"></div>
         <div class="row">
           <div class="col-lg-9">
             <div class="toolbox">
@@ -275,11 +298,11 @@
                     <figure class="product-media">
                       <span class="product-label label-new " style="background-color: rgba(223, 223, 223, 0.925);">
                         <% if (product.stock > 10) { %>
-                          <p style="color: rgb(0, 39, 167);">Stock: In stock</p>
+                          <p style="color: rgb(0, 39, 167);">In stock</p>
                         <% } else if (product.stock > 0 && product.stock <= 10) { %>
-                          <p style="color: rgb(202, 165, 0);">Stock: Few left</p>
+                          <p style="color: rgb(209, 171, 0);">Few left</p>
                         <% } else { %>
-                          <p style="color: rgb(245, 0, 0);">Stock: Out of stock</p>
+                          <p style="color: rgb(245, 0, 0);">Out of stock</p>
                         <% } %>
                       </span>
                       <a href="/product/<%= product._id %>">
@@ -291,12 +314,18 @@
                       </a>
                       
                       <div class="product-action-vertical">
-                        <a
+                        <!-- <a
                           href="#"
                           class="btn-product-icon btn-wishlist btn-expandable"
+                          onclick="addToWishlist('<%= product._id %>'); return false;"
                           ><span>add to wishlist</span></a
-                        >
-                        <a
+                        > -->
+                        
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable" onclick="addToWishlist('<%= product._id %>'); return false;">
+                          <span>Add to Wishlist</span>
+                        </a>
+                        
+                        <!-- <a
                           href="popup/quickView.html"
                           class="btn-product-icon btn-quickview"
                           title="Quick view"
@@ -307,7 +336,7 @@
                           class="btn-product-icon btn-compare"
                           title="Compare"
                           ><span>Compare</span></a
-                        >
+                        > -->
                       </div>
                       <!-- End .product-action-vertical -->
 
@@ -435,6 +464,7 @@
                     </div>
                     <!-- End .filter-items -->
                   </div>
+                  
                   <!-- End .widget-body -->
                 </div>
                 <!-- End .collapse -->
@@ -1216,6 +1246,77 @@
         }
       });
     }
+
   </script>
+
+
+<!-- <script>
+  function addToWishlist(productId) {
+      console.log('Button clicked! Product ID:', productId); // Debugging line
+
+      fetch('/wishlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : ''
+        },
+        body: JSON.stringify({ productId })
+      })
+      .then(response => {
+        console.log('Response received:', response); // Debugging line
+        return response.json();
+      })
+      .then(data => {
+        console.log('Data received:', data); // Debugging line
+        if (data.message) {
+          alert(data.message);
+        } else {
+          window.location.href = '/wishlist';
+        }
+      })
+      .catch(error => console.error('Error adding to wishlist:', error));
+    }
+</script> -->
+
+<script>
+  function addToWishlist(productId) {
+    console.log('Button clicked! Product ID:', productId); // Debugging line
+
+    fetch('/wishlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ productId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Data received:', data); // Debugging line
+      if (data.message) {
+        showAlert(data.message, data.error ? 'error' : 'success');
+      }
+    })
+    .catch(error => {
+      console.error('Error adding to wishlist:', error);
+      showAlert('Error adding item to wishlist', 'error');
+    });
+  }
+
+  function showAlert(message, type) {
+    const alertMessage = document.getElementById('alertMessage');
+    alertMessage.textContent = message;
+    alertMessage.className = 'alert-message'; // Reset classes
+    if (type === 'error') {
+      alertMessage.classList.add('alert-error');
+    }
+    alertMessage.style.display = 'block';
+
+    setTimeout(() => {
+      alertMessage.style.display = 'none';
+    }, 3000); // Hide after 3 seconds
+  }
+</script>
 
 <%- include('../layout/footer.ejs') %>

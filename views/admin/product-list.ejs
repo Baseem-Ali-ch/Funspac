@@ -829,7 +829,7 @@
     const formData = new FormData(form);
 
     fetch(`/admin/update-product/${productId}`, {
-      method: 'POST',
+      method: 'PATCH',
       body: formData
     })
     .then(response => response.json())

@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const randomstring = require("randomstring");
+const Wishlist = require("../model/wishlistModel");
 
 dotenv.config();
 
@@ -252,12 +253,33 @@ const resentOTP = async (req, res) => {
   }
 };
 
+// const loadWishlist = async (req, res) => {
+//   try {
+//     const user = req.session.user || req.user;
+//     const { userId } = req.query;
+//     const wishlistItems = await Wishlist.find({ userId }).populate('productId');
+//     res.render("wishlist", { user,wishlistItems });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 const loadWishlist = async (req, res) => {
   try {
     const user = req.session.user || req.user;
-    res.render("wishlist", { user });
+    const userId = user ? user._id : null;
+    
+    if (!userId) {
+      return res
+        .status(401)
+        .render("login", { message: "Please log in to view your wishlist" });
+    }
+
+    const wishlistItems = await Wishlist.findOne({ userId }).populate("products.productId");
+
+    res.render("wishlist", { user, wishlistItems: wishlistItems.products });
   } catch (error) {
-    console.log(error);
+    console.error("Error loading wishlist:", error);
+    res.status(500).send("Server Error");
   }
 };
 
@@ -343,35 +365,39 @@ const loadProductList = async (req, res) => {
     const limit = 9; // Number of products per page
     const skip = (page - 1) * limit; // Number of products to skip
 
-    const categories = await Category.find({isListed:true}).select('_id');
-    const listedCategories = await Category.find({ isListed: true }).select('_id');
+    const categories = await Category.find({ isListed: true }).select("_id");
+    const listedCategories = await Category.find({ isListed: true }).select(
+      "_id"
+    );
 
-    const products = await Product.find({isListed:true})
-    .populate({
-      path: 'category',
-      match: { isListed: true },
-      select: 'title'
-    })
+    const products = await Product.find({ isListed: true })
+      .populate({
+        path: "category",
+        match: { isListed: true },
+        select: "title",
+      })
       .skip(skip)
       .limit(limit);
 
-    const totalProducts = await Product.countDocuments({isListed:true, category: { $in: listedCategories.map(cat => cat._id) }});
+    const totalProducts = await Product.countDocuments({
+      isListed: true,
+      category: { $in: listedCategories.map((cat) => cat._id) },
+    });
     const totalPages = Math.ceil(totalProducts / limit);
 
     const user = req.session.user || req.user;
 
     res.render("product-list", {
       products,
-      categories:listedCategories ,
+      categories: listedCategories,
       user,
       currentPage: page,
-      totalPages
+      totalPages,
     });
   } catch (error) {
     console.log(error);
   }
 };
-
 
 const updateProfile = async (req, res) => {
   try {
@@ -486,6 +512,81 @@ const filterProduct = async (req, res) => {
   }
 };
 
+// const addToWishlist = async (req, res) => {
+//   try {
+//     console.log('addto wishlist');
+//     const userId = req.session.user ? req.session.user._id : null; // Ensure user ID is retrieved
+//     const { productId } = req.body;
+//     console.log('User ID:', userId);
+//     console.log("Product ID",productId);
+
+//     if (!userId) {
+//       return res.status(401).json({ message: 'User not logged in' });
+//     }
+//     if (!productId) {
+//       return res.status(400).json({ message: 'Product ID is required' });
+//     }
+
+//     // Check if item is already in the wishlist
+//     const existingItem = await Wishlist.findOne({ userId, productId });
+//     if (existingItem) {
+//       return res.status(400).json({ message: 'Item already in wishlist' });
+//     }
+
+//     // Add new item to wishlist
+//     const wishlistItem = new Wishlist({ userId, productId });
+//     await wishlistItem.save();
+
+//     // Redirect to wishlist page
+//     res.redirect('/wishlist');
+//   } catch (error) {
+//     console.error('Error adding item to wishlist:', error);
+//     res.status(500).json({ message: 'Error adding item to wishlist', error });
+//   }
+// };
+const addToWishlist = async (req, res) => {
+  try {
+    const userId = req.session.user ? req.session.user._id : null;
+    const { productId } = req.body;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ message: "User not logged in", error: true });
+    }
+    if (!productId) {
+      return res
+        .status(400)
+        .json({ message: "Product ID is required", error: true });
+    }
+
+    const wishlist = await Wishlist.findOne({ userId });
+    if (wishlist) {
+      const existingProduct = wishlist.products.find(p => p.productId.equals(productId));
+      if (existingProduct) {
+        return res
+          .status(400)
+          .json({ message: "Item already in wishlist", error: true });
+      }
+      wishlist.products.push({ productId });
+      await wishlist.save();
+    } else {
+      const newWishlist = new Wishlist({
+        userId,
+        products: [{ productId }]
+      });
+      await newWishlist.save();
+    }
+
+    res.status(200).json({ message: "Item added to wishlist", error: false });
+  } catch (error) {
+    console.error("Error adding item to wishlist:", error);
+    res
+      .status(500)
+      .json({ message: "Error adding item to wishlist", error: true });
+  }
+};
+
 module.exports = {
   loadHome,
   loadRegister,
@@ -505,4 +606,5 @@ module.exports = {
   setRedirectUrl,
   updateProfile,
   filterProduct,
+  addToWishlist,
 };
