@@ -430,7 +430,7 @@
             
 <!-- Product List Widget -->
 <div class="card mb-6">
-  <div class="card-widget-separator-wrapper">
+  <!-- <div class="card-widget-separator-wrapper">
     <div class="card-body card-widget-separator">
       <div class="row gy-4 gy-sm-1">
         <div class="col-sm-6 col-lg-3">
@@ -493,42 +493,24 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <!-- Product List Table -->
 <div class="card">
-  <div class="card-header">
-    <h5 class="card-title mb-4">Filter</h5>
-    <div class="d-flex justify-content-between align-items-center row gap-5 gx-6 gap-md-0">
-      <div class="col-md-4 product_status"><select id="ProductStatus" class="form-select text-capitalize"><option value="">Status</option><option value="Scheduled">Scheduled</option><option value="Publish">Publish</option><option value="Inactive">Inactive</option></select></div>
-      <div class="col-md-4 product_category">
-
-        <select id="ProductCategory" class="form-select text-capitalize">
-          <option value="">Category</option>
-          <% categories.forEach(category => { %>
-            <option value="<%= category._id %>"><%= category.title %></option>
-          <% }) %>
-        </select>
-
-      </div>
-      <div class="col-md-4 product_stock"><select id="ProductStock" class="form-select text-capitalize"><option value=""> Stock </option><option value="Out_of_Stock">Out of Stock</option><option value="In_Stock">In Stock</option></select></div>
-    </div>
-  </div>
+  
   <div class="card-datatable table-responsive">
-    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer"><div class="card-header d-flex border-top rounded-0 flex-wrap pb-md-0 pt-0"><div class="me-5 ms-n2"><div id="DataTables_Table_0_filter" class="dataTables_filter"><label><input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0"></label></div></div><div class="d-flex justify-content-start justify-content-md-end align-items-baseline"><div class="dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4 pt-0">
+    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+      <div class="card-header d-flex border-top rounded-0 flex-wrap pb-md-0 pt-0">
+        <div class="me-5 ms-n2">
+          <div id="DataTables_Table_0_filter" class="dataTables_filter">
+            <label>
+              <input type="search" class="form-control form-control-sm" placeholder="Search" id="search-input" onkeyup="searchTable()">
+            </label>
+          </div>
+        </div>
+        <div class="d-flex justify-content-start justify-content-md-end align-items-baseline"><div class="dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4 pt-0">
       <div class="dataTables_length" id="DataTables_Table_0_length">
-      
-      <label>
-        <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-select form-select-sm">
-          <option value="7">7</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="70">70</option>
-          <option value="100">100</option>
-        </select>
-      </label>
     </div>
     <div class="dt-buttons btn-group flex-wrap d-flex"> 
       <div class="btn-group">
@@ -570,7 +552,7 @@
 
     </tr>
   </thead>
-  <tbody>
+  <!-- <tbody>
     <% products.forEach(product => { %>
     <tr class="odd">
       
@@ -599,6 +581,32 @@
 
 
 
+      </td>
+    </tr>
+    <% }) %>
+  </tbody> -->
+   <tbody id="category-table-body">
+    <% products.forEach(product => { %>
+    <tr>
+      <td class="product-name">
+        <div class="d-flex justify-content-start align-items-center">
+          <div class="avatar-wrapper me-3">
+            <div class="avatar rounded-3 bg-label-secondary">
+              <img src="<%= product.imageUrl_1 %>" alt="Product image" class="rounded-2">
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <span class="text-nowrap text-heading fw-medium"><%= product.name %></span>
+          </div>
+        </div>
+      </td>
+      <td class="category-title"><%= product.category ? product.category.title : 'No Category' %></td>
+      <td class="stock"><%= product.stock %></td>
+      <td><%= product.price %></td>
+      <td>
+        <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="populateModal(<%= JSON.stringify(product) %>)">
+          Edit
+        </button>
       </td>
     </tr>
     <% }) %>
@@ -868,8 +876,52 @@
 
 
 
-
-
+    <script>
+      function searchTable() {
+        const input = document.getElementById('search-input');
+        const filter = input.value.toLowerCase();
+        const tableBody = document.getElementById('category-table-body');
+        const rows = tableBody.getElementsByTagName('tr');
+    
+        for (let i = 0; i < rows.length; i++) {
+          const productName = rows[i].querySelector('.product-name .text-nowrap').textContent.toLowerCase();
+          const category = rows[i].querySelector('.category-title').textContent.toLowerCase();
+          const stock = rows[i].querySelector('.stock').textContent.toLowerCase();
+    
+          if (productName.includes(filter) || category.includes(filter) || stock.includes(filter)) {
+            rows[i].style.display = '';
+          } else {
+            rows[i].style.display = 'none';
+          }
+    
+          // Highlight matching text
+          highlightMatch(rows[i], filter);
+        }
+      }
+    
+      function highlightMatch(row, searchText) {
+        // Clear previous highlights
+        row.querySelectorAll('.highlighted').forEach(el => {
+          el.innerHTML = el.textContent; // Reset to original text
+        });
+    
+        // Highlight new matches
+        const cells = row.querySelectorAll('.product-name .text-nowrap, .category-title, .stock');
+    
+        cells.forEach(cell => {
+          let html = cell.textContent;
+          const regex = new RegExp(`(${searchText})`, 'gi');
+          html = html.replace(regex, '<span class="highlight">$1</span>');
+          cell.innerHTML = html;
+        });
+      }
+    </script>
+    
+    
+    
+   
+    
+    
 
 
 

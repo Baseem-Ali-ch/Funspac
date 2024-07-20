@@ -30,7 +30,7 @@ userRoute.get(
 );
 
 userRoute.post('/wishlist', userController.addToWishlist);
-
+userRoute.delete('/wishlist/:productId', userController.removeFromWishlist);
 userRoute.get(
   "/contact-us",
   auth.isLogin,

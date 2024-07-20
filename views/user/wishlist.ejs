@@ -1,4 +1,28 @@
 <%- include('../layout/header') %>
+<style>
+  /* CSS for alert messages */
+.alert-message {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 20px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: none; /* Initially hidden */
+}
+
+.alert-error {
+  background-color: #f44336; /* Red for errors */
+}
+
+</style>
+
+
+
 
 <div class="page-wrapper">
   <header class="header">
@@ -189,9 +213,13 @@
             <div class="dropdown-menu dropdown-menu-right">
               <ul class="compare-products">
                 <li class="compare-product">
-                  <a href="#" class="btn-remove" title="Remove Product"
+                  <!-- <a href="#" class="btn-remove" title="Remove Product"
                     ><i class="icon-close"></i
-                  ></a>
+                  ></a> -->
+                  
+                  
+                  
+                  
                   <h4 class="compare-product-title">
                     <a href="product.html">Blue Night Dress</a>
                   </h4>
@@ -349,58 +377,56 @@
 
           <tbody>
             <% wishlistItems.forEach(item => { %>
-            <tr>
+            <tr data-wishlist-item-id="<%= item.productId._id %>">
               <td class="product-col">
                 <div class="product">     
                   <% if(item.productId && item.productId.imageUrl_1){ %>
-
-                       
                   <figure class="product-media">   
                     <a href="#">                  
-                        <img src="<%= item.productId.imageUrl_1 %>" alt="Product image">
+                      <img src="<%= item.productId.imageUrl_1 %>" alt="Product image">
                     </a>
                   </figure>
                   <% }else{ %>
-                    <p>no image available</p>
+                  <p>no image available</p>
                   <% } %> 
                   <% if(item.productId){ %>
-                    <h3 class="product-title">
-                      <a href="#"><%= item.productId.name %></a>
-                    </h3><!-- End .product-title -->
+                  <h3 class="product-title">
+                    <a href="#"><%= item.productId.name %></a>
+                  </h3><!-- End .product-title -->
                   <% }else{ %>
-                    <p>Product details unavailable</p>
+                  <p>Product details unavailable</p>
                   <% } %>
-                  
                 </div><!-- End .product -->
               </td>
               <td class="price-col"><%= item.productId.price %></td>
-              <!-- <td class="stock-col"><span class="in-stock">In stock</span></td> -->
               <td class="stock-col">
                 <span class="in-stock">
                   <% if (item.productId.stock > 10) { %>
-                    <p style="color: #a6c76c; font-weight: normal;">In Stock</p>
+                  <p style="color: #a6c76c; font-weight: normal;">In Stock</p>
                   <% } else if (item.productId.stock > 0 && item.productId.stock <= 10) { %>
-                    <p style="color: rgb(202, 165, 0); font-weight: normal;">Few Stock</p>
+                  <p style="color: rgb(202, 165, 0); font-weight: normal;">Few Stock</p>
                   <% } else { %>
-                    <p style="color: rgb(245, 0, 0); font-weight: normal;">Out of Stock</p>
+                  <p style="color: rgb(245, 0, 0); font-weight: normal;">Out of Stock</p>
                   <% } %>
                 </span>
               </td>
-              
               <td class="action-col">
-                                  <div class="dropdown">
-                                  <button class="btn btn-block btn-outline-primary-2"  aria-haspopup="true" aria-expanded="false" style="width: 0px;">
-                                    <i class="icon-shopping-cart"></i>Add To Cart
-                                  </button>
-
-                                  
-                                  </div>
+                <div class="dropdown">
+                  <button class="btn btn-block btn-outline-primary-2" aria-haspopup="true" aria-expanded="false" style="width: 0px;">
+                    <i class="icon-shopping-cart"></i>Add To Cart
+                  </button>
+                </div>
               </td>
-              <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+              <td class="remove-col">
+                <a href="#" class="btn-remove" title="Remove Product" data-product-id="<%= item.productId._id %>">
+                  <i class="icon-close"></i>
+                </a>
+              </td>
             </tr>
             <% }); %>
           </tbody>
         </table>
+        <div id="alertMessage" class="alert-message" style="display:none;"></div>
         <!-- End .table table-wishlist -->
         <div class="wishlist-share">
           <div class="social-icons social-icons-sm mb-2">
@@ -1020,5 +1046,71 @@
 <script src="assets/js/owl.carousel.min.js"></script>
 <!-- Main JS File -->
 <script src="assets/js/main.js"></script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.btn-remove').forEach(button => {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      const productId = this.getAttribute('data-product-id');
+      removeFromWishlist(productId, this);
+    });
+  });
+});
+
+function removeFromWishlist(productId, buttonElement) {
+  console.log('Remove button clicked! Product ID:', productId); // Debugging line
+
+  fetch(`/wishlist/${productId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Data received:', data); // Debugging line
+    if (data.message) {
+      showAlert(data.message, data.error ? 'error' : 'success');
+      if (!data.error) {
+        // Remove the item from the DOM
+        const tableRow = buttonElement.closest('tr');
+        if (tableRow) {
+          tableRow.remove();
+        }
+      }
+    }
+  })
+  .catch(error => {
+    console.error('Error removing from wishlist:', error);
+    showAlert('Error removing item from wishlist', 'error');
+  });
+}
+
+function showAlert(message, type) {
+  const alertMessage = document.getElementById('alertMessage');
+  alertMessage.textContent = message;
+  alertMessage.className = 'alert-message'; // Reset classes
+  if (type === 'error') {
+    alertMessage.classList.add('alert-error');
+  } else if (type === 'success') {
+    alertMessage.classList.add('alert-success');
+  }
+  alertMessage.style.display = 'block';
+
+  // Append the alert message to the bottom of the table
+  const wishlistTable = document.getElementById('wishlistTable');
+  wishlistTable.insertAdjacentElement('afterend', alertMessage);
+
+  setTimeout(() => {
+    alertMessage.style.display = 'none';
+  }, 3000); // Hide after 3 seconds
+}
+
+</script>
+
 
 <%- include('../layout/footer') %>

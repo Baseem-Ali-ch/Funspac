@@ -587,6 +587,39 @@ const addToWishlist = async (req, res) => {
   }
 };
 
+const removeFromWishlist = async (req, res) => {
+  try {
+    const userId = req.session.user ? req.session.user._id : null;
+    const { productId } = req.params;
+
+    if (!userId) {
+      return res.status(401).json({ message: "User not logged in", error: true });
+    }
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required", error: true });
+    }
+
+    const wishlist = await Wishlist.findOne({ userId });
+    if (wishlist) {
+      wishlist.products = wishlist.products.filter(
+        product => !product.productId.equals(productId)
+      );
+      await wishlist.save();
+    }
+
+    console.log('Item removed from wishlist');
+    res.status(200).json({ message: "Item removed from wishlist", error: false });
+  } catch (error) {
+    console.error("Error removing item from wishlist:", error);
+    res.status(500).json({ message: "Error removing item from wishlist", error: true });
+  }
+};
+
+
+
+
+
+
 module.exports = {
   loadHome,
   loadRegister,
@@ -607,4 +640,5 @@ module.exports = {
   updateProfile,
   filterProduct,
   addToWishlist,
+  removeFromWishlist
 };
