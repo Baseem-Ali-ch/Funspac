@@ -58,6 +58,7 @@ app.use(
 );
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+
 const userRoute = require("./routes/userRoute");
 app.use("/", userRoute);
 

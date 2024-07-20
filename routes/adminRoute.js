@@ -59,6 +59,7 @@ adminRoute.post(
   upload.single("image"),
   adminController.addCategory
 );
+
 adminRoute.get(
   "/category-list",
   isAdminAuthenticated,

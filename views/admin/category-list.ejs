@@ -1,5 +1,31 @@
 <%- include('../admin-layout/header.ejs') %>
   
+<style>
+  .image-input-container {
+  position: relative;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+}
+
+.image-input {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.image-placeholder {
+  display: block;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.image-actions {
+  margin-top: 10px;
+}
+
+</style>
 
   
   <!-- ?PROD Only: Google Tag Manager (noscript) (Default ThemeSelection: GTM-5DDHKGP, PixInvent: GTM-5J3LMKC) -->
@@ -677,7 +703,7 @@
                                       <div class="avatar-wrapper me-3 rounded bg-label-secondary user-name">
                                           <div class="avatar">
                                               <% if (category.image) { %>
-                                              <img src="/uploads/<%= category.image %>" alt="<%= category.title %>" class="rounded">
+                                              <img src="upload/<%= category.image %>" alt="<%= category.title %>" class="rounded">
                                               <% } %>
                                           </div>
                                       </div>
@@ -759,10 +785,24 @@
                           </div>
                           <div class="mb-3">
                             
-                            <div id="categoryImageWrapper" class="mb-3">
+                            <!-- <div id="categoryImageWrapper" class="mb-3">
                               <img id="modalCategoryImage" src="#" alt="Category Image" class="img-thumbnail">
                               <input type="file" class="form-control mt-2" id="modalInputCategoryImage" name="categoryImage" onchange="replaceModalImage(this, 'modalCategoryImage')">
+                            </div> -->
+                            <!-- Category Image in Modal -->
+                            <!-- Category Image in Modal -->
+                            <div class="mb-3">
+                              <label for="modalInputCategoryImage" class="form-label">Category Image</label>
+                              <div class="image-input-container">
+                                <input type="file" class="form-control image-input" id="modalInputCategoryImage" name="categoryImage" accept="image/*" required onchange="previewImage(this, 'modalCategoryImage', 'modalReplaceLink');">
+                                <label for="modalInputCategoryImage" class="image-placeholder">Click to upload</label>
+                                <img id="modalCategoryImage" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+                                <div class="image-actions" id="modalReplaceLink" style="display: none;">
+                                  <a href="#" onclick="triggerInputClick('modalInputCategoryImage'); return false;">Replace</a>
+                                </div>
+                              </div>
                             </div>
+
                           </div>
                           <button type="button" class="btn btn-primary" id="saveCategoryButton" onclick="location.reload()">Save</button>
                         </form>
@@ -828,12 +868,25 @@
                   </div>
 
                   <!-- Image -->
-                  <label for="ecommerce-category-image">Category Image</label>
+                  <!-- <label for="ecommerce-category-image">Category Image</label>
                   <div class="form-floating form-floating-outline mb-5">
                     <input type="file" class="form-control" id="ecommerce-category-image" name="image" accept="image/*">
                     
                   </div>
-                  
+                   -->
+                   <label for="ecommerce-category-image">Category Image</label>
+<div class="form-floating form-floating-outline mb-5">
+  <div class="image-input-container">
+    <input type="file" class="form-control image-input" id="ecommerce-category-image" name="image" accept="image/*" required onchange="previewImage(this, 'category-image-preview', 'replaceLink');">
+    <label for="ecommerce-category-image" class="image-placeholder">Click to upload</label>
+    <img id="category-image-preview" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+    <div class="image-actions" id="replaceLink" style="display: none;">
+      <a href="#" onclick="triggerInputClick('ecommerce-category-image'); return false;">Replace</a>
+    </div>
+  </div>
+</div>
+
+                   
                  
                   <!-- Submit and reset -->
                   <div>
@@ -920,7 +973,7 @@
 function populateCategoryModal(category) {
   document.getElementById('categoryTitle').value = category.title;
   document.getElementById('categoryDescription').value = category.description;
-  document.getElementById('productStatus').value = category.status;
+  document.getElementById('publishStatus').value = category.isListed ? 'true' : 'false';
 
   const categoryImage = category.image ? `/uploads/${category.image}` : '#';
   document.getElementById('modalCategoryImage').src = categoryImage;
@@ -971,16 +1024,44 @@ function editCategory() {
   });
 }
 
-function replaceModalImage(input, imageId) {
+
+function previewImage(input, previewId, actionsId) {
   const file = input.files[0];
-  const reader = new FileReader();
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const previewImage = document.getElementById(previewId);
+      previewImage.src = e.target.result;
+      previewImage.style.display = 'block'; // Show the image
 
-  reader.onload = function(e) {
-    document.getElementById(imageId).src = e.target.result;
-  };
-
-  reader.readAsDataURL(file);
+      const actions = document.getElementById(actionsId);
+      actions.style.display = 'block'; // Show the actions
+    };
+    reader.readAsDataURL(file);
+  }
 }
+
+function triggerInputClick(inputId) {
+  document.getElementById(inputId).click();
+}
+
+
+// For modal image input
+function showModalImagePreview(event) {
+  const input = event.target;
+  const file = input.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const previewImage = document.getElementById('modalCategoryImage');
+      previewImage.src = e.target.result;
+      previewImage.style.display = 'block'; // Show the image
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
 
 
 
