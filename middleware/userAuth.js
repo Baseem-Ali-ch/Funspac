@@ -1,6 +1,6 @@
-const isLogin = async (req, res, next) => {
+const isUserAuthenticated = (req, res, next) => {
   try {
-    if (req.session.user || req.isAuthenticated()) {
+    if (req.session.user) {
       return next();
     } else {
       res.redirect("/login");
@@ -11,9 +11,9 @@ const isLogin = async (req, res, next) => {
   }
 };
 
-const isLogout = async (req, res, next) => {
+const isUserLogout = (req, res, next) => {
   try {
-    if (req.session.user || req.isAuthenticated()) {
+    if (req.session.user) {
       res.redirect("/home");
     } else {
       next();
@@ -24,7 +24,7 @@ const isLogout = async (req, res, next) => {
   }
 };
 
-const isLogoutWishlist = async (req, res, next) => {
+const isUserWishlistPage = (req, res, next) => {
   try {
     if (req.session.user) {
       res.render("wishlist", { user: req.session.user });
@@ -37,7 +37,7 @@ const isLogoutWishlist = async (req, res, next) => {
   }
 };
 
-const isLogoutContact = async (req, res, next) => {
+const isUserContactPage = (req, res, next) => {
   try {
     if (req.session.user) {
       res.render("contact-us", { user: req.session.user });
@@ -50,20 +50,9 @@ const isLogoutContact = async (req, res, next) => {
   }
 };
 
-const isAdminAuthenticated = (req, res, next) => {
-  if (req.session.user && req.session.user.is_admin) {
-    next();
-  } else {
-    res.redirect('/admin');
-  }
-};
-
-
-
 module.exports = {
-  isLogin,
-  isLogout,
-  isLogoutWishlist,
-  isLogoutContact,
-  isAdminAuthenticated
+  isUserAuthenticated,
+  isUserLogout,
+  isUserWishlistPage,
+  isUserContactPage,
 };

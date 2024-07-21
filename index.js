@@ -5,16 +5,15 @@ const session = require("express-session");
 const path = require("path");
 const bodyParser = require("body-parser");
 const nocache = require("nocache");
-const breadcrumbs = require("./middleware/breadcrumbs");
 const MongoStore = require("connect-mongo");
-const passport = require("./config/passport"); // Update the path if necessary
+const passport = require("./config/passport");
+const mongoose = require("mongoose");
 
 // Connect to MongoDB with the FurnSpace db name
-const mongoose = require("mongoose");
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log("mongodb connected");
+    console.log("MongoDB connected");
   })
   .catch((error) => {
     console.log(error);
@@ -23,20 +22,42 @@ mongoose
 const app = express();
 const port = process.env.PORT || 4000;
 
-app.use(bodyParser.json()); // parse application/json
-app.use(bodyParser.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
+// Parse application/json and application/x-www-form-urlencoded
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(nocache());
-app.use(breadcrumbs);
 
+// Initialize MongoStore for user and admin sessions
+const userStore = MongoStore.create({
+  mongoUrl: process.env.MONGODB_URI, // Ensure this is correctly set in .env
+  collectionName: "user_sessions", // Collection for user sessions
+});
+
+const adminStore = MongoStore.create({
+  mongoUrl: process.env.MONGODB_URI, // Ensure this is correctly set in .env
+  collectionName: "admin_sessions", // Collection for admin sessions
+});
+
+// Configure session middleware for user and admin
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.USER_SESSION_SECRET, // Secret for user sessions
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: "mongodb://localhost:27017/FurnSpace",
-    }),
-    cookie: { secure: false },
+    store: userStore,
+    cookie: { secure: false }, // Set to true if using HTTPS
+  })
+);
+
+// Middleware to set up session for admin routes
+app.use(
+  "/admin",
+  session({
+    secret: process.env.ADMIN_SESSION_SECRET, // Secret for admin sessions
+    resave: false,
+    saveUninitialized: false,
+    store: adminStore,
+    cookie: { secure: false }, // Set to true if using HTTPS
   })
 );
 
@@ -44,6 +65,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Serialize and deserialize user
 passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
@@ -51,27 +73,28 @@ passport.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
 
+// Serve static files
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(
-  "/dashboard-assets",  
+  "/dashboard-assets",
   express.static(path.join(__dirname, "dashboard-assets"))
 );
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
+// Define routes
 const userRoute = require("./routes/userRoute");
 app.use("/", userRoute);
 
 const adminRoute = require("./routes/adminRoute");
 app.use("/admin", adminRoute);
 
-const authRoute = require("./routes/authRoutes"); // Add this line
-app.use("/", authRoute); // Add this line
+const authRoute = require("./routes/authRoutes");
+app.use("/", authRoute);
 
+// Render index page
 app.get("/", (req, res) => {
   res.render("index", { user: req.user });
 });
-
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

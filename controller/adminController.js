@@ -25,7 +25,7 @@ const verifyLogin = async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       if (passwordMatch) {
         if (userData.is_admin) {
-          req.session.user = userData; // Set user in session
+          req.session.admin = userData; // Set admin in session
           return res.redirect("/admin/dashboard");
         } else {
           return res.render("login", {
@@ -51,34 +51,25 @@ const verifyLogin = async (req, res) => {
   }
 };
 
+
 const loadHome = async (req, res) => {
   try {
-    const user = req.session.user;
-    return res.render("dashboard", { user });
+    const isAdmin = req.session.admin;
+    return res.render("dashboard", { isAdmin });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal Server Error");
   }
 };
 
-// const loadProductList = async (req, res) => {
-//   try {
-//     const user = req.session.user;
-//     const products = await Product.find().populate("category");
-//     const categories = await Category.find();
-//     return res.render("product-list", { products, categories, user });
-//   } catch (error) {
-//     console.error("Error retrieving product list:", error);
-//     return res.status(500).send("Server Error");
-//   }
-// };
+
 const loadProductList = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Current page number
     const limit = 10; // Number of products per page
     const skip = (page - 1) * limit; // Number of products to skip
 
-    const user = req.session.user;
+    const isAdmin = req.session.admin;
     const products = await Product.find()
       .populate("category")
       .skip(skip)
@@ -90,7 +81,7 @@ const loadProductList = async (req, res) => {
     return res.render("product-list", {
       products,
       categories,
-      user,
+      isAdmin,
       currentPage: page,
       totalPages,
     });
@@ -102,23 +93,14 @@ const loadProductList = async (req, res) => {
 
 const loadAddProduct = async (req, res) => {
   try {
-    const user = req.session.user;
+    const isAdmin = req.session.admin;
     const categories = await Category.find({});
-    return res.render("add-product", { categories, user });
+    return res.render("add-product", { categories, isAdmin });
   } catch (error) {
     console.log(error);
   }
 };
 
-// const loadCategoryList = async (req, res) => {
-//   try {
-//     const user = req.session.user;
-//     const categories = await Category.find();
-//     return res.render("category-list", { categories,user });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 const loadCategoryList = async (req, res) => {
   try {
@@ -132,11 +114,11 @@ const loadCategoryList = async (req, res) => {
     const totalCategories = await Category.countDocuments();
     const totalPages = Math.ceil(totalCategories / limit);
     
-    const user = req.session.user;
+    const isAdmin = req.session.admin;
 
     return res.render("category-list", {
       categories: categories,
-      user,
+      isAdmin,
       currentPage: page,
       totalPages,
     });
@@ -148,8 +130,8 @@ const loadCategoryList = async (req, res) => {
 
 const loadOrderList = async (req, res) => {
   try {
-    const user = req.session.user;
-    return res.render("order-list", { user });
+    const isAdmin = req.session.admin;
+    return res.render("order-list", { isAdmin });
   } catch (error) {
     console.log(error);
   }
@@ -157,8 +139,8 @@ const loadOrderList = async (req, res) => {
 
 const loadOrderDeatails = async (req, res) => {
   try {
-    const user = req.session.user;
-    return res.render("order-details", { user });
+    const isAdmin = req.session.admin;
+    return res.render("order-details", { isAdmin });
   } catch (error) {
     console.log(error);
   }
@@ -189,15 +171,7 @@ const addCategory = async (req, res) => {
   }
 };
 
-// const getCategory = async (req, res) => {
-//   try {
-//     const categories = await Category.find({ isListed: true });
-//     return res.render("category-list", { categories });
-//   } catch (error) {
-//     console.error("Error fetching categories:", error);
-//     return res.status(500).send("Server Error");
-//   }
-// };
+
 
 const updateCategory = async (req, res) => {
   try {
@@ -227,16 +201,7 @@ const updateCategory = async (req, res) => {
   }
 };
 
-// const loadAllUser = async (req, res) => {
-//   try {
-//     const userData = await userModel.find(); // Fetch all user data from MongoDB
-//     const user = req.session.user;
-//     return res.render("all-customer", { customers: userData,user });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).send("Internal Server Error");
-//   }
-// };
+
 
 const loadAllUser = async (req, res) => {
   try {
@@ -248,10 +213,10 @@ const loadAllUser = async (req, res) => {
     const totalUsers = await userModel.countDocuments(); // Get total number of users
     const totalPages = Math.ceil(totalUsers / limit); // Calculate total pages
 
-    const user = req.session.user;
+    const isAdmin = req.session.admin;
     return res.render("all-customer", {
       customers: userData,
-      user,
+      isAdmin,
       currentPage: page,
       totalPages,
     });
@@ -455,21 +420,38 @@ const updateProduct = async (req, res) => {
 
 const loadAdmProfile = async (req, res) => {
   try {
-    const user = req.session.user;
-    res.render("admin-profile", { user });
+    const isAdmin = req.session.admin;
+    res.render("admin-profile", { isAdmin });
   } catch (error) {
     console.log(error);
   }
 };
 
-const logout = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send("Failed to log out");
-    }
-    return res.redirect("/admin/login");
-  });
+// const logout = (req, res) => {
+//   const isAdmin = req.session.admin;
+//   req.session.destroy((err) => {
+//     if (err) {
+//       return res.status(500).send("Failed to log out");
+//     }
+//     return res.redirect("/admin/login");
+//   });
+// };
+const adminLogout = async (req, res) => {
+  try {
+    req.session.destroy((error) => {
+      if (error) {
+        console.error("Failed to destroy session during logout", error);
+        return res.redirect("/admin");
+      }
+      res.clearCookie("connect.sid");
+      res.redirect("/admin");
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
 };
+
 
 module.exports = {
   loadLogin,
@@ -489,6 +471,6 @@ module.exports = {
   changeCustomer,
   addProduct,
   updateProduct,
-  logout,
+  adminLogout,
   loadAdmProfile,
 };

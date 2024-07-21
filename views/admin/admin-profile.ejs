@@ -1265,7 +1265,7 @@
                             </div>
                           </div>
                           <div class="flex-grow-1">
-                            <h6 class="mb-0 small"><%= user.name %></h6>
+                            <h6 class="mb-0 small"><%= isAdmin.name %></h6>
                             <small class="text-muted">Admin</small>
       
                           </div>
@@ -1284,7 +1284,7 @@
                     
                     <li>
                       <div class="d-grid px-4 pt-2 pb-1">
-                        <a class="btn btn-danger d-flex" href="/admin" target="_blank">
+                        <a class="btn btn-danger d-flex" href="/admin">
                           <small class="align-middle">Logout</small>
                           <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
                         </a>
@@ -1341,7 +1341,7 @@
                           class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4"
                         >
                           <div class="user-profile-info">
-                            <h4 class="mb-2 mt-lg-6"><%= user.name %></h4>
+                            <h4 class="mb-2 mt-lg-6"><%= isAdmin.name %></h4>
                             
                           
                       </div>
@@ -1387,7 +1387,7 @@
                           <li class="d-flex align-items-center mb-4">
                             <i class="ri-user-3-line ri-24px"></i
                             ><span class="fw-medium mx-2">Full Name:</span>
-                            <span><%= user.name %></span>
+                            <span><%= isAdmin.name %></span>
                           </li>
                           <li class="d-flex align-items-center mb-4">
                             <i class="ri-check-line ri-24px"></i
@@ -1411,13 +1411,13 @@
                           <li class="d-flex align-items-center mb-4">
                             <i class="ri-phone-line ri-24px"></i
                             ><span class="fw-medium mx-2">Contact:</span>
-                            <span><%= user.phone %></span>
+                            <span><%= isAdmin.phone %></span>
                           </li>
                           
                           <li class="d-flex align-items-center mb-2">
                             <i class="ri-mail-open-line ri-24px"></i
                             ><span class="fw-medium mx-2">Email:</span>
-                            <span><%= user.email %></span>
+                            <span><%= isAdmin.email %></span>
                           </li>
                         </ul>
                       </div>

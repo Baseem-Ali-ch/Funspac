@@ -85,34 +85,7 @@ const setRedirectUrl = (req, res, next) => {
   next();
 };
 
-// const verifyLogin = async (req, res) => {
-//   try {
 
-//     const { "login-email": email, "login-password": password } = req.body;
-//     const userData = await userModel.findOne({ email });
-
-//     if (userData && userData.isListed === true) {
-//       const passwordMatch = await bcrypt.compare(password, userData.password);
-//       if (passwordMatch) {
-//         if (userData.is_verified) {
-//           req.session.user = userData; // Set user data in session
-//           const redirectUrl = req.session.redirectUrl || "/home";
-//           delete req.session.redirectUrl;
-//           return res.redirect(redirectUrl);
-//         } else {
-//           res.redirect("/register");
-//         }
-//       } else {
-//         res.render("login", { message: "Email and Password is incorrect" });
-//       }
-//     } else {
-//       res.render("login", { message: "Email and Password is incorrect" });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
 
 const verifyLogin = async (req, res) => {
   try {
@@ -253,16 +226,7 @@ const resentOTP = async (req, res) => {
   }
 };
 
-// const loadWishlist = async (req, res) => {
-//   try {
-//     const user = req.session.user || req.user;
-//     const { userId } = req.query;
-//     const wishlistItems = await Wishlist.find({ userId }).populate('productId');
-//     res.render("wishlist", { user,wishlistItems });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+
 const loadWishlist = async (req, res) => {
   try {
     const user = req.session.user || req.user;
@@ -593,17 +557,27 @@ const removeFromWishlist = async (req, res) => {
     const { productId } = req.params;
 
     if (!userId) {
+      console.log("User not logged in");
       return res.status(401).json({ message: "User not logged in", error: true });
     }
     if (!productId) {
+      console.log("Product ID is required");
       return res.status(400).json({ message: "Product ID is required", error: true });
     }
 
     const wishlist = await Wishlist.findOne({ userId });
     if (wishlist) {
+      const initialLength = wishlist.products.length;
       wishlist.products = wishlist.products.filter(
         product => !product.productId.equals(productId)
       );
+      const finalLength = wishlist.products.length;
+
+      if (initialLength === finalLength) {
+        console.log("Product ID not found in wishlist");
+        return res.status(404).json({ message: "Product not found in wishlist", error: true });
+      }
+
       await wishlist.save();
     }
 
@@ -614,6 +588,7 @@ const removeFromWishlist = async (req, res) => {
     res.status(500).json({ message: "Error removing item from wishlist", error: true });
   }
 };
+
 
 
 

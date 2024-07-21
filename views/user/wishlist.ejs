@@ -366,7 +366,7 @@
       <div class="container">
        
 
-        <table class="table table-wishlist table-mobile">
+        <table class="table table-wishlist table-mobile" id="wishlistTable">
           <thead>
             <tr>
               <th>Product</th>
@@ -428,7 +428,7 @@
           </tbody>
         </table>
 
-        <div id="alertMessage" class="alert-message" style="display:none;"></div>
+        <div id="alertMessage" class="alert-message" style="display: none;"></div>
         <!-- End .table table-wishlist -->
         <div class="wishlist-share">
           <div class="social-icons social-icons-sm mb-2">
@@ -1072,7 +1072,10 @@ function removeFromWishlist(productId, buttonElement) {
       'X-Requested-With': 'XMLHttpRequest'
     }
   })
-  .then(response => response.json())
+  .then(response => {
+    console.log('Response status:', response.status); // Log status
+    return response.json();
+  })
   .then(data => {
     console.log('Data received:', data); // Debugging line
     if (data.message) {
@@ -1084,6 +1087,9 @@ function removeFromWishlist(productId, buttonElement) {
           tableRow.remove();
         }
       }
+    } else {
+      console.error('No message received in response');
+      showAlert('Failed to remove item from wishlist', 'error');
     }
   })
   .catch(error => {
@@ -1111,6 +1117,7 @@ function showAlert(message, type) {
     alertMessage.style.display = 'none';
   }, 3000); // Hide after 3 seconds
 }
+
 
 </script>
 

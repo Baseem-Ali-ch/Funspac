@@ -1,15 +1,17 @@
 const express = require("express");
 const adminController = require("../controller/adminController");
 const upload = require("../middleware/multer");
-const { isAdminAuthenticated } = require("../middleware/userAuth");
+const { isAdminAuthenticated } = require("../middleware/adminAuth");
 const adminBreadcrumbs = require("../middleware/adminBreadcrumbs");
 
 const adminRoute = express();
+
 adminRoute.use(adminBreadcrumbs);
 
 adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
+// Admin Routes
 adminRoute.get("/", adminController.loadLogin);
 adminRoute.post("/", adminController.verifyLogin);
 
@@ -30,15 +32,16 @@ adminRoute.post(
   ]),
   adminController.addProduct
 );
+
 adminRoute.get(
   "/product-list",
   isAdminAuthenticated,
   adminController.loadProductList
 );
 
-
 adminRoute.patch(
   "/update-product/:id",
+  isAdminAuthenticated,
   upload.fields([
     { name: "productImage1", maxCount: 1 },
     { name: "productImage2", maxCount: 1 },
@@ -47,12 +50,6 @@ adminRoute.patch(
   adminController.updateProduct
 );
 
-
-// adminRoute.get(
-//   "/category-list",
-//   isAdminAuthenticated,
-//   adminController.getCategory
-// );
 adminRoute.post(
   "/categories/add",
   isAdminAuthenticated,
@@ -68,15 +65,9 @@ adminRoute.get(
 adminRoute.patch(
   '/category-list/:id',
   isAdminAuthenticated,
-  upload.single('categoryImage'), // Handle the image upload
+  upload.single('categoryImage'),
   adminController.updateCategory
 );
-
-// adminRoute.patch(
-//   "/category/:id/status",
-//   isAdminAuthenticated,
-//   adminController.changeStatus
-// );
 
 adminRoute.get(
   "/order-list",
@@ -104,10 +95,11 @@ adminRoute.post(
   isAdminAuthenticated,
   adminController.changeCustomer
 );
-adminRoute.get("/logout", isAdminAuthenticated, adminController.logout);
+
+adminRoute.post("/logout", isAdminAuthenticated, adminController.adminLogout);
 adminRoute.get("/admin-profile", isAdminAuthenticated, adminController.loadAdmProfile);
 
-
+// Catch-all route for undefined paths
 adminRoute.get("*", (req, res) => {
   res.redirect("/admin");
 });
