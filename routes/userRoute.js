@@ -3,10 +3,12 @@ const userController = require("../controller/userController");
 const userRoute = express(); // Changed to Router for better practices
 const auth = require("../middleware/userAuth");
 const breadcrumbs = require("../middleware/breadcrumbs");
-
+const nocache = require('nocache')
 // Set view engine and views directory
 userRoute.set("view engine", "ejs");
 userRoute.set("views", "./views/user");
+
+userRoute.use(nocache())
 
 // Apply middleware for specific routes
 userRoute.use(breadcrumbs);

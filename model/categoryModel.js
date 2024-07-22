@@ -15,8 +15,8 @@ const CategorySchema = new mongoose.Schema({
   },
 
   isListed: {
-    type: Boolean,
-    default: true,
+    type: String,
+    required: true
   },
 });
 

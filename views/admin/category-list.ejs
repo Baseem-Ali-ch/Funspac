@@ -25,6 +25,7 @@
   margin-top: 10px;
 }
 
+
 </style>
 
   
@@ -680,7 +681,11 @@
                           </th>
                           <th class="sorting sorting_desc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 500px;" aria-label="Categories: activate to sort column ascending" aria-sort="descending">Categories</th>
                           <th class="text-nowrap text-sm-end sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 132px;" aria-label="Total Products &amp;nbsp;: activate to sort column ascending">Description &nbsp;</th>
-                          <th class="text-nowrap text-sm-end sorting_disabled" rowspan="1" colspan="1" style="width: 110px;" aria-label="Total Earning">Total Products</th>
+                          <th class="text-nowrap text-sm-end sorting_disabled" rowspan="1" colspan="1" style="width: 110px;" aria-label="Total Earning"></th>
+
+                          <th class="text-nowrap text-sm-end sorting_disabled" rowspan="1" colspan="1" style="width: 110px;" aria-label="Total Earning">Status</th>
+                          <th class="text-nowrap text-sm-end sorting_disabled" rowspan="1" colspan="1" style="width: 110px;" aria-label="Total Earning"></th>
+
                           <th class="text-lg-center sorting_disabled" rowspan="1" colspan="1" style="width: 75px;" aria-label="Actions">Actions</th>
                         </tr>
                       </thead>
@@ -692,11 +697,7 @@
                               <td class="sorting_1">
                                   <div class="d-flex align-items-center">
                                       <div class="avatar-wrapper me-3 rounded bg-label-secondary user-name">
-                                          <div class="avatar">
-                                              <% if (category.image) { %>
-                                              <img src="upload/<%= category.image %>" alt="<%= category.title %>" class="rounded">
-                                              <% } %>
-                                          </div>
+                                          
                                       </div>
                                       <div class="d-flex flex-column justify-content-center" style="width: 230px;">
                                           <span class="text-heading fw-medium text-wrap static-text" id="title-text-<%= category._id %>"><%= category.title %></span>
@@ -709,8 +710,19 @@
                                   <input type="text" class="form-control edit-input text-sm-end" id="edit-description-<%= category._id %>" value="<%= category.slug %>" style="display: none;">
                               </td>
                               <td>
-                                  <div class="text-sm-end"></div>
+                                <div class="text-sm-end"></div>
+                            </td>
+                              <td>
+                                <% if(category.isListed === "true"){ %>
+                                  <div class="text-sm-end"> Active </div>
+                                <% }else{ %>
+                                  <div class="text-sm-end"> InActive </div>
+                                <% } %>
+                                  
                               </td>
+                              <td>
+                                <div class="text-sm-end"></div>
+                            </td>
                               <td>   
                                 <!-- <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill" onclick="populateCategoryModal({ _id: '<%= category._id %>', title: '<%= category.title %>', description: '<%= category.slug %>', image: '<%= category.image %>' })">
                                   Edit
@@ -750,57 +762,50 @@
 
 
                 <!-- Modal -->
-                <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <form id="editCategoryForm" enctype="multipart/form-data">
-                          <div class="mb-3">
-                            <label for="categoryTitle" class="form-label">Category Title</label>
-                            <input type="text" class="form-control" id="categoryTitle" name="title">
-                          </div>
-                          <div class="mb-3">
-                            <label for="categoryDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="categoryDescription" name="description"></textarea>
-                          </div>
-                          <div class="mb-3">
-                            <label for="productStatus" class="form-label">Status</label>
-                            <select class="form-control" id="productStatus" name="status">
-                              <option value="active">Active</option>
-                              <option value="inactive">Inactive</option>
-                            </select>
-                          </div>
-                          <div class="mb-3">
-                            
-                            <!-- <div id="categoryImageWrapper" class="mb-3">
-                              <img id="modalCategoryImage" src="#" alt="Category Image" class="img-thumbnail">
-                              <input type="file" class="form-control mt-2" id="modalInputCategoryImage" name="categoryImage" onchange="replaceModalImage(this, 'modalCategoryImage')">
-                            </div> -->
-                            <!-- Category Image in Modal -->
-                            <!-- Category Image in Modal -->
-                            <div class="mb-3">
-                              <label for="modalInputCategoryImage" class="form-label">Category Image</label>
-                              <div class="image-input-container">
-                                <input type="file" class="form-control image-input" id="modalInputCategoryImage" name="categoryImage" accept="image/*" required onchange="previewImage(this, 'modalCategoryImage', 'modalReplaceLink');">
-                                <label for="modalInputCategoryImage" class="image-placeholder">Click to upload</label>
-                                <img id="modalCategoryImage" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
-                                <div class="image-actions" id="modalReplaceLink" style="display: none;">
-                                  <a href="#" onclick="triggerInputClick('modalInputCategoryImage'); return false;">Replace</a>
-                                </div>
-                              </div>
-                            </div>
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editCategoryForm" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="categoryTitle" class="form-label">Category Title</label>
+            <input type="text" class="form-control" id="categoryTitle" name="title">
+          </div>
+          <div class="mb-3">
+            <label for="categoryDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="categoryDescription" name="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="productStatus" class="form-label">Status</label>
+            <select class="form-control" id="productStatus" name="status">
+              <option value="" disabled selected>Select Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="mb-3" hidden>
+            <label for="modalInputCategoryImage" class="form-label">Category Image</label>
+            <div class="image-input-container">
+              <input type="file" class="form-control image-input" id="modalInputCategoryImage" name="categoryImage" accept="image/*" onchange="showModalImagePreview(event)">
+              <label for="modalInputCategoryImage" class="image-placeholder"></label>
+              <img id="modalCategoryImage" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+              <div class="image-actions" id="modalReplaceLink" style="display: none;">
+                <a href="#" onclick="triggerInputClick('modalInputCategoryImage'); return false;">Replace</a>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" id="saveCategoryButton" data-bs-dismiss="modal">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-                          </div>
-                          <button type="button" class="btn btn-primary" id="saveCategoryButton" onclick="location.reload()">Save</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
                 
                 
                 
@@ -867,15 +872,9 @@
                    -->
                    <label for="ecommerce-category-image">Category Image</label>
 <div class="form-floating form-floating-outline mb-5">
-  <div class="image-input-container">
-    <input type="file" class="form-control image-input" id="ecommerce-category-image" name="image" accept="image/*" required onchange="previewImage(this, 'category-image-preview', 'replaceLink');">
-    <label for="ecommerce-category-image" class="image-placeholder">Click to upload</label>
-    <img id="category-image-preview" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
-    <div class="image-actions" id="replaceLink" style="display: none;">
-      <a href="#" onclick="triggerInputClick('ecommerce-category-image'); return false;">Replace</a>
-    </div>
-  </div>
+  
 </div>
+
 
                    
                  
@@ -955,108 +954,119 @@
 
   <!-- Page JS -->
   <!-- <script src="/dashboard-assets/js/app-ecommerce-category-list.js"></script> -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
   <script>
-  document.getElementById('saveCategoryButton').addEventListener('click', editCategory);
-
-function populateCategoryModal(category) {
-  document.getElementById('categoryTitle').value = category.title;
-  document.getElementById('categoryDescription').value = category.description;
-  document.getElementById('publishStatus').value = category.isListed ? 'true' : 'false';
-
-  const categoryImage = category.image ? `/uploads/${category.image}` : '#';
-  document.getElementById('modalCategoryImage').src = categoryImage;
-
-  document.getElementById('editCategoryForm').dataset.categoryId = category._id;
-
-  // Show the modal
-  new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
-}
-
-function editCategory() {
-  const form = document.getElementById('editCategoryForm');
-  const categoryId = form.dataset.categoryId;
-  const formData = new FormData(form);
-
-  fetch(`/admin/category-list/${categoryId}`, {
-    method: 'PATCH',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      swal({
-        title: "Success",
-        text: "Category updated successfully",
-        icon: "success",
-        button: "OK"
-      }).then(() => {
-        location.reload();
-      });
-    } else {
-      swal({
-        title: "Error",
-        text: "Error updating category: " + (data.message || "Unknown error"),
-        icon: "error",
-        button: "OK"
+    let originalCategoryData = {}; // To store the original data
+  
+    document.getElementById('saveCategoryButton').addEventListener('click', editCategory);
+  
+    function populateCategoryModal(category) {
+      document.getElementById('categoryTitle').value = category.title;
+      document.getElementById('categoryDescription').value = category.description;
+      document.getElementById('productStatus').value = category.isListed;
+      const categoryImage = category.image ? `/uploads/${category.image}` : '#';
+      document.getElementById('modalCategoryImage').src = categoryImage;
+      document.getElementById('modalCategoryImage').style.display = category.image ? 'block' : 'none';
+  
+      // Store original data
+      originalCategoryData = {
+        title: category.title,
+        description: category.description,
+        status: category.isListed,
+        image: category.image
+      };
+  
+      document.getElementById('editCategoryForm').dataset.categoryId = category._id;
+  
+      // Show the modal
+      new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+    }
+  
+    function hasChanges() {
+      const form = document.getElementById('editCategoryForm');
+      const currentTitle = form.querySelector('#categoryTitle').value;
+      const currentDescription = form.querySelector('#categoryDescription').value;
+      const currentStatus = form.querySelector('#productStatus').value;
+      const currentImage = document.getElementById('modalInputCategoryImage').files.length > 0 ? 'changed' : originalCategoryData.image;
+  
+      return originalCategoryData.title !== currentTitle ||
+             originalCategoryData.description !== currentDescription ||
+             originalCategoryData.status !== currentStatus ||
+             currentImage !== originalCategoryData.image;
+    }
+  
+    function editCategory() {
+      if (!hasChanges()) {
+        Swal.fire({
+          title: 'No Changes Detected',
+          text: 'No changes were made to the category.',
+          icon: 'info',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
+  
+      const form = document.getElementById('editCategoryForm');
+      const categoryId = form.dataset.categoryId;
+      const formData = new FormData(form);
+  
+      fetch(`/admin/category-list/${categoryId}`, {
+        method: 'PATCH',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            title: 'Success',
+            text: data.message || 'Category updated successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            location.reload(); // Reload the page after user clicks OK
+          });
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'Error updating category: ' + (data.message || 'Unknown error'),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Error updating category: ' + error.message,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       });
     }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    swal({
-      title: "Error",
-      text: "Error updating category: " + error.message,
-      icon: "error",
-      button: "OK"
-    });
-  });
-}
-
-
-function previewImage(input, previewId, actionsId) {
-  const file = input.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const previewImage = document.getElementById(previewId);
-      previewImage.src = e.target.result;
-      previewImage.style.display = 'block'; // Show the image
-
-      const actions = document.getElementById(actionsId);
-      actions.style.display = 'block'; // Show the actions
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-function triggerInputClick(inputId) {
-  document.getElementById(inputId).click();
-}
-
-
-// For modal image input
-function showModalImagePreview(event) {
-  const input = event.target;
-  const file = input.files[0];
-
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const previewImage = document.getElementById('modalCategoryImage');
-      previewImage.src = e.target.result;
-      previewImage.style.display = 'block'; // Show the image
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-
-
-
-</script>
+  
+    function showModalImagePreview(event) {
+      const input = event.target;
+      const file = input.files[0];
+  
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const previewImage = document.getElementById('modalCategoryImage');
+          previewImage.src = e.target.result;
+          previewImage.style.display = 'block'; // Show the image
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  
+    function triggerInputClick(inputId) {
+      document.getElementById(inputId).click();
+    }
+  </script>
+  
 
 
   <script>
@@ -1124,6 +1134,8 @@ function showModalImagePreview(event) {
       }
     });
   </script>
+
+  
   
     
 <%- include('../admin-layout/footer.ejs') %>

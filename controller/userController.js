@@ -239,8 +239,11 @@ const loadWishlist = async (req, res) => {
     }
 
     const wishlistItems = await Wishlist.findOne({ userId }).populate("products.productId");
+    
+    
 
     res.render("wishlist", { user, wishlistItems: wishlistItems.products });
+    
   } catch (error) {
     console.error("Error loading wishlist:", error);
     res.status(500).send("Server Error");
@@ -329,12 +332,13 @@ const loadProductList = async (req, res) => {
     const limit = 9; // Number of products per page
     const skip = (page - 1) * limit; // Number of products to skip
 
-    const categories = await Category.find({ isListed: true }).select("_id");
-    const listedCategories = await Category.find({ isListed: true }).select(
+    // const categories = await Category.find({ isListed: 'true' }).select("_id");
+    const listedCategories = await Category.find({ isListed: 'true' }).select(
       "_id"
     );
+    
 
-    const products = await Product.find({ isListed: true })
+    const products = await Product.find({ isListed: 'true' })
       .populate({
         path: "category",
         match: { isListed: true },
@@ -344,19 +348,21 @@ const loadProductList = async (req, res) => {
       .limit(limit);
 
     const totalProducts = await Product.countDocuments({
-      isListed: true,
+      isListed: 'true',
       category: { $in: listedCategories.map((cat) => cat._id) },
     });
     const totalPages = Math.ceil(totalProducts / limit);
 
     const user = req.session.user || req.user;
 
+    
+
     res.render("product-list", {
       products,
       categories: listedCategories,
       user,
       currentPage: page,
-      totalPages,
+      totalPages
     });
   } catch (error) {
     console.log(error);
@@ -590,6 +596,44 @@ const removeFromWishlist = async (req, res) => {
 };
 
 
+const addToCart = async (req, res) => {
+  try {
+    const userId = req.session.user ? req.session.user._id : null;
+    const { productId, quantity } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ message: 'User not logged in', success: false });
+    }
+    if (!productId || !quantity) {
+      return res.status(400).json({ message: 'Product ID and quantity are required', success: false });
+    }
+
+    const cart = await Cart.findOne({ userId });
+    if (cart) {
+      const itemIndex = cart.items.findIndex(item => item.productId.equals(productId));
+      if (itemIndex > -1) {
+        // Product is already in the cart, update the quantity
+        cart.items[itemIndex].quantity += quantity;
+      } else {
+        // Product is not in the cart, add it
+        cart.items.push({ productId, quantity });
+      }
+      await cart.save();
+    } else {
+      // Create a new cart if it doesn't exist
+      const newCart = new Cart({
+        userId,
+        items: [{ productId, quantity }]
+      });
+      await newCart.save();
+    }
+
+    res.status(200).json({ message: 'Item added to cart', success: true });
+  } catch (error) {
+    console.error('Error adding item to cart:', error);
+    res.status(500).json({ message: 'Error adding item to cart', success: false });
+  }
+};
 
 
 

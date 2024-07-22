@@ -4,7 +4,7 @@ const express = require("express");
 const session = require("express-session");
 const path = require("path");
 const bodyParser = require("body-parser");
-const nocache = require("nocache");
+
 const MongoStore = require("connect-mongo");
 const passport = require("./config/passport");
 const mongoose = require("mongoose");
@@ -25,7 +25,7 @@ const port = process.env.PORT || 4000;
 // Parse application/json and application/x-www-form-urlencoded
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(nocache());
+
 
 // Initialize MongoStore for user and admin sessions
 const userStore = MongoStore.create({

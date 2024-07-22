@@ -1,14 +1,12 @@
 <%- include('../layout/header.ejs') %>
 
-<!DOCTYPE html>
-<html lang="en">
+  <!DOCTYPE html>
+  <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>FurnSpace</title>
     <link rel="icon" href="/assets/images/logo icon.png" />
 
@@ -16,54 +14,79 @@
     <meta name="description" content="Molla - Bootstrap eCommerce Template" />
     <meta name="author" content="p-themes" />
     <!-- Favicon -->
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="assets/images/icons/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="assets/images/icons/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="assets/images/icons/favicon-16x16.png"
-    />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png" />
     <link rel="manifest" href="assets/images/icons/site.webmanifest" />
-    <link
-      rel="mask-icon"
-      href="assets/images/icons/safari-pinned-tab.svg"
-      color="#666666"
-    />
+    <link rel="mask-icon" href="assets/images/icons/safari-pinned-tab.svg" color="#666666" />
     <link rel="shortcut icon" href="assets/images/icons/favicon.ico" />
     <meta name="apple-mobile-web-app-title" content="Molla" />
     <meta name="application-name" content="Molla" />
     <meta name="msapplication-TileColor" content="#cc9966" />
-    <meta
-      name="msapplication-config"
-      content="assets/images/icons/browserconfig.xml"
-    />
+    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml" />
     <meta name="theme-color" content="#ffffff" />
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-    <link
-      rel="stylesheet"
-      href="assets/css/plugins/owl-carousel/owl.carousel.css"
-    />
-    <link
-      rel="stylesheet"
-      href="assets/css/plugins/magnific-popup/magnific-popup.css"
-    />
+    <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css" />
+    <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css" />
     <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css" />
-    <link
-      rel="stylesheet"
-      href="assets/css/plugins/nouislider/nouislider.css"
-    />
+    <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css" />
+
+
+    <style>
+      /* Styles for zoom container and result */
+      .img-zoom-container {
+        position: relative;
+      }
+
+      .img-zoom-result {
+        border: 1px solid #d4d4d4;
+        width: 457px;
+        /* Adjust as needed */
+        height: 457px;
+        /* Adjust as needed */
+        display: none;
+        /* Initially hidden */
+        position: absolute;
+        top: 0;
+        left: 100%;
+        /* Positioned next to the image */
+        background-repeat: no-repeat;
+        background-size: 200%;
+        /* Adjust zoom level */
+        z-index: 1;
+      }
+
+      .product-main-image img {
+        width: 100%;
+        /* Ensure image fits within container */
+      }
+    </style>
+
+    <style>
+      /* CSS for alert messages */
+      .alert-message {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 20px;
+        background-color: #4caf50;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: none;
+        /* Initially hidden */
+      }
+
+      .alert-error {
+        background-color: #f44336;
+        /* Red for errors */
+      }
+    </style>
+
   </head>
 
   <body>
@@ -76,10 +99,12 @@
                 <div class="container breadcrumbs">
                   <ol class="breadcrumb">
                     <% breadcrumbs.forEach(crumb=> { %>
-                    <li class="breadcrumb-item">
-                      <a href="<%= crumb.url %>"> <%= crumb.name %> </a>
-                    </li>
-                    <% }); %>
+                      <li class="breadcrumb-item">
+                        <a href="<%= crumb.url %>">
+                          <%= crumb.name %>
+                        </a>
+                      </li>
+                      <% }); %>
                   </ol>
                 </div>
                 <!-- End .container -->
@@ -93,22 +118,19 @@
                   <a href="#">Links</a>
                   <ul>
                     <li>
-                      <a href="/wishlist"
-                        ><i class="icon-heart-o"></i>Wishlist
-                        <span>(3)</span></a
-                      >
+                      <a href="/wishlist"><i class="icon-heart-o"></i>Wishlist
+                        <span></span></a>
                     </li>
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="/contact-us">Contact Us</a></li>
                     <% if(user){ %>
                       <li>
-                        <a href="/profile"
-                          ><i class="icon-user"></i>
+                        <a href="/profile"><i class="icon-user"></i>
                           <%= user.name %>
                         </a>
                         <% }else{ %>
                       </li>
-      
+
                       <li>
                         <a href="/login"><i class="icon-user"></i>Login</a>
                         <% } %>
@@ -133,12 +155,7 @@
               </button>
 
               <a href="/home" class="logo">
-                <img
-                  src="/assets/images/furnspace logo black.png"
-                  alt="Molla Logo"
-                  width="105"
-                  height="25"
-                />
+                <img src="/assets/images/furnspace logo black.png" alt="Molla Logo" width="105" height="25" />
               </a>
 
               <nav class="main-nav">
@@ -150,8 +167,8 @@
                     <a href="/product-list" ">Product</a>
                   </li>
                   <li>
-                    <a href="category.html" class="sf-with-ul">Brand</a>
-    
+                    <a href=" category.html" class="sf-with-ul">Brand</a>
+
                     <div class="megamenu megamenu-sm">
                       <div class="row no-gutters">
                         <div class="col-md-6">
@@ -170,20 +187,15 @@
                           <!-- End .menu-col -->
                         </div>
                         <!-- End .col-md-6 -->
-    
+
                         <div class="col-md-6">
                           <div class="banner banner-overlay">
                             <a href="category.html">
-                              <img
-                                src="assets/images/menu/banner-1.jpg"
-                                alt="Banner"
-                              />
-    
+                              <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
+
                               <div class="banner-content banner-content-bottom">
                                 <div class="banner-title text-white">
-                                  New Trends<br /><span
-                                    ><strong>spring 2019</strong></span
-                                  >
+                                  New Trends<br /><span><strong>spring 2019</strong></span>
                                 </div>
                                 <!-- End .banner-title -->
                               </div>
@@ -198,15 +210,15 @@
                     </div>
                     <!-- End .megamenu megamenu-sm -->
                   </li>
-                  
+
                   <li>
                     <a href="#" class="sf-with-ul">Pages</a>
-    
+
                     <ul>
                       <li><a href="about.html">About</a></li>
                       <li><a href="contact.html">Contact</a></li>
                       <li><a href="login.html">Login</a></li>
-    
+
                       <li><a href="coming-soon.html">Coming Soon</a></li>
                     </ul>
                   </li>
@@ -219,54 +231,32 @@
 
             <div class="header-right">
               <div class="header-search">
-                <a href="#" class="search-toggle" role="button" title="Search"
-                  ><i class="icon-search"></i
-                ></a>
+                <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
                 <form action="#" method="get">
                   <div class="header-search-wrapper">
                     <label for="q" class="sr-only">Search</label>
-                    <input
-                      type="search"
-                      class="form-control"
-                      name="q"
-                      id="q"
-                      placeholder="Search in..."
-                      required
-                    />
+                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required />
                   </div>
                   <!-- End .header-search-wrapper -->
                 </form>
               </div>
               <!-- End .header-search -->
               <div class="dropdown compare-dropdown">
-                <a
-                  href="#"
-                  class="dropdown-toggle"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  data-display="static"
-                  title="Compare Products"
-                  aria-label="Compare Products"
-                >
+                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
                   <i class="icon-random"></i>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right">
                   <ul class="compare-products">
                     <li class="compare-product">
-                      <a href="#" class="btn-remove" title="Remove Product"
-                        ><i class="icon-close"></i
-                      ></a>
+                      <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
                       <h4 class="compare-product-title">
                         <a href="product.html">Blue Night Dress</a>
                       </h4>
                     </li>
                     <li class="compare-product">
-                      <a href="#" class="btn-remove" title="Remove Product"
-                        ><i class="icon-close"></i
-                      ></a>
+                      <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
                       <h4 class="compare-product-title">
                         <a href="product.html">White Long Skirt</a>
                       </h4>
@@ -275,9 +265,8 @@
 
                   <div class="compare-actions">
                     <a href="#" class="action-link">Clear All</a>
-                    <a href="#" class="btn btn-outline-primary-2"
-                      ><span>Compare</span><i class="icon-long-arrow-right"></i
-                    ></a>
+                    <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i
+                        class="icon-long-arrow-right"></i></a>
                   </div>
                 </div>
                 <!-- End .dropdown-menu -->
@@ -285,15 +274,8 @@
               <!-- End .compare-dropdown -->
 
               <div class="dropdown cart-dropdown">
-                <a
-                  href="#"
-                  class="dropdown-toggle"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  data-display="static"
-                >
+                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false" data-display="static">
                   <i class="icon-shopping-cart"></i>
                   <span class="cart-count"></span>
                 </a>
@@ -318,183 +300,117 @@
                 <div class="col-md-6">
                   <div class="product-gallery product-gallery-vertical">
                     <div class="row">
-                      <figure class="product-main-image">
-                        <img
-                          id="product-zoom"
-                          src="<%= product.imageUrl_1 %>"
-                          data-zoom-image="<%= product.imageUrl_1 %>"
-                          alt="product image"
-                        />
-                        <a
-                          href="#"
-                          id="btn-product-gallery"
-                          class="btn-product-gallery"
-                        >
+                      <figure class="product-main-image img-zoom-container">
+                        <img id="product-zoom" src="<%= product.imageUrl_1 %>"
+                          data-zoom-image="<%= product.imageUrl_1 %>" alt="product image" />
+                        <div id="zoom-result" class="img-zoom-result"></div>
+                        <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                           <i class="icon-arrows"></i>
                         </a>
                       </figure>
-                      <div
-                        id="product-zoom-gallery"
-                        class="product-image-gallery"
-                      >
+                      <div id="product-zoom-gallery" class="product-image-gallery">
                         <% if (product.imageUrl_1) { %>
-                        <a
-                          class="product-gallery-item active"
-                          href="#"
-                          data-image="<%= product.imageUrl_1 %>"
-                          data-zoom-image="<%= product.imageUrl_1 %>"
-                        >
-                          <img
-                            src="<%= product.imageUrl_1 %>"
-                            alt="product image"
-                          />
-                        </a>
-                        <% } %> <% if (product.imageUrl_2) { %>
-                        <a
-                          class="product-gallery-item"
-                          href="#"
-                          data-image="<%= product.imageUrl_2 %>"
-                          data-zoom-image="<%= product.imageUrl_2 %>"
-                        >
-                          <img
-                            src="<%= product.imageUrl_2 %>"
-                            alt="product image"
-                          />
-                        </a>
-                        <% } %> <% if (product.imageUrl_3) { %>
-                        <a
-                          class="product-gallery-item"
-                          href="#"
-                          data-image="<%= product.imageUrl_3 %>"
-                          data-zoom-image="<%= product.imageUrl_3 %>"
-                        >
-                          <img
-                            src="<%= product.imageUrl_3 %>"
-                            alt="product image"
-                          />
-                        </a>
-                        <% } %>
+                          <a class="product-gallery-item active" href="#" data-image="<%= product.imageUrl_1 %>"
+                            data-zoom-image="<%= product.imageUrl_1 %>">
+                            <img src="<%= product.imageUrl_1 %>" alt="product image" />
+                          </a>
+                          <% } %>
+                            <% if (product.imageUrl_2) { %>
+                              <a class="product-gallery-item" href="#" data-image="<%= product.imageUrl_2 %>"
+                                data-zoom-image="<%= product.imageUrl_2 %>">
+                                <img src="<%= product.imageUrl_2 %>" alt="product image" />
+                              </a>
+                              <% } %>
+                                <% if (product.imageUrl_3) { %>
+                                  <a class="product-gallery-item" href="#" data-image="<%= product.imageUrl_3 %>"
+                                    data-zoom-image="<%= product.imageUrl_3 %>">
+                                    <img src="<%= product.imageUrl_3 %>" alt="product image" />
+                                  </a>
+                                  <% } %>
                       </div>
                     </div>
+
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="product-details">
-                    <h1 class="product-title"><%= product.name %></h1>
+                    <h1 class="product-title">
+                      <%= product.name %>
+                    </h1>
                     <div class="ratings-container">
                       <div class="ratings">
                         <div class="ratings-val" style="width: 80%"></div>
                       </div>
-                      <a
-                        class="ratings-text"
-                        href="#product-review-link"
-                        id="review-link"
-                      >
+                      <a class="ratings-text" href="#product-review-link" id="review-link">
                         (2 Reviews)
                       </a>
                     </div>
-                    <div class="product-price">$<%= product.price %></div>
+                    <div class="product-price">$<%= product.price %>
+                    </div>
                     <div class="product-content">
-                      <p><%= product.description %></p>
+                      <p>
+                        <%= product.description %>
+                      </p>
                     </div>
                     <div class="details-filter-row details-row-size">
                       <label>Color:</label>
                       <div class="product-nav product-nav-thumbs">
                         <a href="#" class="active">
-                          <img
-                            src="<%= product.imageUrl_2 %>"
-                            alt="product desc"
-                          />
+                          <img src="<%= product.imageUrl_2 %>" alt="product desc" />
                         </a>
                         <a href="#">
-                          <img
-                            src="<%= product.imageUrl_3 %>"
-                            alt="product desc"
-                          />
+                          <img src="<%= product.imageUrl_3 %>" alt="product desc" />
                         </a>
                       </div>
                     </div>
-                    
+
                     <div class="details-filter-row details-row-size">
                       <label for="qty">Qty:</label>
                       <div class="product-details-quantity">
-                        <input
-                          type="number"
-                          id="qty"
-                          class="form-control"
-                          value="1"
-                          min="1"
-                          max="10"
-                          step="1"
-                          data-decimals="0"
-                          required
-                        />
+                        <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1"
+                          data-decimals="0" required />
                       </div>
                     </div>
                     <div class="product-details-action">
-                      <a href="#" class="btn-product btn-cart"
-                        ><span>add to cart</span></a
-                      >
+                      <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                       <div class="details-action-wrapper">
-                        <a
-                          href="#"
-                          class="btn-product btn-wishlist"
-                          title="Add to Wishlist"
-                        >
+                        <a href="#" class="btn-product btn-wishlist" title="Add to Wishlist"
+                          onclick="addToWishlist('<%= product._id %>')">
                           <span>Add to Wishlist</span>
                         </a>
-                        <a
-                          href="#"
-                          class="btn-product btn-compare"
-                          title="Compare"
-                        >
+
+
+                        <!-- <a href="#" class="btn-product btn-compare" title="Compare">
                           <span>Add to Compare</span>
-                        </a>
+                        </a> -->
                       </div>
                     </div>
                     <div class="product-details-footer">
                       <div class="product-cat">
                         <span>Category:</span>
-                        <a href="#"><%= product.category.title %></a>
+                        <a href="#">
+                          <%= product.category.title %>
+                        </a>
                       </div>
                       <div class="social-icons social-icons-sm">
                         <span class="social-label">Share:</span>
-                        <a
-                          href="#"
-                          class="social-icon"
-                          title="Facebook"
-                          target="_blank"
-                        >
+                        <a href="#" class="social-icon" title="Facebook" target="_blank">
                           <i class="icon-facebook-f"></i>
                         </a>
-                        <a
-                          href="#"
-                          class="social-icon"
-                          title="Twitter"
-                          target="_blank"
-                        >
+                        <a href="#" class="social-icon" title="Twitter" target="_blank">
                           <i class="icon-twitter"></i>
                         </a>
-                        <a
-                          href="#"
-                          class="social-icon"
-                          title="Instagram"
-                          target="_blank"
-                        >
+                        <a href="#" class="social-icon" title="Instagram" target="_blank">
                           <i class="icon-instagram"></i>
                         </a>
-                        <a
-                          href="#"
-                          class="social-icon"
-                          title="Pinterest"
-                          target="_blank"
-                        >
+                        <a href="#" class="social-icon" title="Pinterest" target="_blank">
                           <i class="icon-pinterest"></i>
                         </a>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div id="alertMessage" class="alert-message" style="display:none;"></div>
               </div>
             </div>
 
@@ -503,61 +419,25 @@
             <div class="product-details-tab">
               <ul class="nav nav-pills justify-content-center" role="tablist">
                 <li class="nav-item">
-                  <a
-                    class="nav-link active"
-                    id="product-desc-link"
-                    data-toggle="tab"
-                    href="#product-desc-tab"
-                    role="tab"
-                    aria-controls="product-desc-tab"
-                    aria-selected="true"
-                    >Description</a
-                  >
+                  <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab"
+                    role="tab" aria-controls="product-desc-tab" aria-selected="true">Description</a>
                 </li>
                 <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    id="product-info-link"
-                    data-toggle="tab"
-                    href="#product-info-tab"
-                    role="tab"
-                    aria-controls="product-info-tab"
-                    aria-selected="false"
-                    >Additional information</a
-                  >
+                  <a class="nav-link" id="product-info-link" data-toggle="tab" href="#product-info-tab" role="tab"
+                    aria-controls="product-info-tab" aria-selected="false">Additional information</a>
                 </li>
                 <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    id="product-shipping-link"
-                    data-toggle="tab"
-                    href="#product-shipping-tab"
-                    role="tab"
-                    aria-controls="product-shipping-tab"
-                    aria-selected="false"
-                    >Shipping & Returns</a
-                  >
+                  <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab"
+                    role="tab" aria-controls="product-shipping-tab" aria-selected="false">Shipping & Returns</a>
                 </li>
                 <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    id="product-review-link"
-                    data-toggle="tab"
-                    href="#product-review-tab"
-                    role="tab"
-                    aria-controls="product-review-tab"
-                    aria-selected="false"
-                    >Reviews (2)</a
-                  >
+                  <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab"
+                    aria-controls="product-review-tab" aria-selected="false">Reviews (2)</a>
                 </li>
               </ul>
               <div class="tab-content">
-                <div
-                  class="tab-pane fade show active"
-                  id="product-desc-tab"
-                  role="tabpanel"
-                  aria-labelledby="product-desc-link"
-                >
+                <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel"
+                  aria-labelledby="product-desc-link">
                   <div class="product-desc-content">
                     <h3>Product Information</h3>
                     <p>
@@ -596,12 +476,7 @@
                   <!-- End .product-desc-content -->
                 </div>
                 <!-- .End .tab-pane -->
-                <div
-                  class="tab-pane fade"
-                  id="product-info-tab"
-                  role="tabpanel"
-                  aria-labelledby="product-info-link"
-                >
+                <div class="tab-pane fade" id="product-info-tab" role="tabpanel" aria-labelledby="product-info-link">
                   <div class="product-desc-content">
                     <h3>Information</h3>
                     <p>
@@ -632,12 +507,8 @@
                   <!-- End .product-desc-content -->
                 </div>
                 <!-- .End .tab-pane -->
-                <div
-                  class="tab-pane fade"
-                  id="product-shipping-tab"
-                  role="tabpanel"
-                  aria-labelledby="product-shipping-link"
-                >
+                <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel"
+                  aria-labelledby="product-shipping-link">
                   <div class="product-desc-content">
                     <h3>Delivery & returns</h3>
                     <p>
@@ -653,12 +524,8 @@
                   <!-- End .product-desc-content -->
                 </div>
                 <!-- .End .tab-pane -->
-                <div
-                  class="tab-pane fade"
-                  id="product-review-tab"
-                  role="tabpanel"
-                  aria-labelledby="product-review-link"
-                >
+                <div class="tab-pane fade" id="product-review-tab" role="tabpanel"
+                  aria-labelledby="product-review-link">
                   <div class="reviews">
                     <h3>Reviews (2)</h3>
                     <div class="review">
@@ -692,12 +559,8 @@
                           <!-- End .review-content -->
 
                           <div class="review-action">
-                            <a href="#"
-                              ><i class="icon-thumbs-up"></i>Helpful (2)</a
-                            >
-                            <a href="#"
-                              ><i class="icon-thumbs-down"></i>Unhelpful (0)</a
-                            >
+                            <a href="#"><i class="icon-thumbs-up"></i>Helpful (2)</a>
+                            <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a>
                           </div>
                           <!-- End .review-action -->
                         </div>
@@ -713,10 +576,7 @@
                           <h4><a href="#">John Doe</a></h4>
                           <div class="ratings-container">
                             <div class="ratings">
-                              <div
-                                class="ratings-val"
-                                style="width: 100%"
-                              ></div>
+                              <div class="ratings-val" style="width: 100%"></div>
                               <!-- End .ratings-val -->
                             </div>
                             <!-- End .ratings -->
@@ -740,12 +600,8 @@
                           <!-- End .review-content -->
 
                           <div class="review-action">
-                            <a href="#"
-                              ><i class="icon-thumbs-up"></i>Helpful (0)</a
-                            >
-                            <a href="#"
-                              ><i class="icon-thumbs-down"></i>Unhelpful (0)</a
-                            >
+                            <a href="#"><i class="icon-thumbs-up"></i>Helpful (0)</a>
+                            <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a>
                           </div>
                           <!-- End .review-action -->
                         </div>
@@ -766,9 +622,7 @@
             <h2 class="title text-center mb-4">You May Also Like</h2>
             <!-- End .title text-center -->
 
-            <div
-              class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow"
-              data-toggle="owl"
+            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl"
               data-owl-options='{
                             "nav": false, 
                             "dots": true,
@@ -793,44 +647,24 @@
                                     "dots": false
                                 }
                             }
-                        }'
-            >
+                        }'>
               <div class="product product-7 text-center">
                 <figure class="product-media">
                   <span class="product-label label-new">New</span>
                   <a href="product.html">
-                    <img
-                      src="assets/images/products/product-4.jpg"
-                      alt="Product image"
-                      class="product-image"
-                    />
+                    <img src="assets/images/products/product-4.jpg" alt="Product image" class="product-image" />
                   </a>
 
                   <div class="product-action-vertical">
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-wishlist btn-expandable"
-                      ><span>add to wishlist</span></a
-                    >
-                    <a
-                      href="popup/quickView.html"
-                      class="btn-product-icon btn-quickview"
-                      title="Quick view"
-                      ><span>Quick view</span></a
-                    >
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-compare"
-                      title="Compare"
-                      ><span>Compare</span></a
-                    >
+                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick
+                        view</span></a>
+                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                   </div>
                   <!-- End .product-action-vertical -->
 
                   <div class="product-action">
-                    <a href="#" class="btn-product btn-cart"
-                      ><span>add to cart</span></a
-                    >
+                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                   </div>
                   <!-- End .product-action -->
                 </figure>
@@ -842,9 +676,7 @@
                   </div>
                   <!-- End .product-cat -->
                   <h3 class="product-title">
-                    <a href="product.html"
-                      >Brown paperbag waist <br />pencil skirt</a
-                    >
+                    <a href="product.html">Brown paperbag waist <br />pencil skirt</a>
                   </h3>
                   <!-- End .product-title -->
                   <div class="product-price">$60.00</div>
@@ -861,23 +693,14 @@
 
                   <div class="product-nav product-nav-thumbs">
                     <a href="#" class="active">
-                      <img
-                        src="assets/images/products/product-4-thumb.jpg"
-                        alt="product desc"
-                      />
+                      <img src="assets/images/products/product-4-thumb.jpg" alt="product desc" />
                     </a>
                     <a href="#">
-                      <img
-                        src="assets/images/products/product-4-2-thumb.jpg"
-                        alt="product desc"
-                      />
+                      <img src="assets/images/products/product-4-2-thumb.jpg" alt="product desc" />
                     </a>
 
                     <a href="#">
-                      <img
-                        src="assets/images/products/product-4-3-thumb.jpg"
-                        alt="product desc"
-                      />
+                      <img src="assets/images/products/product-4-3-thumb.jpg" alt="product desc" />
                     </a>
                   </div>
                   <!-- End .product-nav -->
@@ -890,38 +713,19 @@
                 <figure class="product-media">
                   <span class="product-label label-out">Out of Stock</span>
                   <a href="product.html">
-                    <img
-                      src="assets/images/products/product-6.jpg"
-                      alt="Product image"
-                      class="product-image"
-                    />
+                    <img src="assets/images/products/product-6.jpg" alt="Product image" class="product-image" />
                   </a>
 
                   <div class="product-action-vertical">
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-wishlist btn-expandable"
-                      ><span>add to wishlist</span></a
-                    >
-                    <a
-                      href="popup/quickView.html"
-                      class="btn-product-icon btn-quickview"
-                      title="Quick view"
-                      ><span>Quick view</span></a
-                    >
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-compare"
-                      title="Compare"
-                      ><span>Compare</span></a
-                    >
+                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick
+                        view</span></a>
+                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                   </div>
                   <!-- End .product-action-vertical -->
 
                   <div class="product-action">
-                    <a href="#" class="btn-product btn-cart"
-                      ><span>add to cart</span></a
-                    >
+                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                   </div>
                   <!-- End .product-action -->
                 </figure>
@@ -958,38 +762,19 @@
                 <figure class="product-media">
                   <span class="product-label label-top">Top</span>
                   <a href="product.html">
-                    <img
-                      src="assets/images/products/product-11.jpg"
-                      alt="Product image"
-                      class="product-image"
-                    />
+                    <img src="assets/images/products/product-11.jpg" alt="Product image" class="product-image" />
                   </a>
 
                   <div class="product-action-vertical">
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-wishlist btn-expandable"
-                      ><span>add to wishlist</span></a
-                    >
-                    <a
-                      href="popup/quickView.html"
-                      class="btn-product-icon btn-quickview"
-                      title="Quick view"
-                      ><span>Quick view</span></a
-                    >
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-compare"
-                      title="Compare"
-                      ><span>Compare</span></a
-                    >
+                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick
+                        view</span></a>
+                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                   </div>
                   <!-- End .product-action-vertical -->
 
                   <div class="product-action">
-                    <a href="#" class="btn-product btn-cart"
-                      ><span>add to cart</span></a
-                    >
+                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                   </div>
                   <!-- End .product-action -->
                 </figure>
@@ -1001,9 +786,7 @@
                   </div>
                   <!-- End .product-cat -->
                   <h3 class="product-title">
-                    <a href="product.html"
-                      >Light brown studded Wide fit wedges</a
-                    >
+                    <a href="product.html">Light brown studded Wide fit wedges</a>
                   </h3>
                   <!-- End .product-title -->
                   <div class="product-price">$110.00</div>
@@ -1020,23 +803,14 @@
 
                   <div class="product-nav product-nav-thumbs">
                     <a href="#" class="active">
-                      <img
-                        src="assets/images/products/product-11-thumb.jpg"
-                        alt="product desc"
-                      />
+                      <img src="assets/images/products/product-11-thumb.jpg" alt="product desc" />
                     </a>
                     <a href="#">
-                      <img
-                        src="assets/images/products/product-11-2-thumb.jpg"
-                        alt="product desc"
-                      />
+                      <img src="assets/images/products/product-11-2-thumb.jpg" alt="product desc" />
                     </a>
 
                     <a href="#">
-                      <img
-                        src="assets/images/products/product-11-3-thumb.jpg"
-                        alt="product desc"
-                      />
+                      <img src="assets/images/products/product-11-3-thumb.jpg" alt="product desc" />
                     </a>
                   </div>
                   <!-- End .product-nav -->
@@ -1048,38 +822,19 @@
               <div class="product product-7 text-center">
                 <figure class="product-media">
                   <a href="product.html">
-                    <img
-                      src="assets/images/products/product-10.jpg"
-                      alt="Product image"
-                      class="product-image"
-                    />
+                    <img src="assets/images/products/product-10.jpg" alt="Product image" class="product-image" />
                   </a>
 
                   <div class="product-action-vertical">
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-wishlist btn-expandable"
-                      ><span>add to wishlist</span></a
-                    >
-                    <a
-                      href="popup/quickView.html"
-                      class="btn-product-icon btn-quickview"
-                      title="Quick view"
-                      ><span>Quick view</span></a
-                    >
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-compare"
-                      title="Compare"
-                      ><span>Compare</span></a
-                    >
+                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick
+                        view</span></a>
+                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                   </div>
                   <!-- End .product-action-vertical -->
 
                   <div class="product-action">
-                    <a href="#" class="btn-product btn-cart"
-                      ><span>add to cart</span></a
-                    >
+                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                   </div>
                   <!-- End .product-action -->
                 </figure>
@@ -1113,38 +868,19 @@
               <div class="product product-7 text-center">
                 <figure class="product-media">
                   <a href="product.html">
-                    <img
-                      src="assets/images/products/product-7.jpg"
-                      alt="Product image"
-                      class="product-image"
-                    />
+                    <img src="assets/images/products/product-7.jpg" alt="Product image" class="product-image" />
                   </a>
 
                   <div class="product-action-vertical">
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-wishlist btn-expandable"
-                      ><span>add to wishlist</span></a
-                    >
-                    <a
-                      href="popup/quickView.html"
-                      class="btn-product-icon btn-quickview"
-                      title="Quick view"
-                      ><span>Quick view</span></a
-                    >
-                    <a
-                      href="#"
-                      class="btn-product-icon btn-compare"
-                      title="Compare"
-                      ><span>Compare</span></a
-                    >
+                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick
+                        view</span></a>
+                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                   </div>
                   <!-- End .product-action-vertical -->
 
                   <div class="product-action">
-                    <a href="#" class="btn-product btn-cart"
-                      ><span>add to cart</span></a
-                    >
+                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                   </div>
                   <!-- End .product-action -->
                 </figure>
@@ -1189,54 +925,19 @@
             <div class="row">
               <div class="col-sm-6 col-lg-3">
                 <div class="widget widget-about">
-                  <img
-                    src="/assets/images/furnspace logo white without black bg.png"
-                    class="footer-logo"
-                    alt="Footer Logo"
-                    width="105"
-                    height="25"
-                  />
+                  <img src="/assets/images/furnspace logo white without black bg.png" class="footer-logo"
+                    alt="Footer Logo" width="105" height="25" />
                   <p>
                     Praesent dapibus, neque id cursus ucibus, tortor neque
                     egestas augue, eu vulputate magna eros eu erat.
                   </p>
 
                   <div class="social-icons">
-                    <a
-                      href="#"
-                      class="social-icon"
-                      title="Facebook"
-                      target="_blank"
-                      ><i class="icon-facebook-f"></i
-                    ></a>
-                    <a
-                      href="#"
-                      class="social-icon"
-                      title="Twitter"
-                      target="_blank"
-                      ><i class="icon-twitter"></i
-                    ></a>
-                    <a
-                      href="#"
-                      class="social-icon"
-                      title="Instagram"
-                      target="_blank"
-                      ><i class="icon-instagram"></i
-                    ></a>
-                    <a
-                      href="#"
-                      class="social-icon"
-                      title="Youtube"
-                      target="_blank"
-                      ><i class="icon-youtube"></i
-                    ></a>
-                    <a
-                      href="#"
-                      class="social-icon"
-                      title="Pinterest"
-                      target="_blank"
-                      ><i class="icon-pinterest"></i
-                    ></a>
+                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                    <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
                   </div>
                   <!-- End .soial-icons -->
                 </div>
@@ -1312,12 +1013,7 @@
             </p>
             <!-- End .footer-copyright -->
             <figure class="footer-payments">
-              <img
-                src="assets/images/payments.png"
-                alt="Payment methods"
-                width="272"
-                height="20"
-              />
+              <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20" />
             </figure>
             <!-- End .footer-payments -->
           </div>
@@ -1339,45 +1035,33 @@
           <div class="col-6">
             <figure class="product-media">
               <a href="product.html">
-                <img
-                  src="<%= product.imageUrl_1 %>"
-                  alt="Product image"
-                />
+                <img src="<%= product.imageUrl_1 %>" alt="Product image" />
               </a>
             </figure>
             <!-- End .product-media -->
             <h4 class="product-title">
-              <a href="product.html"><%= product.name %></a>
+              <a href="product.html">
+                <%= product.name %>
+              </a>
             </h4>
             <!-- End .product-title -->
           </div>
           <!-- End .col-6 -->
 
           <div class="col-6 justify-content-end">
-            <div class="product-price"><%= product.price %></div>
+            <div class="product-price">
+              <%= product.price %>
+            </div>
             <!-- End .product-price -->
             <div class="product-details-quantity">
-              <input
-                type="number"
-                id="sticky-cart-qty"
-                class="form-control"
-                value="1"
-                min="1"
-                max="10"
-                step="1"
-                data-decimals="0"
-                required
-              />
+              <input type="number" id="sticky-cart-qty" class="form-control" value="1" min="1" max="10" step="1"
+                data-decimals="0" required />
             </div>
             <!-- End .product-details-quantity -->
 
             <div class="product-details-action">
-              <a href="#" class="btn-product btn-cart"
-                ><span>add to cart</span></a
-              >
-              <a href="#" class="btn-product btn-wishlist" title="Wishlist"
-                ><span>Add to Wishlist</span></a
-              >
+              <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+              <a href="#" class="btn-product btn-wishlist" title="Wishlist" onclick="addToWishlist('<%= product._id %>')"><span>Add to Wishlist</span></a>
             </div>
             <!-- End .product-details-action -->
           </div>
@@ -1399,14 +1083,8 @@
 
         <form action="#" method="get" class="mobile-search">
           <label for="mobile-search" class="sr-only">Search</label>
-          <input
-            type="search"
-            class="form-control"
-            name="mobile-search"
-            id="mobile-search"
-            placeholder="Search in..."
-            required
-          />
+          <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..."
+            required />
           <button class="btn btn-primary" type="submit">
             <i class="icon-search"></i>
           </button>
@@ -1456,32 +1134,18 @@
                 <li><a href="category.html">Shop Grid 3 Columns</a></li>
                 <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
                 <li>
-                  <a href="category-boxed.html"
-                    ><span
-                      >Shop Boxed No Sidebar<span class="tip tip-hot"
-                        >Hot</span
-                      ></span
-                    ></a
-                  >
+                  <a href="category-boxed.html"><span>Shop Boxed No Sidebar<span
+                        class="tip tip-hot">Hot</span></span></a>
                 </li>
                 <li>
-                  <a href="category-fullwidth.html"
-                    >Shop Fullwidth No Sidebar</a
-                  >
+                  <a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a>
                 </li>
                 <li>
-                  <a href="product-category-boxed.html"
-                    >Product Category Boxed</a
-                  >
+                  <a href="product-category-boxed.html">Product Category Boxed</a>
                 </li>
                 <li>
-                  <a href="product-category-fullwidth.html"
-                    ><span
-                      >Product Category Fullwidth<span class="tip tip-new"
-                        >New</span
-                      ></span
-                    ></a
-                  >
+                  <a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span
+                        class="tip tip-new">New</span></span></a>
                 </li>
                 <li><a href="cart.html">Cart</a></li>
                 <li><a href="checkout.html">Checkout</a></li>
@@ -1495,11 +1159,7 @@
                 <li><a href="product.html">Default</a></li>
                 <li><a href="product-centered.html">Centered</a></li>
                 <li>
-                  <a href="product-extended.html"
-                    ><span
-                      >Extended Info<span class="tip tip-new">New</span></span
-                    ></a
-                  >
+                  <a href="product-extended.html"><span>Extended Info<span class="tip tip-new">New</span></span></a>
                 </li>
                 <li><a href="product-gallery.html">Gallery</a></li>
                 <li><a href="product-sticky.html">Sticky Info</a></li>
@@ -1582,9 +1242,7 @@
                       <a href="single-fullwidth.html">Fullwidth no sidebar</a>
                     </li>
                     <li>
-                      <a href="single-fullwidth-sidebar.html"
-                        >Fullwidth with sidebar</a
-                      >
+                      <a href="single-fullwidth-sidebar.html">Fullwidth with sidebar</a>
                     </li>
                   </ul>
                 </li>
@@ -1616,18 +1274,10 @@
         <!-- End .mobile-nav -->
 
         <div class="social-icons">
-          <a href="#" class="social-icon" target="_blank" title="Facebook"
-            ><i class="icon-facebook-f"></i
-          ></a>
-          <a href="#" class="social-icon" target="_blank" title="Twitter"
-            ><i class="icon-twitter"></i
-          ></a>
-          <a href="#" class="social-icon" target="_blank" title="Instagram"
-            ><i class="icon-instagram"></i
-          ></a>
-          <a href="#" class="social-icon" target="_blank" title="Youtube"
-            ><i class="icon-youtube"></i
-          ></a>
+          <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+          <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+          <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+          <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
         </div>
         <!-- End .social-icons -->
       </div>
@@ -1636,22 +1286,11 @@
     <!-- End .mobile-menu-container -->
 
     <!-- Sign in / Register Modal -->
-    <div
-      class="modal fade"
-      id="signin-modal"
-      tabindex="-1"
-      role="dialog"
-      aria-hidden="true"
-    >
+    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-body">
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true"><i class="icon-close"></i></span>
             </button>
 
@@ -1659,61 +1298,27 @@
               <div class="form-tab">
                 <ul class="nav nav-pills nav-fill" role="tablist">
                   <li class="nav-item">
-                    <a
-                      class="nav-link active"
-                      id="signin-tab"
-                      data-toggle="tab"
-                      href="#signin"
-                      role="tab"
-                      aria-controls="signin"
-                      aria-selected="true"
-                      >Sign In</a
-                    >
+                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab"
+                      aria-controls="signin" aria-selected="true">Sign In</a>
                   </li>
                   <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      id="register-tab"
-                      data-toggle="tab"
-                      href="#register"
-                      role="tab"
-                      aria-controls="register"
-                      aria-selected="false"
-                      >Register</a
-                    >
+                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
+                      aria-controls="register" aria-selected="false">Register</a>
                   </li>
                 </ul>
                 <div class="tab-content" id="tab-content-5">
-                  <div
-                    class="tab-pane fade show active"
-                    id="signin"
-                    role="tabpanel"
-                    aria-labelledby="signin-tab"
-                  >
+                  <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
                     <form action="#">
                       <div class="form-group">
-                        <label for="singin-email"
-                          >Username or email address *</label
-                        >
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="singin-email"
-                          name="singin-email"
-                          required
-                        />
+                        <label for="singin-email">Username or email address *</label>
+                        <input type="text" class="form-control" id="singin-email" name="singin-email" required />
                       </div>
                       <!-- End .form-group -->
 
                       <div class="form-group">
                         <label for="singin-password">Password *</label>
-                        <input
-                          type="password"
-                          class="form-control"
-                          id="singin-password"
-                          name="singin-password"
-                          required
-                        />
+                        <input type="password" class="form-control" id="singin-password" name="singin-password"
+                          required />
                       </div>
                       <!-- End .form-group -->
 
@@ -1724,22 +1329,12 @@
                         </button>
 
                         <div class="custom-control custom-checkbox">
-                          <input
-                            type="checkbox"
-                            class="custom-control-input"
-                            id="signin-remember"
-                          />
-                          <label
-                            class="custom-control-label"
-                            for="signin-remember"
-                            >Remember Me</label
-                          >
+                          <input type="checkbox" class="custom-control-input" id="signin-remember" />
+                          <label class="custom-control-label" for="signin-remember">Remember Me</label>
                         </div>
                         <!-- End .custom-checkbox -->
 
-                        <a href="#" class="forgot-link"
-                          >Forgot Your Password?</a
-                        >
+                        <a href="#" class="forgot-link">Forgot Your Password?</a>
                       </div>
                       <!-- End .form-footer -->
                     </form>
@@ -1766,34 +1361,18 @@
                     <!-- End .form-choice -->
                   </div>
                   <!-- .End .tab-pane -->
-                  <div
-                    class="tab-pane fade"
-                    id="register"
-                    role="tabpanel"
-                    aria-labelledby="register-tab"
-                  >
+                  <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
                     <form action="#">
                       <div class="form-group">
                         <label for="register-email">Your email address *</label>
-                        <input
-                          type="email"
-                          class="form-control"
-                          id="register-email"
-                          name="register-email"
-                          required
-                        />
+                        <input type="email" class="form-control" id="register-email" name="register-email" required />
                       </div>
                       <!-- End .form-group -->
 
                       <div class="form-group">
                         <label for="register-password">Password *</label>
-                        <input
-                          type="password"
-                          class="form-control"
-                          id="register-password"
-                          name="register-password"
-                          required
-                        />
+                        <input type="password" class="form-control" id="register-password" name="register-password"
+                          required />
                       </div>
                       <!-- End .form-group -->
 
@@ -1804,18 +1383,9 @@
                         </button>
 
                         <div class="custom-control custom-checkbox">
-                          <input
-                            type="checkbox"
-                            class="custom-control-input"
-                            id="register-policy"
-                            required
-                          />
-                          <label
-                            class="custom-control-label"
-                            for="register-policy"
-                            >I agree to the
-                            <a href="#">privacy policy</a> *</label
-                          >
+                          <input type="checkbox" class="custom-control-input" id="register-policy" required />
+                          <label class="custom-control-label" for="register-policy">I agree to the
+                            <a href="#">privacy policy</a> *</label>
                         </div>
                         <!-- End .custom-checkbox -->
                       </div>
@@ -1867,7 +1437,7 @@
     <script src="assets/js/superfish.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
     <script src="assets/js/bootstrap-input-spinner.js"></script>
-    <script src="assets/js/jquery.elevateZoom.min.js"></script>
+    <script src="https://cdn.rawgit.com/elevateweb/elevatezoom/3.0.8/jquery.elevatezoom.js"></script>
     <script src="assets/js/bootstrap-input-spinner.js"></script>
     <script src="assets/js/jquery.magnific-popup.min.js"></script>
     <!-- Main JS File -->
@@ -1875,10 +1445,8 @@
     <!-- zoom images -->
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- ElevateZoom -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
 
-    <script>
+    <!-- <script>
       function addToWishlist(productId) {
         // Retrieve existing wishlist items from localStorage or initialize an empty array
         let wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
@@ -1910,7 +1478,7 @@
           });
         }
       }
-    </script>
+    </script> -->
 
     <script>
       // JavaScript for image gallery functionality
@@ -1945,40 +1513,99 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
 
     <script>
-      $(document).ready(function() {
-        // Initialize elevateZoom on the main image
-        $('#product-zoom').elevateZoom({
-          zoomType: 'inner',
-          cursor: 'crosshair'
+      document.addEventListener("DOMContentLoaded", function () {
+        var img = document.getElementById("product-zoom");
+        var result = document.getElementById("zoom-result");
+
+        img.addEventListener("mouseover", function (event) {
+          result.style.display = "block"; // Show zoom result
         });
-    
-        // Handle thumbnail click event
-        $('.product-gallery-item').on('click', function(e) {
-          e.preventDefault();
-          
-          // Remove active class from all thumbnails and add to the clicked one
-          $('.product-gallery-item').removeClass('active');
-          $(this).addClass('active');
-          
-          // Get the new image URLs
-          var imageSrc = $(this).data('image');
-          var zoomImageSrc = $(this).data('zoom-image');
-    
-          // Update the main image and data-zoom-image attribute
-          $('#product-zoom').attr('src', imageSrc).data('zoom-image', zoomImageSrc);
-    
-          // Reinitialize elevateZoom for the new image
-          $('.zoomContainer').remove(); // Remove the previous zoomContainer
-          $('#product-zoom').removeData('elevateZoom'); // Remove old elevateZoom data
-          $('#product-zoom').elevateZoom({
-            zoomType: 'inner',
-            cursor: 'crosshair'
-          });
+
+        img.addEventListener("mouseout", function (event) {
+          result.style.display = "none"; // Hide zoom result
         });
+
+        img.addEventListener("mousemove", function (event) {
+          var pos = getCursorPos(event);
+          var x = pos.x;
+          var y = pos.y;
+
+          var lensWidth = result.offsetWidth / 2;
+          var lensHeight = result.offsetHeight / 2;
+
+          // Ensure the lens doesn't go outside the image
+          if (x > img.width - lensWidth / 2) { x = img.width - lensWidth / 2; }
+          if (x < lensWidth / 2) { x = lensWidth / 2; }
+          if (y > img.height - lensHeight / 2) { y = img.height - lensHeight / 2; }
+          if (y < lensHeight / 2) { y = lensHeight / 2; }
+
+          result.style.backgroundImage = "url('" + img.src + "')";
+          result.style.backgroundSize = (img.width * 2) + "px " + (img.height * 2) + "px";
+          result.style.backgroundPosition = "-" + ((x * 2) - lensWidth) + "px -" + ((y * 2) - lensHeight) + "px";
+        });
+
+        function getCursorPos(e) {
+          var a = img.getBoundingClientRect();
+          var x = e.pageX - a.left;
+          var y = e.pageY - a.top;
+          x = x - window.pageXOffset;
+          y = y - window.pageYOffset;
+          return { x: x, y: y };
+        }
       });
+
+
     </script>
-    
+
+<script>
+  function addToWishlist(productId) {
+    console.log('Button clicked! Product ID:', productId); // Debugging line
+
+    fetch('/wishlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ productId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Data received:', data); // Debugging line
+      if (data.message) {
+        showAlert(data.message, data.error ? 'error' : 'success');
+      }
+    })
+    .catch(error => {
+      console.error('Error adding to wishlist:', error);
+      showAlert('Error adding item to wishlist', 'error');
+    });
+  }
+
+  function showAlert(message, type) {
+    const alertMessage = document.getElementById('alertMessage');
+    console.log('Showing alert:', message, type); // Debugging line
+    alertMessage.textContent = message;
+    alertMessage.className = 'alert-message'; 
+    if (type === 'error') {
+      alertMessage.classList.add('alert-error');
+    } else {
+      alertMessage.classList.add('alert-success');
+    }
+    alertMessage.style.display = 'block';
+
+    setTimeout(() => {
+      alertMessage.style.display = 'none';
+    }, 3000); // Hide after 3 seconds
+  }
+</script>
+
+
+
+
+
+
 
     <%- include('../layout/footer.ejs') %>
   </body>
-</html>
+
+  </html>

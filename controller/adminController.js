@@ -51,7 +51,6 @@ const verifyLogin = async (req, res) => {
   }
 };
 
-
 const loadHome = async (req, res) => {
   try {
     const isAdmin = req.session.admin;
@@ -61,7 +60,6 @@ const loadHome = async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 };
-
 
 const loadProductList = async (req, res) => {
   try {
@@ -94,26 +92,24 @@ const loadProductList = async (req, res) => {
 const loadAddProduct = async (req, res) => {
   try {
     const isAdmin = req.session.admin;
-    const categories = await Category.find({});
+    const categories = await Category.find({ isListed: "true" });
     return res.render("add-product", { categories, isAdmin });
   } catch (error) {
     console.log(error);
   }
 };
 
-
 const loadCategoryList = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Current page number
     const limit = 10; // Number of categories per page
     const skip = (page - 1) * limit; // Number of categories to skip
-    
 
     // Get categories with pagination
     const categories = await Category.find().skip(skip).limit(limit);
     const totalCategories = await Category.countDocuments();
     const totalPages = Math.ceil(totalCategories / limit);
-    
+
     const isAdmin = req.session.admin;
 
     return res.render("category-list", {
@@ -153,33 +149,38 @@ const addCategory = async (req, res) => {
 
     const existingCategory = await Category.findOne({ title });
     if (existingCategory) {
-      return res.status(400).send("Category already exists");
+      return res.status(400).json({ message: "Category already exists" });
     }
 
     const newCategory = new Category({
       title,
       slug,
       image,
-      isListed,
+      isListed: isListed === "true",
     });
 
     await newCategory.save();
-    return res.redirect("/admin/category-list");
+    return res.status(201).json({ message: "Category added successfully" });
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Server Error");
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
-
-
 const updateCategory = async (req, res) => {
   try {
-    const { title, description, status } = req.body;
     const categoryId = req.params.id;
-    const image = req.file ? req.file.filename : undefined;
+    const { title, description, status } = req.body; // `status` from form
+    const image = req.file ? req.file.filename : null;
 
-    const updateData = { title, description, status };
+    console.log("Update Data:", { title, description, status });
+
+    const updateData = {
+      title,
+      description,
+      isListed: status === "active", // Convert 'active' to true and 'inactive' to false
+    };
+
     if (image) {
       updateData.image = image;
     }
@@ -190,18 +191,18 @@ const updateCategory = async (req, res) => {
       { new: true }
     );
 
-    if (updatedCategory) {
-      res.json({ success: true });
-    } else {
-      res.status(404).json({ success: false, message: "Category not found" });
+    if (!updatedCategory) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Category not found" });
     }
+
+    res.json({ success: true, message: "Category updated successfully" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    console.error("Error updating category:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
-
 
 const loadAllUser = async (req, res) => {
   try {
@@ -380,43 +381,59 @@ const updateProduct = async (req, res) => {
   const { name, description, category, price, stock, status } = req.body;
 
   try {
-    // Validate ObjectId format
-    if (!mongoose.Types.ObjectId.isValid(category)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid category ID" });
-    }
-
-    const product = await Product.findById(productId);
-
-    if (product) {
-      product.name = name;
-      product.description = description;
-      product.category = new mongoose.Types.ObjectId(category); // Ensure category is an ObjectId
-      product.price = price;
-      product.stock = stock;
-      product.status = status;
-
-      if (req.files.productImage1) {
-        product.imageUrl_1 = "/uploads/" + req.files.productImage1[0].filename;
-      }
-      if (req.files.productImage2) {
-        product.imageUrl_2 = "/uploads/" + req.files.productImage2[0].filename;
-      }
-      if (req.files.productImage3) {
-        product.imageUrl_3 = "/uploads/" + req.files.productImage3[0].filename;
+      // Validate ObjectId format
+      if (!mongoose.Types.ObjectId.isValid(category)) {
+          return res.status(400).json({ success: false, message: "Invalid category ID" });
       }
 
-      await product.save();
-      res.json({ success: true, product });
-    } else {
-      res.json({ success: false, message: "Product not found" });
-    }
+      const product = await Product.findById(productId);
+
+      if (product) {
+          // Check if there are any changes
+          const changes = [];
+          if (product.name !== name) changes.push("name");
+          if (product.description !== description) changes.push("description");
+          if (product.category.toString() !== category) changes.push("category");
+          if (product.price !== price) changes.push("price");
+          if (product.stock !== stock) changes.push("stock");
+          if (product.isListed !== status) changes.push("status");
+
+          if (changes.length === 0) {
+              return res.json({ success: false, message: "No changes detected" });
+          }
+
+          // Update the product fields
+          product.name = name;
+          product.description = description;
+          product.category = new mongoose.Types.ObjectId(category);
+          product.price = price;
+          product.stock = stock;
+          product.isListed = status;
+
+          if (req.files) {
+              if (req.files.productImage1) {
+                  product.imageUrl_1 = "/uploads/" + req.files.productImage1[0].filename;
+              }
+              if (req.files.productImage2) {
+                  product.imageUrl_2 = "/uploads/" + req.files.productImage2[0].filename;
+              }
+              if (req.files.productImage3) {
+                  product.imageUrl_3 = "/uploads/" + req.files.productImage3[0].filename;
+              }
+          }
+
+          await product.save();
+          res.json({ success: true, product });
+      } else {
+          res.json({ success: false, message: "Product not found" });
+      }
   } catch (error) {
-    console.error("Error updating product:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+      console.error("Error updating product:", error);
+      res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+
 
 const loadAdmProfile = async (req, res) => {
   try {
@@ -451,7 +468,6 @@ const adminLogout = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 module.exports = {
   loadLogin,

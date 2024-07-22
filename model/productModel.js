@@ -49,7 +49,7 @@ const productSchema = new mongoose.Schema({
   imageUrl_2: { type: String },
   imageUrl_3: { type: String },
   isListed:{
-    type:Boolean,
+    type:String,
     required:true
   }
 });

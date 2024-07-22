@@ -548,43 +548,11 @@
       <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 136px;" aria-label="category: activate to sort column ascending">Category</th>
       <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 56px;" aria-label="stock: activate to sort column ascending">Stock</th>
       <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 100px;" aria-label="price: activate to sort column ascending">Price</th>
+      <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 100px;" aria-label="price: activate to sort column ascending">Status</th>
       <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 100px;" aria-label="price: activate to sort column ascending">Action</th>
 
     </tr>
   </thead>
-  <!-- <tbody>
-    <% products.forEach(product => { %>
-    <tr class="odd">
-      
-      <td class="sorting_1">
-        <div class="d-flex justify-content-start align-items-center product-name">
-          <div class="avatar-wrapper me-3">
-            <div class="avatar rounded-3 bg-label-secondary">
-              <img src="<%= product.imageUrl_1 %>" alt="Product-9" class="rounded-2">
-            </div>
-          </div>
-          <div class="d-flex flex-column">
-            <span class="text-nowrap text-heading fw-medium"><%= product.name %></span>
-          </div>
-        </div>
-      </td>
-      <td><%= product.category ? product.category.title : 'No Category' %></td>
-      <td class="stock"><%= product.stock %></td>
-      
-      
-      <td><%= product.price %></td>
-      <td>
-        <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="populateModal(<%= JSON.stringify(product) %>)">
-          Edit
-        </button>
-      
-
-
-
-      </td>
-    </tr>
-    <% }) %>
-  </tbody> -->
    <tbody id="category-table-body">
     <% products.forEach(product => { %>
     <tr>
@@ -603,6 +571,14 @@
       <td class="category-title"><%= product.category ? product.category.title : 'No Category' %></td>
       <td class="stock"><%= product.stock %></td>
       <td><%= product.price %></td>
+      <td>
+        <% if(product.isListed === 'true'){ %>
+        <div class="text-sm-end"> Active </div>
+      <% }else{ %>
+        <div class="text-sm-end"> InActive </div>
+      <% } %>
+      </td>
+        
       <td>
         <button class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="populateModal(<%= JSON.stringify(product) %>)">
           Edit
@@ -676,8 +652,9 @@
           <div class="mb-3">
             <label for="productStatus" class="form-label">Status</label>
             <select class="form-control" id="productStatus" name="status">
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="" disabled selected>Select Status</option>
+              <option value='true'>Active</option>
+              <option value='false'>Inactive</option>
             </select>
           </div>
           <div class="mb-3">
@@ -723,50 +700,14 @@
 
           </div>
           <!-- / Content -->
-
-          
-          
-
-<!-- Footer -->
-<!-- <footer class="content-footer footer bg-footer-theme">
-  <div class="container-xxl">
-    <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-      <div class="text-body mb-2 mb-md-0">
-        © <script>
-          document.write(new Date().getFullYear())
-
-        </script>, made with <span class="text-danger"><i class="tf-icons ri-heart-fill"></i></span> by <a href="https://themeselection.com/" target="_blank" class="footer-link">ThemeSelection</a>
-      </div>
-      <div class="d-none d-lg-inline-block">
-        
-        <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-        <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-        
-        <a href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/documentation/" target="_blank" class="footer-link me-4">Documentation</a>
-        
-        
-        <a href="https://themeselection.com/support/" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
-        
-      </div>
-    </div>
-  </div>
-</footer> -->
-<!-- / Footer -->
-
-          
           <div class="content-backdrop fade"></div>
         </div>
         <!-- Content wrapper -->
       </div>
       <!-- / Layout page -->
     </div>
-
-    
-    
     <!-- Overlay -->
     <div class="layout-overlay layout-menu-toggle"></div>
-    
-    
     <!-- Drag Target Area To SlideIn Menu On Small Screens -->
     <div class="drag-target"></div>
     
@@ -814,63 +755,128 @@
 
     
     
-    <script>
-      function populateModal(product) {
+  <script>
+    let originalProductData = {};
+
+    // Populate the modal with product data and store the original data
+    function populateModal(product) {
+        originalProductData = {
+            name: product.name,
+            description: product.description,
+            category: product.category ? product.category._id : '',
+            price: product.price,
+            stock: product.stock,
+            status: product.isListed,
+            image1: product.imageUrl_1,
+            image2: product.imageUrl_2,
+            image3: product.imageUrl_3
+        };
+
         document.getElementById('productName').value = product.name;
         document.getElementById('productDescription').value = product.description;
-        document.getElementById('productCategory').value = product.category ? product.category._id : ''; // Use the category ID
+        document.getElementById('productCategory').value = product.category ? product.category._id : '';
         document.getElementById('productPrice').value = product.price;
         document.getElementById('productStock').value = product.stock;
-        document.getElementById('productStatus').value = product.status;
-    
+        document.getElementById('productStatus').value = product.isListed;
+
         document.getElementById('modalImage1').src = product.imageUrl_1;
         document.getElementById('modalImage2').src = product.imageUrl_2;
         document.getElementById('modalImage3').src = product.imageUrl_3;
-    
-        document.getElementById('editProductForm').dataset.productId = product._id;
-      }
-    
-      
-      function editProduct() {
-    const form = document.getElementById('editProductForm');
-    const productId = form.dataset.productId;
-    const formData = new FormData(form);
 
-    fetch(`/admin/update-product/${productId}`, {
-      method: 'PATCH',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        swal({
-          title: "Success",
-          text: "Product updated successfully",
-          icon: "success",
-          button: "OK"
-        }).then(() => {
-          location.reload();
-        });
-      } else {
-        swal({
-          title: "Error",
-          text: "Error updating product: " + (data.message || "Unknown error"),
-          icon: "error",
-          button: "OK"
-        });
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      swal({
-        title: "Error",
-        text: "Error updating product: " + error.message,
-        icon: "error",
-        button: "OK"
-      });
-    });
-  }
-    </script>
+        document.getElementById('editProductForm').dataset.productId = product._id;
+    }
+
+    // Check if there are any changes
+    function hasChanges() {
+        const form = document.getElementById('editProductForm');
+        const currentName = form.querySelector('#productName').value;
+        const currentDescription = form.querySelector('#productDescription').value;
+        const currentCategory = form.querySelector('#productCategory').value;
+        const currentPrice = form.querySelector('#productPrice').value;
+        const currentStock = form.querySelector('#productStock').value;
+        const currentStatus = form.querySelector('#productStatus').value;
+
+        // Check for changes in images
+        const currentImage1 = document.getElementById('modalInputImage1').files.length > 0 
+            ? '/uploads/' + document.getElementById('modalInputImage1').files[0].name 
+            : originalProductData.image1;
+        const currentImage2 = document.getElementById('modalInputImage2').files.length > 0 
+            ? '/uploads/' + document.getElementById('modalInputImage2').files[0].name 
+            : originalProductData.image2;
+        const currentImage3 = document.getElementById('modalInputImage3').files.length > 0 
+            ? '/uploads/' + document.getElementById('modalInputImage3').files[0].name 
+            : originalProductData.image3;
+
+        return originalProductData.name !== currentName ||
+               originalProductData.description !== currentDescription ||
+               originalProductData.category !== currentCategory ||
+               originalProductData.price !== currentPrice ||
+               originalProductData.stock !== currentStock ||
+               originalProductData.status !== currentStatus ||
+               currentImage1 !== originalProductData.image1 ||
+               currentImage2 !== originalProductData.image2 ||
+               currentImage3 !== originalProductData.image3;
+    }
+
+    // Handle form submission
+    async function editProduct() {
+        const form = document.getElementById('editProductForm');
+        const productId = form.dataset.productId;
+
+        if (!hasChanges()) {
+            swal({
+                title: "No Changes",
+                text: "No changes were made to the product.",
+                icon: "info",
+                button: "OK"
+            });
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(`/admin/update-product/${productId}`, {
+                method: 'PATCH',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                swal({
+                    title: "Success",
+                    text: "Product updated successfully.",
+                    icon: "success",
+                    button: "OK"
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                swal({
+                    title: "Error",
+                    text: "Error updating product: " + (data.message || "Unknown error"),
+                    icon: "error",
+                    button: "OK"
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            swal({
+                title: "Error",
+                text: "Error updating product: " + error.message,
+                icon: "error",
+                button: "OK"
+            });
+        }
+    }
+</script>
+
+
+
+
+  
+  
+  
     
     
 

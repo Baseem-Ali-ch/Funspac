@@ -3,9 +3,10 @@ const adminController = require("../controller/adminController");
 const upload = require("../middleware/multer");
 const { isAdminAuthenticated } = require("../middleware/adminAuth");
 const adminBreadcrumbs = require("../middleware/adminBreadcrumbs");
-
+const nocache = require("nocache");
 const adminRoute = express();
 
+adminRoute.use(nocache());
 adminRoute.use(adminBreadcrumbs);
 
 adminRoute.set("view engine", "ejs");
@@ -17,11 +18,8 @@ adminRoute.post("/", adminController.verifyLogin);
 
 adminRoute.get("/dashboard", isAdminAuthenticated, adminController.loadHome);
 
-adminRoute.get(
-  "/add-product",
-  isAdminAuthenticated,
-  adminController.loadAddProduct
-);
+adminRoute.get("/add-product", isAdminAuthenticated, adminController.loadAddProduct);
+
 adminRoute.post(
   "/add-product",
   isAdminAuthenticated,
@@ -30,14 +28,10 @@ adminRoute.post(
     { name: "productImage2", maxCount: 1 },
     { name: "productImage3", maxCount: 1 },
   ]),
-  adminController.addProduct
+  adminController.addProduct,
 );
 
-adminRoute.get(
-  "/product-list",
-  isAdminAuthenticated,
-  adminController.loadProductList
-);
+adminRoute.get("/product-list", isAdminAuthenticated, adminController.loadProductList);
 
 adminRoute.patch(
   "/update-product/:id",
@@ -45,56 +39,27 @@ adminRoute.patch(
   upload.fields([
     { name: "productImage1", maxCount: 1 },
     { name: "productImage2", maxCount: 1 },
-    { name: "productImage3", maxCount: 1 }
+    { name: "productImage3", maxCount: 1 },
   ]),
-  adminController.updateProduct
+  adminController.updateProduct,
 );
 
-adminRoute.post(
-  "/categories/add",
-  isAdminAuthenticated,
-  upload.single("image"),
-  adminController.addCategory
-);
+adminRoute.post("/categories/add", isAdminAuthenticated, upload.single("image"), adminController.addCategory);
 
-adminRoute.get(
-  "/category-list",
-  isAdminAuthenticated,
-  adminController.loadCategoryList
-);
+adminRoute.get("/category-list", isAdminAuthenticated, adminController.loadCategoryList);
 adminRoute.patch(
-  '/category-list/:id',
+  "/category-list/:id",
   isAdminAuthenticated,
-  upload.single('categoryImage'),
-  adminController.updateCategory
+  upload.single("categoryImage"),
+  adminController.updateCategory,
 );
 
-adminRoute.get(
-  "/order-list",
-  isAdminAuthenticated,
-  adminController.loadOrderList
-);
-adminRoute.get(
-  "/order-details",
-  isAdminAuthenticated,
-  adminController.loadOrderDeatails
-);
+adminRoute.get("/order-list", isAdminAuthenticated, adminController.loadOrderList);
+adminRoute.get("/order-details", isAdminAuthenticated, adminController.loadOrderDeatails);
 
-adminRoute.get(
-  "/allCustomer",
-  isAdminAuthenticated,
-  adminController.loadAllUser
-);
-adminRoute.post(
-  "/update-customer/:id",
-  isAdminAuthenticated,
-  adminController.updateCustomer
-);
-adminRoute.post(
-  "/change-status/:id",
-  isAdminAuthenticated,
-  adminController.changeCustomer
-);
+adminRoute.get("/allCustomer", isAdminAuthenticated, adminController.loadAllUser);
+adminRoute.post("/update-customer/:id", isAdminAuthenticated, adminController.updateCustomer);
+adminRoute.post("/change-status/:id", isAdminAuthenticated, adminController.changeCustomer);
 
 adminRoute.post("/logout", isAdminAuthenticated, adminController.adminLogout);
 adminRoute.get("/admin-profile", isAdminAuthenticated, adminController.loadAdmProfile);
