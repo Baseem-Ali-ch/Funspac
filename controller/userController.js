@@ -228,14 +228,16 @@ const loadHome = async (req, res) => {
       cartItems = cart ? cart.items : []
     }
     
-
+    const products = await Product.find({isListed:true}).limit(6).sort({createdAt:-1})
 
     console.log('Wishlist Items:', wishlistItems);
 
     res.render('home', { 
       user, 
       wishlistItems,
-      cartItems });
+      cartItems,
+      products
+     });
   } catch (error) {
     console.error('Error rendering home:', error);
     res.status(500).send('Internal Server Error');
@@ -361,11 +363,18 @@ const loadProduct = async (req, res) => {
       return res.status(404).send("Product not found");
     }
 
+    const breadcrumbs = [
+      { name: "Home", url: "/" },
+      { name: "Product List", url: "/product-list" },
+      { name: product.name, url: `/product/${product._id}` } // Use product name here
+    ];
+
     res.render("product", { 
       product, 
       user,
       wishlistItems, 
-      cartItems 
+      cartItems,
+      breadcrumbs
     });
   } catch (error) {
     console.error(error);
@@ -398,7 +407,7 @@ const loadProductList = async (req, res) => {
     const products = await Product.find({ isListed: 'true' })
       .populate({
         path: "category",
-        match: { isListed: true },
+        match: { isListed: 'true' },
         select: "title",
       })
       .skip(skip)

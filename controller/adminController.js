@@ -25,6 +25,7 @@ const verifyLogin = async (req, res) => {
       if (passwordMatch) {
         if (userData.is_admin) {
           req.session.admin = userData; // Set admin in session
+         
           return res.redirect("/admin/dashboard");
         } else {
           return res.render("login", {
@@ -53,6 +54,7 @@ const verifyLogin = async (req, res) => {
 const loadHome = async (req, res) => {
   try {
     const isAdmin = req.session.admin;
+    console.log('admin session',isAdmin)
     return res.render("dashboard", { isAdmin });
   } catch (error) {
     console.log(error);
@@ -411,13 +413,13 @@ const updateProduct = async (req, res) => {
 
           if (req.files) {
               if (req.files.productImage1) {
-                  product.imageUrl_1 = "/uploads/" + req.files.productImage1[0].filename;
+                  product.imageUrl_1 = "/assets/images/add-product/" + req.files.productImage1[0].filename;
               }
               if (req.files.productImage2) {
-                  product.imageUrl_2 = "/uploads/" + req.files.productImage2[0].filename;
+                  product.imageUrl_2 = "/assets/images/add-product/" + req.files.productImage2[0].filename;
               }
               if (req.files.productImage3) {
-                  product.imageUrl_3 = "/uploads/" + req.files.productImage3[0].filename;
+                  product.imageUrl_3 = "/assets/images/add-product/" + req.files.productImage3[0].filename;
               }
           }
 

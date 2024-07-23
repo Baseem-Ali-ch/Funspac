@@ -6,6 +6,7 @@ const adminBreadcrumbs = require("../middleware/adminBreadcrumbs");
 const nocache = require("nocache");
 const adminRoute = express();
 
+
 adminRoute.use(nocache());
 adminRoute.use(adminBreadcrumbs);
 

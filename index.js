@@ -38,7 +38,7 @@ const adminStore = MongoStore.create({
   collectionName: "admin_sessions", // Collection for admin sessions
 });
 
-// Configure session middleware for user and admin
+
 app.use(
   session({
     secret: process.env.USER_SESSION_SECRET, // Secret for user sessions
@@ -49,17 +49,23 @@ app.use(
   })
 );
 
-// Middleware to set up session for admin routes
 app.use(
   "/admin",
   session({
-    secret: process.env.ADMIN_SESSION_SECRET, // Secret for admin sessions
+    secret: process.env.ADMIN_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: adminStore,
-    cookie: { secure: false }, // Set to true if using HTTPS
+    cookie: { secure: false },
   })
 );
+
+// Configure session middleware for user and admin
+
+
+// Middleware to set up session for admin routes
+
+
 
 // Initialize passport
 app.use(passport.initialize());
@@ -84,6 +90,10 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Define routes
 const userRoute = require("./routes/userRoute");
 app.use("/", userRoute);
+
+
+app.use("/admin", passport.initialize());
+app.use("/admin", passport.session());
 
 const adminRoute = require("./routes/adminRoute");
 app.use("/admin", adminRoute);

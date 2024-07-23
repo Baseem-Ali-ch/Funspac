@@ -15,6 +15,7 @@ breadcrumbs.use((req, res, next) => {
      if (segment === "product") {
       path = "/product-list";
     }
+    
    
     
     breadcrumbArray.push({
