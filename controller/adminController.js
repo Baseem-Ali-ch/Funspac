@@ -20,7 +20,6 @@ const verifyLogin = async (req, res) => {
   try {
     const { "login-email": email, "login-password": password } = req.body;
     const userData = await userModel.findOne({ email });
-
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       if (passwordMatch) {

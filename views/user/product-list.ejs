@@ -54,7 +54,15 @@
 
                   <li>
                     <a href="/wishlist"><i class="icon-heart-o"></i>Wishlist
-
+                      <% if(wishlistItems){ %>
+                        <span>
+                          (<%= wishlistItems.length %>)
+                        </span>
+                      <% }else{ %>
+                        <span>
+                          (0)
+                        </span>
+                     <% } %>
 
                     </a>
                   </li>
@@ -182,7 +190,13 @@
             <div class="dropdown cart-dropdown">
               <a href="/cart" class="dropdown-toggle">
                 <i class="icon-shopping-cart"></i>
-                <span class="cart-count">0</span>
+                <% if(cartItems){ %>
+                  <span class="cart-count">
+                    <%= cartItems.length %>
+                  </span>
+                <% }else{ %>
+                  <span class="cart-count">0</span>
+                <% } %> 
               </a>
             </div>
             <!-- End .cart-dropdown -->
@@ -254,7 +268,7 @@
                         > -->
 
                             <a href="#" class="btn-product-icon btn-wishlist btn-expandable"
-                              onclick="addToWishlist('<%= product._id %>'); return false;">
+                              onclick="addToWishlist('<%= product._id %>',1); return false;">
                               <span>Add to Wishlist</span>
                             </a>
                             
@@ -274,9 +288,19 @@
                           </div>
                           <!-- End .product-action-vertical -->
 
-                          <div class="product-action">
+                          
+                          <!-- <div class="product-action">
+                            
                             <a href="#" class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></a>
+                          </div> -->
+                          <div class="product-action">
+                            <a href="#" class="btn-product btn-cart" id="btn-cart-<%= product._id %>" onclick="addToCart('<%= product._id %>')">
+                              <span>add to cart</span>
+                            </a>
                           </div>
+                          
+                          
+                          
                           <!-- End .product-action -->
                         </figure>
                         <!-- End .product-media -->
@@ -302,7 +326,7 @@
                           </h3>
                           <!-- End .product-title -->
                           <div class="product-price">
-                            <%= product.price %>
+                            ₹<%= product.price %>
                           </div>
                           <!-- End .product-price -->
                           <div class="ratings-container">
@@ -1049,7 +1073,7 @@
         })
         .catch(error => {
           console.error('Error adding to wishlist:', error);
-          showAlert('Error adding item to wishlist', 'error');
+          showAlert('Error adding to wishlist ! Please login and continue', 'error');
         });
     }
 
@@ -1069,41 +1093,63 @@
 
 
 
-    function addToCart(productId, quantity) {
-  fetch('/cart', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest'
-    },
-    body: JSON.stringify({ productId, quantity })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      showAlert(data.message, 'success'); // Show success message
-    } else {
-      showAlert(data.message, 'error'); // Show error message
-    }
-  })
-  .catch(error => {
-    console.error('Error adding item to cart:', error);
-    showAlert('Error adding item to cart', 'error');
-  });
-}
+    
+  
+    
+  // Function to add product to the cart
+  function addToCart(productId) {
+    const quantity = 1; // Set quantity to 1
+    console.log('Adding to cart:', productId, quantity); // Log productId and quantity
 
-function showAlert(message, type) {
-  const alertMessage = document.getElementById('alertMessage');
-  alertMessage.textContent = message;
-  alertMessage.className = 'alert-message';
-  alertMessage.classList.add(type === 'error' ? 'alert-error' : 'alert-success');
-  alertMessage.style.display = 'block';
+    fetch('/cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ productId, quantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        showAlert(data.message, 'success'); // Show success message
+        // Change button to "View Cart"
+        const btnCart = document.getElementById(`btn-cart-${productId}`);
+        btnCart.innerHTML = '<span>view cart</span>';
+        btnCart.setAttribute('onclick', 'viewCart()');
+        
+      } else {
+        showAlert(data.message, 'error'); // Show error message
+      }
+    })
+    .catch(error => {
+      console.error('Error adding item to cart:', error);
+      showAlert('Error adding item to cart', 'error');
+    });
+  }
 
-  setTimeout(() => {
-    alertMessage.style.display = 'none';
-  }, 3000);
-}
+  // Function to redirect to the cart page
+  function viewCart() {
+    window.location.href = '/cart'; // Redirect to the cart page
+  }
 
-  </script>
+  // Function to show alert messages
+  function showAlert(message, type) {
+    const alertMessage = document.getElementById('alertMessage');
+    alertMessage.textContent = message;
+    alertMessage.className = 'alert-message';
+    alertMessage.classList.add(type === 'error' ? 'alert-error' : 'alert-success');
+    alertMessage.style.display = 'block';
+
+    setTimeout(() => {
+      alertMessage.style.display = 'none';
+    }, 3000);
+  }
+
+  // Function to save product ID to local storage
+  
+
+</script>
+
 
   <%- include('../layout/footer.ejs') %>

@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const randomstring = require("randomstring");
 const Wishlist = require("../model/wishlistModel");
+const Cart = require('../model/cartModel')
 
 dotenv.config();
 
@@ -197,15 +198,51 @@ const verifyOTP = async (req, res) => {
   }
 };
 
+// const loadHome = async (req, res) => {
+//   try {
+//     const user = req.session.user || req.user;
+//     const userId = user ? user._id : null
+//     const wishlistItems = await Wishlist.findOne({ userId }).populate("products.productId")
+//     res.render("home", { user,wishlistItems:wishlistItems.products });
+//   } catch (error) {
+//     console.error("Error rendering home:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
 const loadHome = async (req, res) => {
   try {
     const user = req.session.user || req.user;
-    res.render("home", { user });
+    const userId = user ? user._id : null;
+
+    console.log('User ID:', userId);
+
+    let wishlistItems = [];
+    if (userId) {
+      const wishlist = await Wishlist.findOne({ userId }).populate('products.productId');
+      wishlistItems = wishlist ? wishlist.products : [];
+    }
+
+    let cartItems = []
+    if(userId){
+      const cart = await Cart.findOne({ userId }).populate('items.productId');
+      cartItems = cart ? cart.items : []
+    }
+    
+
+
+    console.log('Wishlist Items:', wishlistItems);
+
+    res.render('home', { 
+      user, 
+      wishlistItems,
+      cartItems });
   } catch (error) {
-    console.error("Error rendering home:", error);
-    res.status(500).send("Internal Server Error");
+    console.error('Error rendering home:', error);
+    res.status(500).send('Internal Server Error');
   }
 };
+
+
 
 const resentOTP = async (req, res) => {
   try {
@@ -239,8 +276,6 @@ const loadWishlist = async (req, res) => {
     }
 
     const wishlistItems = await Wishlist.findOne({ userId }).populate("products.productId");
-    
-    
 
     res.render("wishlist", { user, wishlistItems: wishlistItems.products });
     
@@ -253,7 +288,10 @@ const loadWishlist = async (req, res) => {
 const loadContact = async (req, res) => {
   try {
     const user = req.session.user || req.user;
-    res.render("contact-us", { user });
+    const userId = user ? user._id : null
+    const cart = await Cart.findOne({ userId }).populate('items.productId');
+    const wishlistItems = await Wishlist.findOne({ userId }).populate("products.productId")
+    res.render("contact-us", { user, cartItems:cart.items,wishlistItems:wishlistItems.products });
   } catch (error) {
     console.log(error);
   }
@@ -300,16 +338,35 @@ const loadProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     const user = req.session.user || req.user;
+    const userId = user ? user._id : null
+    
     const product = await Product.findById(productId).populate(
       "category",
       "title"
     );
+    let wishlistItems = [];
+    if (userId) {
+      const wishlist = await Wishlist.findOne({ userId }).populate('products.productId');
+      wishlistItems = wishlist ? wishlist.products : [];
+    }
+
+    let cartItems = []
+    if(userId){
+      const cart = await Cart.findOne({ userId }).populate('items.productId');
+      cartItems = cart ? cart.items : []
+    }
+    
 
     if (!product) {
       return res.status(404).send("Product not found");
     }
 
-    res.render("product", { product, user });
+    res.render("product", { 
+      product, 
+      user,
+      wishlistItems, 
+      cartItems 
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
@@ -354,15 +411,28 @@ const loadProductList = async (req, res) => {
     const totalPages = Math.ceil(totalProducts / limit);
 
     const user = req.session.user || req.user;
+    const userId = user ? user._id : null
 
-    
+    let wishlistItems = [];
+    if (userId) {
+      const wishlist = await Wishlist.findOne({ userId }).populate('products.productId');
+      wishlistItems = wishlist ? wishlist.products : [];
+    }
+
+    let cartItems = []
+    if(userId){
+      const cart = await Cart.findOne({ userId }).populate('items.productId');
+      cartItems = cart ? cart.items : []
+    }
 
     res.render("product-list", {
       products,
       categories: listedCategories,
       user,
       currentPage: page,
-      totalPages
+      totalPages,
+      wishlistItems,
+      cartItems
     });
   } catch (error) {
     console.log(error);
@@ -522,7 +592,7 @@ const addToWishlist = async (req, res) => {
     if (!userId) {
       return res
         .status(401)
-        .json({ message: "User not logged in", error: true });
+        .json({ message: "Please login and continue", error: true });
     }
     if (!productId) {
       return res
@@ -601,8 +671,12 @@ const addToCart = async (req, res) => {
     const userId = req.session.user ? req.session.user._id : null;
     const { productId, quantity } = req.body;
 
+    console.log('User ID:', userId); // Log userId
+    console.log('Product ID:', productId); // Log productId
+    console.log('Quantity:', quantity); // Log quantity
+
     if (!userId) {
-      return res.status(401).json({ message: 'User not logged in', success: false });
+      return res.status(401).json({ message: 'Please login and continue', success: false });
     }
     if (!productId || !quantity) {
       return res.status(400).json({ message: 'Product ID and quantity are required', success: false });
@@ -639,6 +713,36 @@ const addToCart = async (req, res) => {
 
 
 
+const loadCart = async (req, res) => {
+  try {
+    const user = req.session.user || req.user;
+    const userId = user ? user._id : null;
+    
+    if (!userId) {
+      return res
+        .status(401)
+        .render("login", { message: "Please log in to view your cart" });
+    }
+    const wishlistItems = await Wishlist.findOne({userId}).populate('products.productId')
+    const cart = await Cart.findOne({ userId }).populate('items.productId');
+
+    if (!cart || !cart.items) {
+      return res.render('cart', { user, cartItems: [], wishlistItems: wishlistItems.products});
+    }
+
+    res.render('cart', { user, cartItems: cart.items, wishlistItems: wishlistItems.products });
+  } catch (error) {
+    console.error('Error loading cart:', error);
+    res.status(500).send("Server Error");
+  }
+}
+
+
+
+
+
+
+
 module.exports = {
   loadHome,
   loadRegister,
@@ -659,5 +763,7 @@ module.exports = {
   updateProfile,
   filterProduct,
   addToWishlist,
-  removeFromWishlist
+  removeFromWishlist,
+  loadCart,
+  addToCart
 };

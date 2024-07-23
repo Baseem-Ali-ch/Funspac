@@ -47,6 +47,10 @@ userRoute.get("/product-list", userController.loadProductList);
 // Filter Products
 userRoute.post('/filter-products', userController.filterProduct);
 
+//cart routes
+userRoute.get('/cart',userController.loadCart)
+userRoute.post('/cart',userController.addToCart)
+
 // Authentication Routes
 const authRoute = require("./authRoutes"); // Ensure this path is correct
 userRoute.use("/", authRoute);
