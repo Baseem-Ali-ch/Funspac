@@ -526,17 +526,7 @@
                         <div class="dataTables_length" id="DataTables_Table_0_length">
                         </div>
                         <div class="dt-buttons btn-group flex-wrap d-flex">
-                          <div class="btn-group">
-                            <button
-                              class="btn btn-secondary buttons-collection dropdown-toggle btn-outline-secondary me-4 waves-effect waves-light"
-                              tabindex="0" aria-controls="DataTables_Table_0" type="button" aria-haspopup="dialog"
-                              aria-expanded="false">
-                              <span>
-                                <i class="ri-upload-2-line ri-16px me-2"></i>
-                                <span class="d-none d-sm-inline-block">Export </span>
-                              </span>
-                            </button>
-                          </div>
+
                           <a href="/admin/add-product">
                             <button class="btn btn-secondary add-new btn-primary waves-effect waves-light" tabindex="0"
                               aria-controls="DataTables_Table_0" type="button">
@@ -561,26 +551,27 @@
                     id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 1043px;">
                     <thead>
                       <tr>
-
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
+                        <th>s/n</th>
+                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
                           colspan="1" style="width: 439px;" aria-label="product: activate to sort column descending"
-                          aria-sort="ascending">Product</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                          aria-sort="">Product</th>
+                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 136px;" aria-label="category: activate to sort column ascending">Category</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 56px;" aria-label="stock: activate to sort column ascending">Stock</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 100px;" aria-label="price: activate to sort column ascending">Price</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 100px;" aria-label="price: activate to sort column ascending">Status</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 100px;" aria-label="price: activate to sort column ascending">Action</th>
 
                       </tr>
                     </thead>
                     <tbody id="category-table-body">
-                      <% products.forEach(product=> { %>
+                      <% products.forEach(function(product,index) { %>
                         <tr>
+                          <td><%= index + 1 %></td>
                           <td class="product-name">
                             <div class="d-flex justify-content-start align-items-center">
                               <div class="avatar-wrapper me-3">
@@ -614,7 +605,7 @@
 
                           <td>
                             <button
-                              class="btn btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn"
+                              class="btn btn-sm btn-primary btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn"
                               data-bs-toggle="modal" data-bs-target="#editProductModal"
                               onclick="populateModal(<%= JSON.stringify(product) %>)">
                               Edit
@@ -650,74 +641,7 @@
                   </nav>
 
 
-                  <!-- Modal -->
-                  <!-- <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="editProductForm" enctype="multipart/form-data">
-          <div class="mb-3">
-            <label for="productName" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="productName" name="name">
-          </div>
-          <div class="mb-3">
-            <label for="productDescription" class="form-label">Description</label>
-            <textarea class="form-control" id="productDescription" name="description"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="productCategory" class="form-label">Category</label>            <select class="form-control" id="productCategory" name="category">
-              <% categories.forEach(category => { %>
-                <option value="<%= category._id %>" <%= category._id.equals(category._id) ? 'selected' : '' %>>
-                  <%= category.title %>
-                </option>
-              <% }) %>
-            </select>
-             
-          </div>
-          <div class="mb-3">
-            <label for="productPrice" class="form-label">Price</label>
-            <input type="number" class="form-control" id="productPrice" name="price">
-          </div>
-          <div class="mb-3">
-            <label for="productStock" class="form-label">Stock</label>
-            <input type="number" class="form-control" id="productStock" name="stock">
-          </div>
-          <div class="mb-3">
-            <label for="productStatus" class="form-label">Status</label>
-            <select class="form-control" id="productStatus" name="status">
-              <option value="" disabled selected>Select Status</option>
-              <option value='true'>Active</option>
-              <option value='false'>Inactive</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="productImages" class="form-label">Product Images</label>
-            <div id="productImages" class="row">
-              <div class="col-md-4 mb-3">
-                <img id="modalImage1" src="#" alt="Product Image 1" class="img-thumbnail">
-                <input type="file" class="form-control mt-2" id="modalInputImage1" name="productImage1" onchange="replaceModalImage(this, 'modalImage1')">
-              </div>
-              <div class="col-md-4 mb-3">
-                <img id="modalImage2" src="#" alt="Product Image 2" class="img-thumbnail">
-                <input type="file" class="form-control mt-2" id="modalInputImage2" name="productImage2" onchange="replaceModalImage(this, 'modalImage2')">
-              </div>
-              <div class="col-md-4 mb-3">
-                <img id="modalImage3" src="#" alt="Product Image 3" class="img-thumbnail">
-                <input type="file" class="form-control mt-2" id="modalInputImage3" name="productImage3" onchange="replaceModalImage(this, 'modalImage3')">
-              </div>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary" onclick="editProduct()">Save</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div> -->
-
+              
 
                   <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
                     aria-hidden="true">
@@ -775,7 +699,7 @@
                                     <button type="button" class="btn btn-warning btn-sm"
                                       onclick="triggerInputClick('modalInputImage1');">Replace</button>
                                     <button type="button" class="btn btn-danger btn-sm"
-                                      onclick="deleteModalImage('modalImage1');">Delete</button>
+                                      onclick="deleteModalImage('modalImage1');">Remove</button>
                                   </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
@@ -786,7 +710,7 @@
                                     <button type="button" class="btn btn-warning btn-sm"
                                       onclick="triggerInputClick('modalInputImage2');">Replace</button>
                                     <button type="button" class="btn btn-danger btn-sm"
-                                      onclick="deleteModalImage('modalImage2');">Delete</button>
+                                      onclick="deleteModalImage('modalImage2');">Remove</button>
                                   </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
@@ -797,7 +721,7 @@
                                     <button type="button" class="btn btn-warning btn-sm"
                                       onclick="triggerInputClick('modalInputImage3');">Replace</button>
                                     <button type="button" class="btn btn-danger btn-sm"
-                                      onclick="deleteModalImage('modalImage3');">Delete</button>
+                                      onclick="deleteModalImage('modalImage3');">Remove</button>
                                   </div>
                                 </div>
                               </div>
@@ -807,7 +731,7 @@
                         </div>
                       </div>
                     </div>
-                   </div>
+                  </div>
                   <!-- / Content -->
                   <div class="content-backdrop fade"></div>
                 </div>
@@ -920,7 +844,6 @@
               document.getElementById('productPrice').value = product.price;
               document.getElementById('productStock').value = product.stock;
               document.getElementById('productStatus').value = product.isListed;
-
               document.getElementById('modalImage1').src = product.imageUrl_1;
               document.getElementById('modalImage2').src = product.imageUrl_2;
               document.getElementById('modalImage3').src = product.imageUrl_3;

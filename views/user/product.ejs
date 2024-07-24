@@ -175,6 +175,20 @@
                   <li>
                     <a href="/product-list" ">Product</a>
                   </li>
+
+                  <li>
+                    <a href=" #" class="sf-with-ul">Category</a>
+                      <ul>
+                        <% categories.forEach(function(category) { %>
+    
+                          <li><a href="/category/<%= category._id %>">
+                              <%= category.title %>
+                            </a></li>
+    
+                          <% }) %>
+                      </ul>
+                    </li>
+
                   <li>
                     <a href=" category.html" class="sf-with-ul">Brand</a>
 
@@ -224,11 +238,11 @@
                     <a href="#" class="sf-with-ul">Pages</a>
 
                     <ul>
-                      <li><a href="about.html">About</a></li>
-                      <li><a href="contact.html">Contact</a></li>
-                      <li><a href="login.html">Login</a></li>
+                      <!-- <li><a href="about.html">About</a></li> -->
+                      <li><a href="/contact">Contact</a></li>
+                      <li><a href="/login">Login</a></li>
 
-                      <li><a href="coming-soon.html">Coming Soon</a></li>
+                      <!-- <li><a href="coming-soon.html">Coming Soon</a></li> -->
                     </ul>
                   </li>
                 </ul>

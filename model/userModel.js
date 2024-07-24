@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
   },
   isListed: {
     // Add this field
-    type: Boolean,
+    type: String,
     default: true,
   },
   resetPasswordToken: String,

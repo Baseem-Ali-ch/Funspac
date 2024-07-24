@@ -31,19 +31,21 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
               <div class="container breadcrumbs">
                 <ol class="breadcrumb">
-                  <% breadcrumbs.forEach((crumb, index) => { %>
+                  <% breadcrumbs.forEach((crumb, index)=> { %>
                     <% if (index < breadcrumbs.length - 1) { %>
                       <!-- Breadcrumbs with links -->
                       <li class="breadcrumb-item">
-                        <a href="<%= crumb.url %>"><%= crumb.name %></a>
+                        <a href="<%= crumb.url %>">
+                          <%= crumb.name %>
+                        </a>
                       </li>
-                    <% } else { %>
-                      <!-- Current page breadcrumb without link -->
-                      <li class="breadcrumb-item active" aria-current="page">
-                        <%= crumb.name %>
-                      </li>
-                    <% } %>
-                  <% }); %>
+                      <% } else { %>
+                        <!-- Current page breadcrumb without link -->
+                        <li class="breadcrumb-item active" aria-current="page">
+                          <%= crumb.name %>
+                        </li>
+                        <% } %>
+                          <% }); %>
                 </ol>
               </div>
               <!-- End .container -->
@@ -64,11 +66,11 @@
                         <span>
                           (<%= wishlistItems.length %>)
                         </span>
-                      <% }else{ %>
-                        <span>
-                          (0)
-                        </span>
-                     <% } %>
+                        <% }else{ %>
+                          <span>
+                            (0)
+                          </span>
+                          <% } %>
 
                     </a>
                   </li>
@@ -117,62 +119,81 @@
                 <li>
                   <a href="/product-list" ">Product</a>
               </li>
+
               <li>
-                <a href=" category.html" class="sf-with-ul">Brand</a>
-
-                  <div class="megamenu megamenu-sm">
-                    <div class="row no-gutters">
-                      <div class="col-md-6">
-                        <div class="menu-col">
-                          <div class="menu-title"></div>
-                          <!-- End .menu-title -->
-                          <ul>
-                            <li><a href="product.html">IKEA</a></li>
-                            <li><a href="product-centered.html">Durian</a></li>
-                            <li><a href="product-extended.html">Hometown</a></li>
-                            <li>
-                              <a href="product-gallery.html">Urban Ladder</a>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- End .menu-col -->
-                      </div>
-                      <!-- End .col-md-6 -->
-
-                      <div class="col-md-6">
-                        <div class="banner banner-overlay">
-                          <a href="category.html">
-                            <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
-
-                            <div class="banner-content banner-content-bottom">
-                              <div class="banner-title text-white">
-                                New Trends<br /><span><strong>spring 2019</strong></span>
-                              </div>
-                              <!-- End .banner-title -->
-                            </div>
-                            <!-- End .banner-content -->
-                          </a>
-                        </div>
-                        <!-- End .banner -->
-                      </div>
-                      <!-- End .col-md-6 -->
-                    </div>
-                    <!-- End .row -->
-                  </div>
-                  <!-- End .megamenu megamenu-sm -->
-                </li>
-
-                <li>
-                  <a href="#" class="sf-with-ul">Pages</a>
-
+                <a href=" #" class="sf-with-ul">Category</a>
                   <ul>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                    <li><a href="login.html">Login</a></li>
+                    <% categories.forEach(function(category) { %>
 
-                    <li><a href="coming-soon.html">Coming Soon</a></li>
+                      <li><a href="/category/<%= category._id %>">
+                          <%= category.title %>
+                        </a></li>
+
+                      <% }) %>
                   </ul>
                 </li>
+
+                
+
+
+
+
+                      <li>
+                        <a href=" category.html" class="sf-with-ul">Brand</a>
+
+                        <div class="megamenu megamenu-sm">
+                          <div class="row no-gutters">
+                            <div class="col-md-6">
+                              <div class="menu-col">
+                                <div class="menu-title"></div>
+                                <!-- End .menu-title -->
+                                <ul>
+                                  <li><a href="product.html">IKEA</a></li>
+                                  <li><a href="product-centered.html">Durian</a></li>
+                                  <li><a href="product-extended.html">Hometown</a></li>
+                                  <li>
+                                    <a href="product-gallery.html">Urban Ladder</a>
+                                  </li>
+                                </ul>
+                              </div>
+                              <!-- End .menu-col -->
+                            </div>
+                            <!-- End .col-md-6 -->
+
+                            <div class="col-md-6">
+                              <div class="banner banner-overlay">
+                                <a href="category.html">
+                                  <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
+
+                                  <div class="banner-content banner-content-bottom">
+                                    <div class="banner-title text-white">
+                                      New Trends<br /><span><strong>spring 2019</strong></span>
+                                    </div>
+                                    <!-- End .banner-title -->
+                                  </div>
+                                  <!-- End .banner-content -->
+                                </a>
+                              </div>
+                              <!-- End .banner -->
+                            </div>
+                            <!-- End .col-md-6 -->
+                          </div>
+                          <!-- End .row -->
+                        </div>
+                        <!-- End .megamenu megamenu-sm -->
+                      </li>
+
+                      <li>
+                        <a href="#" class="sf-with-ul">Pages</a>
+
+                        <ul>
+                          <!-- <li><a href="about.html">About</a></li> -->
+                          <li><a href="/contact-us">Contact</a></li>
+                          <li><a href="/login">Login</a></li>
+
+                          <!-- <li><a href="coming-soon.html">Coming Soon</a></li> -->
+                        </ul>
+                      </li>
               </ul>
               <!-- End .menu -->
             </nav>
@@ -200,9 +221,9 @@
                   <span class="cart-count">
                     <%= cartItems.length %>
                   </span>
-                <% }else{ %>
-                  <span class="cart-count">0</span>
-                <% } %> 
+                  <% }else{ %>
+                    <span class="cart-count">0</span>
+                    <% } %>
               </a>
             </div>
             <!-- End .cart-dropdown -->
@@ -266,31 +287,32 @@
                           </a>
 
                           <div class="product-action-vertical">
-                           
+
 
                             <a href="#" class="btn-product-icon btn-wishlist btn-expandable"
                               onclick="addToWishlist('<%= product._id %>',1); return false;">
                               <span>Add to Wishlist</span>
                             </a>
-                            
 
-                           
+
+
                           </div>
                           <!-- End .product-action-vertical -->
 
-                          
+
                           <!-- <div class="product-action">
                             
                             <a href="#" class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></a>
                           </div> -->
                           <div class="product-action">
-                            <a href="#" class="btn-product btn-cart" id="btn-cart-<%= product._id %>" onclick="addToCart('<%= product._id %>')">
+                            <a href="#" class="btn-product btn-cart" id="btn-cart-<%= product._id %>"
+                              onclick="addToCart('<%= product._id %>');">
                               <span>add to cart</span>
                             </a>
                           </div>
-                          
-                          
-                          
+
+
+
                           <!-- End .product-action -->
                         </figure>
                         <!-- End .product-media -->
@@ -387,27 +409,25 @@
                   <div class="collapse show" id="widget-1">
                     <div class="widget-body">
                       <div class="filter-items filter-items-count">
-                        
+
                         <div class="filter-item">
-                          <% 
-                            const uniqueCategories = [];
-                            products.forEach(product => {
-                              if (product.category && !uniqueCategories.some(cat => cat._id === product.category._id)) {
-                                uniqueCategories.push(product.category);
-                              }
+                          <% const uniqueCategories=[]; products.forEach(product=> {
+                            if (product.category && !uniqueCategories.some(cat => cat._id === product.category._id)) {
+                            uniqueCategories.push(product.category);
+                            }
                             });
-                          %>
-                          <% uniqueCategories.forEach((category, index) => { %>
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="cat-<%= index %>"
-                                value="<%= category._id %>" onchange="filterProducts()" />
-                              <label class="custom-control-label" for="cat-<%= index %>">
-                                <%= category.title %>
-                              </label>
-                            </div>
-                          <% }); %>
+                            %>
+                            <% uniqueCategories.forEach((category, index)=> { %>
+                              <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="cat-<%= index %>"
+                                  value="<%= category._id %>" onchange="filterProducts()" />
+                                <label class="custom-control-label" for="cat-<%= index %>">
+                                  <%= category.title %>
+                                </label>
+                              </div>
+                              <% }); %>
                         </div>
-                        
+
                         <!-- End .custom-checkbox -->
                       </div>
                       <!-- End .filter-item -->
@@ -421,14 +441,14 @@
               </div>
               <!-- End .widget -->
 
-              <div class="widget widget-collapsible">
+              <!-- <div class="widget widget-collapsible">
                 <h3 class="widget-title">
                   <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true"
                     aria-controls="widget-4">
                     Brand
                   </a>
                 </h3>
-                <!-- End .widget-title -->
+                
 
                 <div class="collapse show" id="widget-4">
                   <div class="widget-body">
@@ -438,70 +458,69 @@
                           <input type="checkbox" class="custom-control-input" id="brand-1" />
                           <label class="custom-control-label" for="brand-1">Next</label>
                         </div>
-                        <!-- End .custom-checkbox -->
+                        
                       </div>
-                      <!-- End .filter-item -->
+                      
 
                       <div class="filter-item">
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="brand-2" />
                           <label class="custom-control-label" for="brand-2">River Island</label>
                         </div>
-                        <!-- End .custom-checkbox -->
+                        
                       </div>
-                      <!-- End .filter-item -->
+                      
 
                       <div class="filter-item">
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="brand-3" />
                           <label class="custom-control-label" for="brand-3">Geox</label>
                         </div>
-                        <!-- End .custom-checkbox -->
+                        
                       </div>
-                      <!-- End .filter-item -->
-
+                      
                       <div class="filter-item">
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="brand-4" />
                           <label class="custom-control-label" for="brand-4">New Balance</label>
                         </div>
-                        <!-- End .custom-checkbox -->
+                        
                       </div>
-                      <!-- End .filter-item -->
+                      
 
                       <div class="filter-item">
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="brand-5" />
                           <label class="custom-control-label" for="brand-5">UGG</label>
                         </div>
-                        <!-- End .custom-checkbox -->
+                        
                       </div>
-                      <!-- End .filter-item -->
+                      
 
                       <div class="filter-item">
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="brand-6" />
                           <label class="custom-control-label" for="brand-6">F&F</label>
                         </div>
-                        <!-- End .custom-checkbox -->
+                        
                       </div>
-                      <!-- End .filter-item -->
+                      
 
                       <div class="filter-item">
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="brand-7" />
                           <label class="custom-control-label" for="brand-7">Nike</label>
                         </div>
-                        <!-- End .custom-checkbox -->
+                        
                       </div>
-                      <!-- End .filter-item -->
+                      
                     </div>
-                    <!-- End .filter-items -->
+                    
                   </div>
-                  <!-- End .widget-body -->
+                  
                 </div>
-                <!-- End .collapse -->
-              </div>
+                
+              </div> -->
               <!-- End .widget -->
 
               <!-- End .widget -->
@@ -727,18 +746,12 @@
               <li>
                 <a href="about.html">About</a>
 
-                <ul>
-                  <li><a href="about.html">About 01</a></li>
-                  <li><a href="about-2.html">About 02</a></li>
-                </ul>
+
               </li>
               <li>
                 <a href="contact.html">Contact</a>
 
-                <ul>
-                  <li><a href="contact.html">Contact 01</a></li>
-                  <li><a href="contact-2.html">Contact 02</a></li>
-                </ul>
+
               </li>
               <li><a href="login.html">Login</a></li>
               <li><a href="faq.html">FAQs</a></li>
@@ -1091,63 +1104,63 @@
 
 
 
-    
-  
-    
-  // Function to add product to the cart
-  function addToCart(productId) {
-    const quantity = 1; // Set quantity to 1
-    console.log('Adding to cart:', productId, quantity); // Log productId and quantity
 
-    fetch('/cart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: JSON.stringify({ productId, quantity })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        showAlert(data.message, 'success'); // Show success message
-        // Change button to "View Cart"
-        const btnCart = document.getElementById(`btn-cart-${productId}`);
-        btnCart.innerHTML = '<span>view cart</span>';
-        btnCart.setAttribute('onclick', 'viewCart()');
-        
-      } else {
-        showAlert(data.message, 'error'); // Show error message
-      }
-    })
-    .catch(error => {
-      console.error('Error adding item to cart:', error);
-      showAlert('Error adding item to cart', 'error');
-    });
-  }
 
-  // Function to redirect to the cart page
-  function viewCart() {
-    window.location.href = '/cart'; // Redirect to the cart page
-  }
 
-  // Function to show alert messages
-  function showAlert(message, type) {
-    const alertMessage = document.getElementById('alertMessage');
-    alertMessage.textContent = message;
-    alertMessage.className = 'alert-message';
-    alertMessage.classList.add(type === 'error' ? 'alert-error' : 'alert-success');
-    alertMessage.style.display = 'block';
+    // Function to add product to the cart
+    function addToCart(productId) {
+      const quantity = 1; // Set quantity to 1
+      console.log('Adding to cart:', productId, quantity); // Log productId and quantity
 
-    setTimeout(() => {
-      alertMessage.style.display = 'none';
-    }, 3000);
-  }
+      fetch('/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ productId, quantity })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            showAlert(data.message, 'success'); // Show success message
+            // Change button to "View Cart"
+            const btnCart = document.getElementById(`btn-cart-${productId}`);
+            btnCart.innerHTML = '<span>view cart</span>';
+            btnCart.setAttribute('onclick', 'viewCart()');
 
-  // Function to save product ID to local storage
-  
+          } else {
+            showAlert(data.message, 'error'); // Show error message
+          }
+        })
+        .catch(error => {
+          console.error('Error adding item to cart:', error);
+          showAlert('Error adding item to cart', 'error');
+        });
+    }
 
-</script>
+    // Function to redirect to the cart page
+    function viewCart() {
+      window.location.href = '/cart'; // Redirect to the cart page
+    }
+
+    // Function to show alert messages
+    function showAlert(message, type) {
+      const alertMessage = document.getElementById('alertMessage');
+      alertMessage.textContent = message;
+      alertMessage.className = 'alert-message';
+      alertMessage.classList.add(type === 'error' ? 'alert-error' : 'alert-success');
+      alertMessage.style.display = 'block';
+
+      setTimeout(() => {
+        alertMessage.style.display = 'none';
+      }, 3000);
+    }
+
+    // Function to save product ID to local storage
+
+
+  </script>
 
 
   <%- include('../layout/footer.ejs') %>

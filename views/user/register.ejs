@@ -1,16 +1,16 @@
 <%- include('../layout/header.ejs') %>
 
-<style>
-    .input-group-text {
-  cursor: pointer;
-  background: transparent;
-  
-}
+    <style>
+        .input-group-text {
+            cursor: pointer;
+            background: transparent;
 
-.input-group-text i {
-  font-size: 1.3em;
-}
-</style>
+        }
+
+        .input-group-text i {
+            font-size: 1.3em;
+        }
+    </style>
 
     <div class="page-wrapper">
         <header class="header">
@@ -21,19 +21,21 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0 ">
                             <div class="container breadcrumbs">
                                 <ol class="breadcrumb">
-                                    <% breadcrumbs.forEach((crumb, index) => { %>
+                                    <% breadcrumbs.forEach((crumb, index)=> { %>
                                         <% if (index < breadcrumbs.length - 1) { %>
-                                          <!-- Breadcrumbs with links -->
-                                          <li class="breadcrumb-item">
-                                            <a href="<%= crumb.url %>"><%= crumb.name %></a>
-                                          </li>
-                                        <% } else { %>
-                                          <!-- Current page breadcrumb without link -->
-                                          <li class="breadcrumb-item active" aria-current="page">
-                                            <%= crumb.name %>
-                                          </li>
-                                        <% } %>
-                                      <% }); %>
+                                            <!-- Breadcrumbs with links -->
+                                            <li class="breadcrumb-item">
+                                                <a href="<%= crumb.url %>">
+                                                    <%= crumb.name %>
+                                                </a>
+                                            </li>
+                                            <% } else { %>
+                                                <!-- Current page breadcrumb without link -->
+                                                <li class="breadcrumb-item active" aria-current="page">
+                                                    <%= crumb.name %>
+                                                </li>
+                                                <% } %>
+                                                    <% }); %>
                                 </ol>
                             </div><!-- End .container -->
 
@@ -41,7 +43,7 @@
 
                     </div><!-- End .header-left -->
 
-                    
+
                 </div><!-- End .container -->
             </div><!-- End .header-top -->
 
@@ -57,10 +59,10 @@
                             <img src="/assets/images/furnspace logo black.png" alt="Molla Logo" width="105" height="25">
                         </a>
 
-                        
+
                     </div><!-- End .header-left -->
 
-                    
+
                 </div><!-- End .container -->
             </div><!-- End .header-middle -->
         </header><!-- End .header -->
@@ -83,72 +85,79 @@
 
                             <div class="tab-pane fade show active" id="register-2" role="tabpanel"
                                 aria-labelledby="register-tab-2">
-                                
 
-                                <form action="/register" method="post" onsubmit="return validateForm()" name="registerForm">
-                                    
+
+                                <form action="/register" method="post" onsubmit="return validateForm()"
+                                    name="registerForm">
+
                                     <div class="form-group">
                                         <label for="register-name">Name *</label>
                                         <input type="text" class="form-control" id="register-name" name="name" required>
                                         <p id="nameError" class="error-message text-danger"></p>
                                     </div>
-                                
+
                                     <div class="form-group">
                                         <label for="register-phone">Phone Number *</label>
-                                        <input type="tel" class="form-control" id="register-phone" name="phone" required>
+                                        <input type="tel" class="form-control" id="register-phone" name="phone"
+                                            required>
                                         <p id="phoneError" class="error-message text-danger"></p>
                                     </div>
-                                
+
                                     <div class="form-group">
                                         <label for="register-email">Email Address *</label>
-                                        <input type="email" class="form-control" id="register-email" name="email" required>
+                                        <input type="email" class="form-control" id="register-email" name="email"
+                                            required>
                                         <p id="emailError" class="error-message text-danger"></p>
                                     </div>
-                                
+
                                     <div class="form-group">
                                         <label for="register-password">Password *</label>
                                         <div class="input-group">
-                                            <input type="password" class="form-control" id="register-password" name="password" required>
+                                            <input type="password" class="form-control" id="register-password"
+                                                name="password" required>
                                             <div class="input-group-append">
                                                 <span class="input-group-text" id="password-toggle">
                                                     <i class="fa fa-eye"></i>
-                                                  </span>
+                                                </span>
                                             </div>
                                         </div>
                                         <p id="passwordError" class="error-message text-danger"></p>
                                     </div>
-                                
+
                                     <div class="form-group">
                                         <label for="register-confirm-password">Confirm Password *</label>
                                         <div class="input-group">
-                                            <input type="password" class="form-control" id="register-confirm-password" name="confirm-password" required>
+                                            <input type="password" class="form-control" id="register-confirm-password"
+                                                name="confirm-password" required>
                                             <div class="input-group-append">
                                                 <span class="input-group-text" id="confirm-password-toggle">
                                                     <i class="fa fa-eye"></i>
-                                                  </span>
+                                                </span>
                                             </div>
                                         </div>
                                         <p id="confirm-passwordError" class="error-message text-danger"></p>
                                     </div>
-                                
+
                                     <div class="form-footer">
-                                        <button type="submit" class="btn btn-outline-primary-2" >
+                                        <button type="submit" class="btn btn-outline-primary-2">
                                             <span>SIGN UP</span>
                                             <i class="icon-long-arrow-right"></i>
                                         </button>
-                                
-                                        <label class="" >Have an account <a href="/login">LOG IN</a></label>
+
+                                        <label class="">Have an account <a href="/login">LOG IN</a></label>
                                         <% if(message){ %>
-                                            <p style="color: red; margin-left: 131px;"><%= message %></p>
+                                            <p id="existEmailMes" style="color: red; margin-left: 131px;">
+                                                <%= message %>
+                                            </p>
                                             <% } %>
-                                        
+
                                     </div>
-                                    
+
                                 </form>
 
-                                
-                                
-                               
+
+
+
                             </div><!-- .End .tab-pane -->
                         </div><!-- End .tab-content -->
                     </div><!-- End .form-tab -->
@@ -163,8 +172,8 @@
                 <div class="row">
                     <div class="col-sm-6 col-lg-3">
                         <div class="widget widget-about">
-                            <img src="/assets/images/furnspace logo white without black bg.png" class="footer-logo" alt="Footer Logo"
-                                width="105" height="25">
+                            <img src="/assets/images/furnspace logo white without black bg.png" class="footer-logo"
+                                alt="Footer Logo" width="105" height="25">
                             <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
                                 magna eros eu erat. </p>
 
@@ -433,126 +442,132 @@
 
 
     <script>
-        
+
 
 
         document.addEventListener('DOMContentLoaded', function () {
-    const nameInput = document.getElementById('register-name');
-    const phoneInput = document.getElementById('register-phone');
-    const emailInput = document.getElementById('register-email');
-    const passwordInput = document.getElementById('register-password');
-    const confirmPasswordInput = document.getElementById('register-confirm-password');
+            const nameInput = document.getElementById('register-name');
+            const phoneInput = document.getElementById('register-phone');
+            const emailInput = document.getElementById('register-email');
+            const passwordInput = document.getElementById('register-password');
+            const confirmPasswordInput = document.getElementById('register-confirm-password');
 
-    nameInput.addEventListener('blur', validateName);
-    phoneInput.addEventListener('blur', validatePhone);
-    emailInput.addEventListener('blur', validateEmail);
-    passwordInput.addEventListener('blur', validatePassword);
-    confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+            nameInput.addEventListener('blur', validateName);
+            phoneInput.addEventListener('blur', validatePhone);
+            emailInput.addEventListener('blur', validateEmail);
+            passwordInput.addEventListener('blur', validatePassword);
+            confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
 
-    function validateName() {
-        const name = nameInput.value;
-        const nameError = document.getElementById('nameError');
-        const namePattern = /^[A-Za-z][A-Za-z\s]*$/;
-        if (!namePattern.test(name)) {
-            nameError.textContent = 'Name must contain only letters and spaces, and not start with a space';
-            return false;
-        } else {
-            nameError.textContent = '';
-            return true;
+            function validateName() {
+                const name = nameInput.value;
+                const nameError = document.getElementById('nameError');
+                const namePattern = /^[A-Za-z][A-Za-z\s]*$/;
+                if (!namePattern.test(name)) {
+                    nameError.textContent = 'Name must contain only letters and spaces, and not start with a space';
+                    return false;
+                } else {
+                    nameError.textContent = '';
+                    return true;
+                }
+            }
+
+            function validatePhone() {
+                const phone = phoneInput.value.trim();
+                const phoneError = document.getElementById('phoneError');
+                const phonePattern = /^[0-9]{10}$/; // Adjust pattern based on your requirements
+                if (!phonePattern.test(phone)) {
+                    phoneError.textContent = 'Invalid phone number';
+                    return false;
+                } else {
+                    phoneError.textContent = '';
+                    return true;
+                }
+            }
+
+            function validateEmail() {
+                const email = emailInput.value.trim();
+                const emailError = document.getElementById('emailError');
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(email)) {
+                    emailError.textContent = 'Invalid email address';
+                    return false;
+                } else {
+                    emailError.textContent = '';
+                    return true;
+                }
+            }
+
+            function validatePassword() {
+                const password = passwordInput.value.trim();
+                const passwordError = document.getElementById('passwordError');
+                if (password.length < 8) {
+                    passwordError.textContent = 'Password must be at least 8 characters long';
+                    return false;
+                } else {
+                    passwordError.textContent = '';
+                    return true;
+                }
+            }
+
+            function validateConfirmPassword() {
+                const confirmPassword = confirmPasswordInput.value.trim();
+                const password = passwordInput.value.trim();
+                const confirmPasswordError = document.getElementById('confirm-passwordError');
+                const signUpButton = document.querySelector('.btn.btn-outline-primary-2'); // Select the sign-up button
+
+
+                if (confirmPassword !== password) {
+                    confirmPasswordError.textContent = 'Passwords do not match';
+                    signUpButton.disabled = true
+                    return false;
+                } else {
+                    confirmPasswordError.textContent = '';
+                    signUpButton.disabled = false;
+                    return true;
+                }
+            }
+
+
+        });
+
+
+
+
+
+
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const icon = passwordInput.nextElementSibling.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         }
-    }
 
-    function validatePhone() {
-        const phone = phoneInput.value.trim();
-        const phoneError = document.getElementById('phoneError');
-        const phonePattern = /^[0-9]{10}$/; // Adjust pattern based on your requirements
-        if (!phonePattern.test(phone)) {
-            phoneError.textContent = 'Invalid phone number';
-            return false;
-        } else {
-            phoneError.textContent = '';
-            return true;
+        document.getElementById('password-toggle').addEventListener('click', function () {
+            togglePasswordVisibility('register-password');
+        });
+
+        document.getElementById('confirm-password-toggle').addEventListener('click', function () {
+            togglePasswordVisibility('register-confirm-password');
+        });
+
+
+        const messageElem = document.getElementById('existEmailMes')
+        if(messageElem){
+            setTimeout(() => {
+                messageElem.style.display = 'none'
+            },5000)
         }
-    }
 
-    function validateEmail() {
-        const email = emailInput.value.trim();
-        const emailError = document.getElementById('emailError');
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
-            emailError.textContent = 'Invalid email address';
-            return false;
-        } else {
-            emailError.textContent = '';
-            return true;
-        }
-    }
+    </script>
 
-    function validatePassword() {
-        const password = passwordInput.value.trim();
-        const passwordError = document.getElementById('passwordError');
-        if (password.length < 8) {
-            passwordError.textContent = 'Password must be at least 8 characters long';
-            return false;
-        } else {
-            passwordError.textContent = '';
-            return true;
-        }
-    }
-
-    function validateConfirmPassword() {
-  const confirmPassword = confirmPasswordInput.value.trim();
-  const password = passwordInput.value.trim();
-  const confirmPasswordError = document.getElementById('confirm-passwordError');
-  const signUpButton = document.querySelector('.btn.btn-outline-primary-2'); // Select the sign-up button
-
-
-  if(confirmPassword !== password) {
-    confirmPasswordError.textContent = 'Passwords do not match';
-    signUpButton.disabled = true
-    return false;
-  } else {
-    confirmPasswordError.textContent = '';
-    signUpButton.disabled = false;
-    return true;
-  }
-}
-
-
-});
-
-
-
-
-
-
-function togglePasswordVisibility(inputId) {
-  const passwordInput = document.getElementById(inputId);
-  const icon = passwordInput.nextElementSibling.querySelector('i');
-  
-  if (passwordInput.type === 'password') {
-    passwordInput.type = 'text';
-    icon.classList.remove('fa-eye');
-    icon.classList.add('fa-eye-slash');
-  } else {
-    passwordInput.type = 'password';
-    icon.classList.remove('fa-eye-slash');
-    icon.classList.add('fa-eye');
-  }
-}
-
-document.getElementById('password-toggle').addEventListener('click', function() {
-  togglePasswordVisibility('register-password');
-});
-
-document.getElementById('confirm-password-toggle').addEventListener('click', function() {
-  togglePasswordVisibility('register-confirm-password');
-});
-
-
-     
-</script>
-        
 
 
 

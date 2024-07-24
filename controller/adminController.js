@@ -229,51 +229,33 @@ const loadAllUser = async (req, res) => {
 };
 
 const updateCustomer = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, email, phone } = req.body;
-
-    const updatedCustomer = await userModel.findByIdAndUpdate(
-      id,
-      { name, email, phone },
-      { new: true }
-    );
-
-    if (!updatedCustomer) {
-      return res.status(404).json({ error: "Customer not found" });
-    }
-
-    res.json(updatedCustomer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-};
-
-const changeCustomer = async (req, res) => {
   const customerId = req.params.id;
-  const { isListed } = req.body;
+  const { name, email, phone, isListed  } = req.body;
 
   try {
     const updatedCustomer = await userModel.findByIdAndUpdate(
       customerId,
-      { isListed },
-      { new: true }
+      { name, email, phone, isListed  },
+      { new: true, runValidators: true }
     );
 
     if (!updatedCustomer) {
-      return res.status(404).json({ error: "Customer not found" });
+      return res.status(404).json({ success: false, message: 'Customer not found' });
     }
 
-    res.json({
-      message: "Listing status updated successfully",
-      customer: updatedCustomer,
-    });
+    res.json({ success: true, message: 'Customer updated successfully', data: updatedCustomer });
   } catch (error) {
-    console.error("Error updating listing status:", error);
-    return res.status(500).json({ error: "Server Error" });
+    console.error('Error updating customer:', error);
+    res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
   }
 };
+
+
+
+
+
+
+
 
 const addProduct = async (req, res) => {
   try {
@@ -485,7 +467,6 @@ module.exports = {
 
   loadAllUser,
   updateCustomer,
-  changeCustomer,
   addProduct,
   updateProduct,
   adminLogout,

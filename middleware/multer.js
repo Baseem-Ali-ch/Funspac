@@ -1,15 +1,3 @@
-// const multer = require("multer");
-// const path = require("path");
-
-// // Configure multer storage
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "assets/images/add-product"); // Directory to save images
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + path.extname(file.originalname)); // Save files with a timestamp
-//   },
-// });
 
 
 const multer = require('multer');
@@ -24,6 +12,7 @@ const storage = multer.diskStorage({
         cb(null, uniqueFilename);
     }
 });
+
 
 // Init upload
 const uploadMulter = multer({

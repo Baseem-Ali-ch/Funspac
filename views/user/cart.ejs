@@ -102,19 +102,21 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
                             <div class="container breadcrumbs">
                                 <ol class="breadcrumb">
-                                    <% breadcrumbs.forEach((crumb, index) => { %>
+                                    <% breadcrumbs.forEach((crumb, index)=> { %>
                                         <% if (index < breadcrumbs.length - 1) { %>
-                                          <!-- Breadcrumbs with links -->
-                                          <li class="breadcrumb-item">
-                                            <a href="<%= crumb.url %>"><%= crumb.name %></a>
-                                          </li>
-                                        <% } else { %>
-                                          <!-- Current page breadcrumb without link -->
-                                          <li class="breadcrumb-item active" aria-current="page">
-                                            <%= crumb.name %>
-                                          </li>
-                                        <% } %>
-                                      <% }); %>
+                                            <!-- Breadcrumbs with links -->
+                                            <li class="breadcrumb-item">
+                                                <a href="<%= crumb.url %>">
+                                                    <%= crumb.name %>
+                                                </a>
+                                            </li>
+                                            <% } else { %>
+                                                <!-- Current page breadcrumb without link -->
+                                                <li class="breadcrumb-item active" aria-current="page">
+                                                    <%= crumb.name %>
+                                                </li>
+                                                <% } %>
+                                                    <% }); %>
                                 </ol>
                             </div>
                             <!-- End .container -->
@@ -184,6 +186,8 @@
                                 <li>
                                     <a href="/product-list">Product</a>
                                 </li>
+
+
                                 <li>
                                     <a href=" category.html" class="sf-with-ul">Brand</a>
 

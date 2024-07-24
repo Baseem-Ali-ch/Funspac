@@ -59,8 +59,7 @@ adminRoute.get("/order-list", isAdminAuthenticated, adminController.loadOrderLis
 adminRoute.get("/order-details", isAdminAuthenticated, adminController.loadOrderDeatails);
 
 adminRoute.get("/allCustomer", isAdminAuthenticated, adminController.loadAllUser);
-adminRoute.post("/update-customer/:id", isAdminAuthenticated, adminController.updateCustomer);
-adminRoute.post("/change-status/:id", isAdminAuthenticated, adminController.changeCustomer);
+adminRoute.patch("/allCustomer/:id", isAdminAuthenticated, adminController.updateCustomer);
 
 adminRoute.post("/logout", isAdminAuthenticated, adminController.adminLogout);
 adminRoute.get("/admin-profile", isAdminAuthenticated, adminController.loadAdmProfile);

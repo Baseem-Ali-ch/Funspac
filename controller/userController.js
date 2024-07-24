@@ -94,7 +94,7 @@ const verifyLogin = async (req, res) => {
     const userData = await userModel.findOne({ email });
 
     if (userData) {
-      if (userData.isListed === false) {
+      if (userData.isListed === 'false') {
         return res.render("login", {
           message:
             "Your account has been blocked. Please Make another account.",
@@ -136,7 +136,7 @@ const insertUser = async (req, res) => {
 
     const user = await userModel.findOne({ email: email });
     if (user) {
-      return res.render("register", { message: "The email already exists." });
+      return res.render("register", { message: "The email is already exists. Please login and continue" });
     } else {
       const spassword = await securePassword(password);
 
@@ -228,15 +228,16 @@ const loadHome = async (req, res) => {
       cartItems = cart ? cart.items : []
     }
     
-    const products = await Product.find({isListed:true}).limit(6).sort({createdAt:-1})
-
+    const products = await Product.find({isListed:'true'}).limit(6).sort({createdAt:-1})
+    const categories = await Category.find({isListed:'true'})
     console.log('Wishlist Items:', wishlistItems);
 
     res.render('home', { 
       user, 
       wishlistItems,
       cartItems,
-      products
+      products,
+      categories
      });
   } catch (error) {
     console.error('Error rendering home:', error);
@@ -278,8 +279,12 @@ const loadWishlist = async (req, res) => {
     }
 
     const wishlistItems = await Wishlist.findOne({ userId }).populate("products.productId");
-
-    res.render("wishlist", { user, wishlistItems: wishlistItems.products });
+    const categories = await Category.find({isListed:'true'})
+    res.render("wishlist", {
+       user,
+       wishlistItems: wishlistItems.products,
+       categories
+       });
     
   } catch (error) {
     console.error("Error loading wishlist:", error);
@@ -293,7 +298,14 @@ const loadContact = async (req, res) => {
     const userId = user ? user._id : null
     const cart = await Cart.findOne({ userId }).populate('items.productId');
     const wishlistItems = await Wishlist.findOne({ userId }).populate("products.productId")
-    res.render("contact-us", { user, cartItems:cart.items,wishlistItems:wishlistItems.products });
+    const categories = await Category.find({isListed:'true'})
+
+    res.render("contact-us", { 
+      user, 
+      cartItems:cart.items,
+      wishlistItems:wishlistItems.products ,
+      categories
+    });
   } catch (error) {
     console.log(error);
   }
@@ -302,8 +314,9 @@ const loadContact = async (req, res) => {
 const loadProfile = async (req, res) => {
   try {
     const user = req.session.user || req.user;
+    const categories = await Category.find({isListed:'true'})
 
-    res.render("profile", { user });
+    res.render("profile", { user,categories });
   } catch (error) {
     console.log(error);
   }
@@ -346,6 +359,7 @@ const loadProduct = async (req, res) => {
       "category",
       "title"
     );
+    const categories = await Category.find({isListed:'true'})
     let wishlistItems = [];
     if (userId) {
       const wishlist = await Wishlist.findOne({ userId }).populate('products.productId');
@@ -374,7 +388,8 @@ const loadProduct = async (req, res) => {
       user,
       wishlistItems, 
       cartItems,
-      breadcrumbs
+      breadcrumbs,
+      categories
     });
   } catch (error) {
     console.error(error);
@@ -403,6 +418,7 @@ const loadProductList = async (req, res) => {
       "_id"
     );
     
+    const categories = await Category.find({isListed:'true'})
 
     const products = await Product.find({ isListed: 'true' })
       .populate({
@@ -441,7 +457,8 @@ const loadProductList = async (req, res) => {
       currentPage: page,
       totalPages,
       wishlistItems,
-      cartItems
+      cartItems,
+      categories
     });
   } catch (error) {
     console.log(error);
