@@ -22,31 +22,27 @@ mongoose
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Parse application/json and application/x-www-form-urlencoded
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// Initialize MongoStore for user and admin sessions
 const userStore = MongoStore.create({
-  mongoUrl: process.env.MONGODB_URI, // Ensure this is correctly set in .env
-  collectionName: "user_sessions", // Collection for user sessions
+  mongoUrl: process.env.MONGODB_URI,
+  collectionName: "user_sessions",
 });
 
 const adminStore = MongoStore.create({
-  mongoUrl: process.env.MONGODB_URI, // Ensure this is correctly set in .env
-  collectionName: "admin_sessions", // Collection for admin sessions
+  mongoUrl: process.env.MONGODB_URI,
+  collectionName: "admin_sessions",
 });
-
 
 app.use(
   session({
-    secret: process.env.USER_SESSION_SECRET, // Secret for user sessions
+    secret: process.env.USER_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: userStore,
-    cookie: { secure: false }, // Set to true if using HTTPS
-  })
+    cookie: { secure: false },
+  }),
 );
 
 app.use(
@@ -57,15 +53,8 @@ app.use(
     saveUninitialized: false,
     store: adminStore,
     cookie: { secure: false },
-  })
+  }),
 );
-
-// Configure session middleware for user and admin
-
-
-// Middleware to set up session for admin routes
-
-
 
 // Initialize passport
 app.use(passport.initialize());
@@ -81,23 +70,21 @@ passport.deserializeUser(function (obj, cb) {
 
 // Serve static files
 app.use("/assets", express.static(path.join(__dirname, "assets")));
-app.use(
-  "/dashboard-assets",
-  express.static(path.join(__dirname, "dashboard-assets"))
-);
+app.use("/dashboard-assets", express.static(path.join(__dirname, "dashboard-assets")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// Define routes
-const userRoute = require("./routes/userRoute");
-app.use("/", userRoute);
-
 
 app.use("/admin", passport.initialize());
 app.use("/admin", passport.session());
 
+// user routes
+const userRoute = require("./routes/userRoute");
+app.use("/", userRoute);
+
+//admin routes
 const adminRoute = require("./routes/adminRoute");
 app.use("/admin", adminRoute);
 
+//auth routes
 const authRoute = require("./routes/authRoutes");
 app.use("/", authRoute);
 

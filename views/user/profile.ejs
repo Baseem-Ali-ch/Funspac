@@ -9,19 +9,21 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0 ">
                             <div class="container breadcrumbs">
                                 <ol class="breadcrumb">
-                                    <% breadcrumbs.forEach((crumb, index) => { %>
+                                    <% breadcrumbs.forEach((crumb, index)=> { %>
                                         <% if (index < breadcrumbs.length - 1) { %>
-                                          <!-- Breadcrumbs with links -->
-                                          <li class="breadcrumb-item">
-                                            <a href="<%= crumb.url %>"><%= crumb.name %></a>
-                                          </li>
-                                        <% } else { %>
-                                          <!-- Current page breadcrumb without link -->
-                                          <li class="breadcrumb-item active" aria-current="page">
-                                            <%= crumb.name %>
-                                          </li>
-                                        <% } %>
-                                      <% }); %>
+                                            <!-- Breadcrumbs with links -->
+                                            <li class="breadcrumb-item">
+                                                <a href="<%= crumb.url %>">
+                                                    <%= crumb.name %>
+                                                </a>
+                                            </li>
+                                            <% } else { %>
+                                                <!-- Current page breadcrumb without link -->
+                                                <li class="breadcrumb-item active" aria-current="page">
+                                                    <%= crumb.name %>
+                                                </li>
+                                                <% } %>
+                                                    <% }); %>
                                 </ol>
                             </div><!-- End .container -->
 
@@ -71,90 +73,86 @@
 
                         <nav class="main-nav">
                             <ul class="menu sf-arrows">
-                              <li class="megamenu-container active">
-                                <a href="/home" class="">Home</a>
-                              </li>
-                              <li>
-                                <a href="/product-list" ">Product</a>
+                                <li class="megamenu-container active">
+                                    <a href="/home" class="">Home</a>
+                                </li>
+                                <li>
+                                    <a href="/product-list" ">Product</a>
                               </li>
 
                               <li>
                                 <a href=" #" class="sf-with-ul">Category</a>
-                                  <ul>
-                                    <% categories.forEach(function(category) { %>
-                
-                                      <li><a href="/category/<%= category._id %>">
-                                          <%= category.title %>
-                                        </a></li>
-                
-                                      <% }) %>
-                                  </ul>
+                                    <ul>
+                                        <% categories.forEach(function(category) { %>
+
+                                            <li><a href="/category/<%= category._id %>">
+                                                    <%= category.title %>
+                                                </a></li>
+
+                                            <% }) %>
+                                    </ul>
                                 </li>
 
-                              <li>
-                                <a href="category.html" class="sf-with-ul">Brand</a>
-                
-                                <div class="megamenu megamenu-sm">
-                                  <div class="row no-gutters">
-                                    <div class="col-md-6">
-                                      <div class="menu-col">
-                                        <div class="menu-title"></div>
-                                        <!-- End .menu-title -->
-                                        <ul>
-                                          <li><a href="product.html">IKEA</a></li>
-                                          <li><a href="product-centered.html">Durian</a></li>
-                                          <li><a href="product-extended.html">Hometown</a></li>
-                                          <li>
-                                            <a href="product-gallery.html">Urban Ladder</a>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                      <!-- End .menu-col -->
-                                    </div>
-                                    <!-- End .col-md-6 -->
-                
-                                    <div class="col-md-6">
-                                      <div class="banner banner-overlay">
-                                        <a href="category.html">
-                                          <img
-                                            src="assets/images/menu/banner-1.jpg"
-                                            alt="Banner"
-                                          />
-                
-                                          <div class="banner-content banner-content-bottom">
-                                            <div class="banner-title text-white">
-                                              New Trends<br /><span
-                                                ><strong>spring 2019</strong></span
-                                              >
+                                <li>
+                                    <a href="category.html" class="sf-with-ul">Brand</a>
+
+                                    <div class="megamenu megamenu-sm">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-6">
+                                                <div class="menu-col">
+                                                    <div class="menu-title"></div>
+                                                    <!-- End .menu-title -->
+                                                    <ul>
+                                                        <li><a href="product.html">IKEA</a></li>
+                                                        <li><a href="product-centered.html">Durian</a></li>
+                                                        <li><a href="product-extended.html">Hometown</a></li>
+                                                        <li>
+                                                            <a href="product-gallery.html">Urban Ladder</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- End .menu-col -->
                                             </div>
-                                            <!-- End .banner-title -->
-                                          </div>
-                                          <!-- End .banner-content -->
-                                        </a>
-                                      </div>
-                                      <!-- End .banner -->
+                                            <!-- End .col-md-6 -->
+
+                                            <div class="col-md-6">
+                                                <div class="banner banner-overlay">
+                                                    <a href="category.html">
+                                                        <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
+
+                                                        <div class="banner-content banner-content-bottom">
+                                                            <div class="banner-title text-white">
+                                                                New Trends<br /><span><strong>spring
+                                                                        2019</strong></span>
+                                                            </div>
+                                                            <!-- End .banner-title -->
+                                                        </div>
+                                                        <!-- End .banner-content -->
+                                                    </a>
+                                                </div>
+                                                <!-- End .banner -->
+                                            </div>
+                                            <!-- End .col-md-6 -->
+                                        </div>
+                                        <!-- End .row -->
                                     </div>
-                                    <!-- End .col-md-6 -->
-                                  </div>
-                                  <!-- End .row -->
-                                </div>
-                                <!-- End .megamenu megamenu-sm -->
-                              </li>
-                              
-                              <li>
-                                <a href="#" class="sf-with-ul">Pages</a>
-                
-                                <ul>
-                                  <!-- <li><a href="about.html">About</a></li> -->
-                                  <li><a href="/contact">Contact</a></li>
-                                  <li><a href="/login">Login</a></li>
-                
-                                  <!-- <li><a href="coming-soon.html">Coming Soon</a></li> -->
-                                </ul>
-                              </li>
+                                    <!-- End .megamenu megamenu-sm -->
+                                </li>
+
+                                <li>
+                                    <a href="#" class="sf-with-ul">Pages</a>
+
+                                    <ul>
+                                        <!-- <li><a href="about.html">About</a></li> -->
+                                        <li><a href="/contact">Contact</a></li>
+                                        <li><a href="/login">Login</a></li>
+
+                                        <!-- <li><a href="coming-soon.html">Coming Soon</a></li> -->
+                                    </ul>
+                                </li>
                             </ul>
                             <!-- End .menu -->
-                          </nav>
+                        </nav>
                     </div><!-- End .header-left -->
 
                     <div class="header-right">
@@ -285,6 +283,10 @@
                             href="/logout">Logout</a></button>
 
 
+                            <button id="" class="btn" style=" margin-bottom: 10px; margin-top: -10px; margin-left: -30px;"><a
+                                href="/forget-password">Forget Password</a></button>
+                    
+
 
                     <div class="wishlist-share">
                         <div class="social-icons social-icons-sm mb-2">
@@ -311,8 +313,8 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget widget-about">
-                                <img src="/assets/images/furnspace logo white without black bg.png" class="footer-logo" alt="Footer Logo"
-                                    width="105" height="25">
+                                <img src="/assets/images/furnspace logo white without black bg.png" class="footer-logo"
+                                    alt="Footer Logo" width="105" height="25">
                                 <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
                                     magna eros eu erat. </p>
 

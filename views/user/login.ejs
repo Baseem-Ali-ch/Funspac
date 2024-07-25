@@ -97,40 +97,7 @@
               </ul>
               <div class="tab-content">
                 <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
-                  <!-- <form action="/login" method="post" onsubmit="return validateForm()">
-                                        <div class="form-group">
-                                            <label for="login-email">Your email address *</label>
-                                            <input type="email" class="form-control" id="login-email" name="login-email" required>
-                                            <div class="invalid-feedback" id="email-error" style="display: none;">
-                                                Please enter a valid email address.
-                                            </div>
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label for="login-password">Password *</label>
-                                            <input type="password" class="form-control" id="login-password" name="login-password" required>
-                                            <div class="invalid-feedback" id="password-error" style="display: none;">
-                                                Password is required.
-                                            </div>
-                                        </div>
-                                    
-                                        <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>LOG IN</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
-                                    
-                                            <label class="custom-control-label" for="register-policy-2">
-                                                Don't have an account <a href="/register">SIGN UP</a>
-                                            </label>
-                                    
-                                            <% if (typeof message !== 'undefined') { %>
-                                                <p class="text-danger text-center">
-                                                    <%= message %>
-                                                </p>
-                                            <% } %>
-                                        </div>
-                                    </form> -->
+
 
                   <form action="/login" method="post" onsubmit="return validateForm()">
                     <div class="form-group">
@@ -158,7 +125,7 @@
                       </div>
                     </div>
 
-                    <!-- End .form-group -->
+
 
                     <div class="form-footer">
                       <button type="submit" class="btn btn-outline-primary-2">
@@ -169,14 +136,17 @@
                       <label class="" for="register-policy-2">
                         Don't have an account <a href="/register">SIGN UP</a>
                       </label>
+                      <label class="mt-2" for="register-policy-2">
+                        <a href="/forget-password">Forget Password</a>
+                      </label>
 
                       <% if (typeof message !=='undefined' ) { %>
-                        <p id="mailPasMes" class="text-danger text-center mt-2">
+                        <p id="mailPasMes" class="text-danger text-center mt-8">
                           <%= message %>
                         </p>
                         <% } %>
                     </div>
-                    <!-- End .form-footer -->
+
                   </form>
 
                   <div class="form-choice">
@@ -596,12 +566,12 @@
         }
       });
 
-      const messageElem = document.getElementById('mailPasMes')
-      if(messageElem){
-        setTimeout(() => {
-          messageElem.style.display = 'none'
-        },3000)
-      }
+    const messageElem = document.getElementById('mailPasMes')
+    if (messageElem) {
+      setTimeout(() => {
+        messageElem.style.display = 'none'
+      }, 5000)
+    }
   </script>
 
   <%- include('../layout/footer.ejs') %>

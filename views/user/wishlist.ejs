@@ -102,19 +102,21 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
               <div class="container breadcrumbs">
                 <ol class="breadcrumb">
-                  <% breadcrumbs.forEach((crumb, index) => { %>
+                  <% breadcrumbs.forEach((crumb, index)=> { %>
                     <% if (index < breadcrumbs.length - 1) { %>
                       <!-- Breadcrumbs with links -->
                       <li class="breadcrumb-item">
-                        <a href="<%= crumb.url %>"><%= crumb.name %></a>
+                        <a href="<%= crumb.url %>">
+                          <%= crumb.name %>
+                        </a>
                       </li>
-                    <% } else { %>
-                      <!-- Current page breadcrumb without link -->
-                      <li class="breadcrumb-item active" aria-current="page">
-                        <%= crumb.name %>
-                      </li>
-                    <% } %>
-                  <% }); %>
+                      <% } else { %>
+                        <!-- Current page breadcrumb without link -->
+                        <li class="breadcrumb-item active" aria-current="page">
+                          <%= crumb.name %>
+                        </li>
+                        <% } %>
+                          <% }); %>
                 </ol>
               </div>
               <!-- End .container -->
@@ -202,8 +204,8 @@
                   </ul>
                 </li>
 
-              <li>
-                <a href=" category.html" class="sf-with-ul">Brand</a>
+                <li>
+                  <a href=" category.html" class="sf-with-ul">Brand</a>
 
                   <div class="megamenu megamenu-sm">
                     <div class="row no-gutters">
@@ -289,11 +291,11 @@
                 <span class="cart-count">0</span>
               </a>
             </div>
-          <!-- End .header-right -->
+            <!-- End .header-right -->
+          </div>
+          <!-- End .container -->
         </div>
-        <!-- End .container -->
-      </div>
-      <!-- End .header-middle -->
+        <!-- End .header-middle -->
     </header>
     <!-- End .header -->
 
@@ -349,8 +351,27 @@
                                     <% } %>
                         </div><!-- End .product -->
                       </td>
-                      <td class="price-col">
-                        ₹<%= item.productId.price %>
+                      <td class="price-col" style="width: 230px;">
+                        <% if(item.productId.discountedPrice && item.productId.price> item.productId.discountedPrice){
+                          %>
+                          <div class="row " style="margin-top: 15px;">
+                            <div class="product-price mx-3 text-dark">
+                              ₹<%= item.productId.discountedPrice %>
+                            </div>
+                            <div class="product-price mx-3 text-dark" style="font-size: 13px;">
+                              <del>₹<%= item.productId.price %></del>
+                            </div>
+                            <% const discountPercentage=Math.round(((item.productId.price -
+                              item.productId.discountedPrice) / item.productId.price) * 100); %>
+                              <div class="product-price text-dark" style="font-size: 13px;">
+                                <%= discountPercentage %>% off
+                              </div>
+                          </div>
+                          <% } else { %>
+                            <div class="product-price text-dark">
+                              ₹<%= item.productId.price %>
+                            </div>
+                            <% } %>
                       </td>
                       <td class="stock-col">
                         <span class="in-stock">

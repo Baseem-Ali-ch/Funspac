@@ -1,26 +1,29 @@
-const express = require("express");
+const productController = require("../controller/productController");
 const adminController = require("../controller/adminController");
 const upload = require("../middleware/multer");
 const { isAdminAuthenticated } = require("../middleware/adminAuth");
 const adminBreadcrumbs = require("../middleware/adminBreadcrumbs");
 const nocache = require("nocache");
+const express = require("express");
 const adminRoute = express();
-
 
 adminRoute.use(nocache());
 adminRoute.use(adminBreadcrumbs);
 
+//ejs view engine
 adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
-// Admin Routes
+// login Routes
 adminRoute.get("/", adminController.loadLogin);
 adminRoute.post("/", adminController.verifyLogin);
 
+//home routes
 adminRoute.get("/dashboard", isAdminAuthenticated, adminController.loadHome);
 
-adminRoute.get("/add-product", isAdminAuthenticated, adminController.loadAddProduct);
-
+//product management
+adminRoute.get("/product-list", isAdminAuthenticated, productController.loadProductList);
+adminRoute.get("/add-product", isAdminAuthenticated, productController.loadAddProduct);
 adminRoute.post(
   "/add-product",
   isAdminAuthenticated,
@@ -29,11 +32,8 @@ adminRoute.post(
     { name: "productImage2", maxCount: 1 },
     { name: "productImage3", maxCount: 1 },
   ]),
-  adminController.addProduct,
+  productController.addProduct,
 );
-
-adminRoute.get("/product-list", isAdminAuthenticated, adminController.loadProductList);
-
 adminRoute.patch(
   "/update-product/:id",
   isAdminAuthenticated,
@@ -42,27 +42,24 @@ adminRoute.patch(
     { name: "productImage2", maxCount: 1 },
     { name: "productImage3", maxCount: 1 },
   ]),
-  adminController.updateProduct,
+  productController.updateProduct,
 );
 
-adminRoute.post("/categories/add", isAdminAuthenticated, upload.single("image"), adminController.addCategory);
+//category management
+adminRoute.get("/category-list", isAdminAuthenticated, productController.loadCategoryList);
+adminRoute.post("/categories/add", isAdminAuthenticated, upload.single("image"), productController.addCategory);
+adminRoute.patch("/category-list/:id", isAdminAuthenticated, upload.single("categoryImage"), productController.updateCategory);
 
-adminRoute.get("/category-list", isAdminAuthenticated, adminController.loadCategoryList);
-adminRoute.patch(
-  "/category-list/:id",
-  isAdminAuthenticated,
-  upload.single("categoryImage"),
-  adminController.updateCategory,
-);
-
+//order management
 adminRoute.get("/order-list", isAdminAuthenticated, adminController.loadOrderList);
 adminRoute.get("/order-details", isAdminAuthenticated, adminController.loadOrderDeatails);
 
+//user management
 adminRoute.get("/allCustomer", isAdminAuthenticated, adminController.loadAllUser);
 adminRoute.patch("/allCustomer/:id", isAdminAuthenticated, adminController.updateCustomer);
 
-adminRoute.post("/logout", isAdminAuthenticated, adminController.adminLogout);
 adminRoute.get("/admin-profile", isAdminAuthenticated, adminController.loadAdmProfile);
+adminRoute.post("/logout", isAdminAuthenticated, adminController.adminLogout);
 
 // Catch-all route for undefined paths
 adminRoute.get("*", (req, res) => {

@@ -552,15 +552,18 @@
                     <thead>
                       <tr>
                         <th>s/n</th>
-                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
-                          colspan="1" style="width: 439px;" aria-label="product: activate to sort column descending"
-                          aria-sort="">Product</th>
+                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                          style="width: 439px;" aria-label="product: activate to sort column descending" aria-sort="">
+                          Product</th>
                         <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 136px;" aria-label="category: activate to sort column ascending">Category</th>
                         <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 56px;" aria-label="stock: activate to sort column ascending">Stock</th>
                         <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 100px;" aria-label="price: activate to sort column ascending">Price</th>
+                        <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                          style="width: 100px;" aria-label="price: activate to sort column ascending">Discount price
+                        </th>
                         <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                           style="width: 100px;" aria-label="price: activate to sort column ascending">Status</th>
                         <th class="" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
@@ -571,7 +574,9 @@
                     <tbody id="category-table-body">
                       <% products.forEach(function(product,index) { %>
                         <tr>
-                          <td><%= index + 1 %></td>
+                          <td>
+                            <%= index + 1 %>
+                          </td>
                           <td class="product-name">
                             <div class="d-flex justify-content-start align-items-center">
                               <div class="avatar-wrapper me-3">
@@ -594,6 +599,14 @@
                           </td>
                           <td>
                             <%= product.price %>
+                          </td>
+                          <td>
+                            <% if(product.discountedPrice){ %>
+                              <%= product.discountedPrice %>
+                                <% }else{ %>
+                                  N/A
+                                  <% } %>
+
                           </td>
                           <td>
                             <% if(product.isListed==='true' ){ %>
@@ -641,7 +654,7 @@
                   </nav>
 
 
-              
+
 
                   <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
                     aria-hidden="true">
@@ -675,6 +688,10 @@
                             <div class="mb-3">
                               <label for="productPrice" class="form-label">Price</label>
                               <input type="number" class="form-control" id="productPrice" name="price">
+                            </div>
+                            <div class="mb-3">
+                              <label for="productPrice" class="form-label">Discount price</label>
+                              <input type="number" class="form-control" id="discountProductPrice" name="discountPrice">
                             </div>
                             <div class="mb-3">
                               <label for="productStock" class="form-label">Stock</label>
@@ -831,6 +848,7 @@
                 description: product.description,
                 category: product.category ? product.category._id : '',
                 price: product.price,
+                discountPrice:product.discountedPrice,
                 stock: product.stock,
                 status: product.isListed,
                 image1: product.imageUrl_1,
@@ -842,6 +860,7 @@
               document.getElementById('productDescription').value = product.description;
               document.getElementById('productCategory').value = product.category ? product.category._id : '';
               document.getElementById('productPrice').value = product.price;
+              document.getElementById('discountProductPrice').value = product.discountedPrice;
               document.getElementById('productStock').value = product.stock;
               document.getElementById('productStatus').value = product.isListed;
               document.getElementById('modalImage1').src = product.imageUrl_1;

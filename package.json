@@ -11,7 +11,7 @@
     "start": "nodemon index.js"
   },
   "prettier": {
-    "printWidth": 120,
+    "printWidth": 1000,
     "singleAttributePerLine": false
   },
   "keywords": [],

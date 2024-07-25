@@ -540,7 +540,11 @@
                             <div
                               class="d-flex justify-content-start align-items-center customer-country fw-medium text-truncate">
                               <div><span>
-                                  <%= customer.phone %>
+                                  <% if(customer.phone){ %>
+                                    <%= customer.phone %>
+                                      <% }else{ %>
+                                        N/A
+                                        <% } %>
                                 </span></div>
                             </div>
                           </td>

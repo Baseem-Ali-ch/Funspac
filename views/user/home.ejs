@@ -140,8 +140,8 @@
                   </ul>
                 </li>
 
-              <li>
-                <a href=" category.html" class="sf-with-ul">Brand</a>
+                <li>
+                  <a href=" category.html" class="sf-with-ul">Brand</a>
 
                   <div class="megamenu megamenu-sm">
                     <div class="row no-gutters">
@@ -461,18 +461,7 @@
               <a class="nav-link active" id="trendy-all-link" data-toggle="tab" href="#trendy-all-tab" role="tab"
                 aria-controls="trendy-all-tab" aria-selected="true">All</a>
             </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link" id="trendy-fur-link" data-toggle="tab" href="#trendy-fur-tab" role="tab"
-                aria-controls="trendy-fur-tab" aria-selected="false">Furniture</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="trendy-decor-link" data-toggle="tab" href="#trendy-decor-tab" role="tab"
-                aria-controls="trendy-decor-tab" aria-selected="false">Decor</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="trendy-light-link" data-toggle="tab" href="#trendy-light-tab" role="tab"
-                aria-controls="trendy-light-tab" aria-selected="false">Lighting</a>
-            </li> -->
+
           </ul>
         </div>
         <!-- End .heading -->
@@ -531,7 +520,25 @@
                     </h3>
                     <!-- End .product-title -->
                     <div class="product-price">
-                      <%= product.price %>
+                      <% if(product.discountedPrice && product.price> product.discountedPrice){ %>
+                        <div class="row ">
+                          <div class="product-price mx-3">
+                            ₹<%= product.discountedPrice %>
+                          </div>
+                          <div class="product-price mx-3" style="font-size: 13px;">
+                            <del>₹<%= product.price %></del>
+                          </div>
+                          <% const discountPercentage=Math.round(((product.price - product.discountedPrice) /
+                            product.price) * 100); %>
+                            <div class="product-price" style="font-size: 13px;">
+                              <%= discountPercentage %>% off
+                            </div>
+                        </div>
+                        <% } else { %>
+                          <div class="product-price">
+                            ₹<%= product.price %>
+                          </div>
+                          <% } %>
                     </div>
                     <!-- End .product-price -->
                   </div>

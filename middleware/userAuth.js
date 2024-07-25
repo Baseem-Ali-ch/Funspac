@@ -1,6 +1,6 @@
 const isUserAuthenticated = (req, res, next) => {
   try {
-    if (req.session.user) {
+    if (req.session.user || req.user) {
       return next();
     } else {
       res.redirect("/login");

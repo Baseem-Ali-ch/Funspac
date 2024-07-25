@@ -547,111 +547,124 @@
 
   <div class="container py-4">
     <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
-        <!-- Product Information -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h5 class="card-title mb-0 text-primary">Product Information</h5>
-            </div>
-            <div class="card-body">
+      <!-- Product Information -->
+      <div class="card shadow mb-4">
+          <div class="card-header py-3">
+              <h5 class="card-title mb-0 text-primary">Product Information</h5>
+          </div>
+          <div class="card-body">
+              <div class="row">
+                  <!-- Product Title -->
+                  <div class="mb-3 col-md-6">
+                      <label for="productTitle">Product Title</label>
+                      <input type="text" class="form-control" id="productTitle" name="productTitle" placeholder="Product Title" required>
+                  </div>
+                  <!-- Description -->
+                  <div class="mb-3 col-md-6">
+                      <label for="productDescription">Description</label>
+                      <textarea class="form-control" id="productDescription" name="productDescription" placeholder="Product Description"></textarea>
+                  </div>
+              </div>
+  
+              <!-- Product Images -->
+              <div class="mb-3">
+                  <label for="productImage1" class="form-label">Product Images:</label>
+                  <div class="row">
+                      <div class="col-md-4 mb-3">
+                          <div class="image-input-container">
+                              <input type="file" class="form-control image-input" id="productImage1" name="productImage1" accept="image/*" required onchange="previewImage(this, 'imagePreview1');">
+                              <label for="productImage1" class="image-placeholder">Click to upload</label>
+                              <img id="imagePreview1" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+                          </div>
+                          <div class="image-actions" id="actions1" style="display: none;">
+                              <a href="#" class="btn btn-warning btn-sm" onclick="triggerInputClick('productImage1'); return false;">Replace</a>
+                              <a href="#" class="btn btn-danger btn-sm" onclick="deleteImage('productImage1', 'imagePreview1'); return false;">Remove</a>
+                          </div>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                          <div class="image-input-container">
+                              <input type="file" class="form-control image-input" id="productImage2" name="productImage2" accept="image/*" required onchange="previewImage(this, 'imagePreview2');">
+                              <label for="productImage2" class="image-placeholder">Click to upload</label>
+                              <img id="imagePreview2" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+                          </div>
+                          <div class="image-actions" id="actions2" style="display: none;">
+                              <a href="#" class="btn btn-warning btn-sm" onclick="triggerInputClick('productImage2'); return false;">Replace</a>
+                              <a href="#" class="btn btn-danger btn-sm" onclick="deleteImage('productImage2', 'imagePreview2'); return false;">Remove</a>
+                          </div>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                          <div class="image-input-container">
+                              <input type="file" class="form-control image-input" id="productImage3" name="productImage3" accept="image/*" onchange="previewImage(this, 'imagePreview3');">
+                              <label for="productImage3" class="image-placeholder">Click to upload</label>
+                              <img id="imagePreview3" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
+                          </div>
+                          <div class="image-actions" id="actions3" style="display: none;">
+                              <a href="#" class="btn btn-warning btn-sm" onclick="triggerInputClick('productImage3'); return false;">Replace</a>
+                              <a href="#" class="btn btn-danger btn-sm" onclick="deleteImage('productImage3', 'imagePreview3'); return false;">Remove</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+  
+              <!-- Price and Stock -->
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="mb-3">
+                          <label for="productPrice" class="form-label">Price:</label>
+                          <input type="number" class="form-control" id="productPrice" name="productPrice" required>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="mb-3">
+                          <label for="discountPrice" class="form-label">Discount Price:</label>
+                          <input type="number" class="form-control" id="discountPrice" name="productDiscountedPrice">
+                          <div class="invalid-feedback" id="discountPrice-error" style="display: none;">Discount price must be a valid number.</div>
+                      </div>
+                  </div>
+                </div>
                 <div class="row">
-                    <!-- Product Title -->
-                    <div class="form-floating mb-3 col-md-6">
-                        <input type="text" class="form-control" id="productTitle" name="productTitle" placeholder="Product Title" required>
-                        <label for="productTitle">Product Title</label>
-                    </div>
-                    <!-- Description -->
-                    <div class="form-floating mb-3 col-md-6">
-                        <textarea class="form-control" id="productDescription" name="productDescription" placeholder="Product Description"></textarea>
-                        <label for="productDescription">Description</label>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stock:</label>
+                        <input type="number" class="form-control" id="stock" name="stock" required>
                     </div>
                 </div>
-
-                <!-- Product Images -->
-                <div class="mb-3">
-                    <label for="productImage1" class="form-label">Product Images:</label>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="image-input-container">
-                                <input type="file" class="form-control image-input" id="productImage1" name="productImage1" accept="image/*" required onchange="previewImage(this, 'imagePreview1');">
-                                <label for="productImage1" class="image-placeholder">Click to upload</label>
-                                <img id="imagePreview1" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
-                            </div>
-                            <div class="image-actions" id="actions1" style="display: none;">
-                                <a href="#" class="btn btn-warning btn-sm" onclick="triggerInputClick('productImage1'); return false;">Replace</a>
-                                <a href="#" class="btn btn-danger btn-sm" onclick="deleteImage('productImage1', 'imagePreview1'); return false;">Remove</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="image-input-container">
-                                <input type="file" class="form-control image-input" id="productImage2" name="productImage2" accept="image/*" required onchange="previewImage(this, 'imagePreview2');">
-                                <label for="productImage2" class="image-placeholder">Click to upload</label>
-                                <img id="imagePreview2" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
-                            </div>
-                            <div class="image-actions" id="actions2" style="display: none;">
-                                <a href="#" class="btn btn-warning btn-sm" onclick="triggerInputClick('productImage2'); return false;">Replace</a>
-                                <a href="#" class="btn btn-danger btn-sm" onclick="deleteImage('productImage2', 'imagePreview2'); return false;">Remove</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="image-input-container">
-                                <input type="file" class="form-control image-input" id="productImage3" name="productImage3" accept="image/*" onchange="previewImage(this, 'imagePreview3');">
-                                <label for="productImage3" class="image-placeholder">Click to upload</label>
-                                <img id="imagePreview3" src="#" alt="Preview" class="img-thumbnail mt-2" style="display: none; height: 270px;">
-                            </div>
-                            <div class="image-actions" id="actions3" style="display: none;">
-                                <a href="#" class="btn btn-warning btn-sm" onclick="triggerInputClick('productImage3'); return false;">Replace</a>
-                                <a href="#" class="btn btn-danger btn-sm" onclick="deleteImage('productImage3', 'imagePreview3'); return false;">Remove</a>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-6">
+                     <div class="mb-3">
+                        <label for="category" class="form-label">Category:</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="" disabled selected>Select category</option>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category._id %>"><%= category.title %></option>
+                            <% }) %>
+                        </select>
+                      </div>
+                  </div>
                 </div>
-
-                <!-- Price and Stock -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="productPrice" class="form-label">Price:</label>
-                            <input type="number" class="form-control" id="productPrice" name="productPrice" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="stock" class="form-label">Stock:</label>
-                            <input type="number" class="form-control" id="stock" name="stock" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Category and Status -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="category" class="form-label">Category:</label>
-                            <select class="form-select" id="category" name="category" required>
-                                <option value="" disabled selected>Select category</option>
-                                <% categories.forEach(category => { %>
-                                    <option value="<%= category._id %>"><%= category.title %></option>
-                                <% }) %>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="publishStatus" class="form-label">Status</label>
-                            <select class="form-select" id="publishStatus" name="isListed" required>
-                                <option value="" disabled selected>Select status</option>
-                                <option value="true">Active</option>
-                                <option value="false">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
+                  
+              
+  
+              <!-- Category and Status -->
+              <div class="row">
+                  
+                  <div class="col-md-6">
+                      <div class="mb-3">
+                          <label for="publishStatus" class="form-label">Status:</label>
+                          <select class="form-select" id="publishStatus" name="isListed" required>
+                              <option value="" disabled selected>Select status</option>
+                              <option value="true">Active</option>
+                              <option value="false">Inactive</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              <div class="mb-3">
                   <button type="submit" class="btn btn-primary">Add Product</button>
-                </div>
-            </div>
-        </div>
-    </form>
+              </div>
+          </div>
+      </div>
+  </form>
+  
 </div>
 
   

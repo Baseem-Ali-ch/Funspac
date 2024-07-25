@@ -1,55 +1,63 @@
-const express = require("express");
+//controllers
+const loginController = require('../controller/loginController')
 const userController = require("../controller/userController");
-const userRoute = express(); // Changed to Router for better practices
-const auth = require("../middleware/userAuth");
+const accountController = require('../controller/accountController')
 const breadcrumbs = require("../middleware/breadcrumbs");
+const auth = require("../middleware/userAuth");
+
+const express = require("express");
+const userRoute = express(); 
 const nocache = require('nocache')
+
 // Set view engine and views directory
 userRoute.set("view engine", "ejs");
 userRoute.set("views", "./views/user");
 
 userRoute.use(nocache())
-
-// Apply middleware for specific routes
 userRoute.use(breadcrumbs);
 
-// Public Routes - No authentication required
+//main user route
 userRoute.get("/", userController.loadHome);
 userRoute.get("/home", userController.loadHome);
-
-userRoute.get("/login", auth.isUserLogout, userController.loadLogin); // Use isUserLogout for logged-out users
-userRoute.post("/login", userController.verifyLogin);
-
-userRoute.get("/register", auth.isUserLogout, userController.loadRegister); // Use isUserLogout for logged-out users
-userRoute.post("/register", userController.insertUser);
-
-userRoute.get("/verify-otp", userController.loadVerifyOtp);
-userRoute.post("/verify-otp", userController.verifyOTP);
-
-userRoute.get("/resend-otp", userController.resentOTP); // Changed to GET for resend OTP
-
-// Authenticated Routes
-userRoute.get("/wishlist", auth.isUserAuthenticated, userController.loadWishlist);
-userRoute.post('/wishlist', auth.isUserAuthenticated, userController.addToWishlist);
-userRoute.delete('/wishlist/:productId', auth.isUserAuthenticated, userController.removeFromWishlist);
-
-userRoute.get("/contact-us", auth.isUserAuthenticated, userController.loadContact);
-
-userRoute.get("/profile", auth.isUserAuthenticated, userController.loadProfile);
-userRoute.post("/update-profile", auth.isUserAuthenticated, userController.updateProfile);
-
-userRoute.get("/logout", auth.isUserAuthenticated, userController.userLogout); // Logout is protected
-
-// Product Routes
 userRoute.get("/product/:id", userController.loadProduct);
 userRoute.get("/product-list", userController.loadProductList);
-
-// Filter Products
 userRoute.post('/filter-products', userController.filterProduct);
 
 //cart routes
 userRoute.get('/cart',userController.loadCart)
 userRoute.post('/cart',userController.addToCart)
+userRoute.delete('/cart/:productId', auth.isUserAuthenticated, userController.removeFromCart);
+
+// Authenticated routes
+userRoute.get("/wishlist", auth.isUserAuthenticated, userController.loadWishlist);
+userRoute.post('/wishlist', auth.isUserAuthenticated, userController.addToWishlist);
+userRoute.delete('/wishlist/:productId', auth.isUserAuthenticated, userController.removeFromWishlist);
+
+
+//contact routes
+userRoute.get("/contact-us", auth.isUserAuthenticated, userController.loadContact);
+
+//register and login route. login controller
+userRoute.get("/register", auth.isUserLogout, loginController.loadRegister); 
+userRoute.post("/register",auth.isUserLogout, loginController.insertUser);
+userRoute.get("/verify-otp", loginController.loadVerifyOtp);
+userRoute.post("/verify-otp", loginController.verifyOTP);
+userRoute.get("/resend-otp", loginController.resentOTP);
+userRoute.get("/login", auth.isUserLogout, loginController.loadLogin); // Use isUserLogout for logged-out users
+userRoute.post("/login",auth.isUserLogout, loginController.verifyLogin);
+userRoute.get("/logout", auth.isUserAuthenticated, loginController.userLogout);
+
+
+//account manage. account controller
+userRoute.get("/profile", auth.isUserAuthenticated, accountController.loadProfile);
+userRoute.post("/update-profile", auth.isUserAuthenticated, accountController.updateProfile);
+userRoute.get('/forget-password', accountController.forgetPassword);
+userRoute.post('/forget-password', accountController.verifyForgetPassword);
+userRoute.get('/reset-password', accountController.resetPasswordPage);
+userRoute.post('/reset-password', accountController.resetPassword);
+
+
+
 
 // Authentication Routes
 const authRoute = require("./authRoutes"); // Ensure this path is correct

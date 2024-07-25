@@ -133,67 +133,67 @@
                   </ul>
                 </li>
 
-                
 
 
 
 
-                      <li>
-                        <a href=" category.html" class="sf-with-ul">Brand</a>
 
-                        <div class="megamenu megamenu-sm">
-                          <div class="row no-gutters">
-                            <div class="col-md-6">
-                              <div class="menu-col">
-                                <div class="menu-title"></div>
-                                <!-- End .menu-title -->
-                                <ul>
-                                  <li><a href="product.html">IKEA</a></li>
-                                  <li><a href="product-centered.html">Durian</a></li>
-                                  <li><a href="product-extended.html">Hometown</a></li>
-                                  <li>
-                                    <a href="product-gallery.html">Urban Ladder</a>
-                                  </li>
-                                </ul>
-                              </div>
-                              <!-- End .menu-col -->
-                            </div>
-                            <!-- End .col-md-6 -->
+                <li>
+                  <a href=" category.html" class="sf-with-ul">Brand</a>
 
-                            <div class="col-md-6">
-                              <div class="banner banner-overlay">
-                                <a href="category.html">
-                                  <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
-
-                                  <div class="banner-content banner-content-bottom">
-                                    <div class="banner-title text-white">
-                                      New Trends<br /><span><strong>spring 2019</strong></span>
-                                    </div>
-                                    <!-- End .banner-title -->
-                                  </div>
-                                  <!-- End .banner-content -->
-                                </a>
-                              </div>
-                              <!-- End .banner -->
-                            </div>
-                            <!-- End .col-md-6 -->
-                          </div>
-                          <!-- End .row -->
+                  <div class="megamenu megamenu-sm">
+                    <div class="row no-gutters">
+                      <div class="col-md-6">
+                        <div class="menu-col">
+                          <div class="menu-title"></div>
+                          <!-- End .menu-title -->
+                          <ul>
+                            <li><a href="product.html">IKEA</a></li>
+                            <li><a href="product-centered.html">Durian</a></li>
+                            <li><a href="product-extended.html">Hometown</a></li>
+                            <li>
+                              <a href="product-gallery.html">Urban Ladder</a>
+                            </li>
+                          </ul>
                         </div>
-                        <!-- End .megamenu megamenu-sm -->
-                      </li>
+                        <!-- End .menu-col -->
+                      </div>
+                      <!-- End .col-md-6 -->
 
-                      <li>
-                        <a href="#" class="sf-with-ul">Pages</a>
+                      <div class="col-md-6">
+                        <div class="banner banner-overlay">
+                          <a href="category.html">
+                            <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
 
-                        <ul>
-                          <!-- <li><a href="about.html">About</a></li> -->
-                          <li><a href="/contact-us">Contact</a></li>
-                          <li><a href="/login">Login</a></li>
+                            <div class="banner-content banner-content-bottom">
+                              <div class="banner-title text-white">
+                                New Trends<br /><span><strong>spring 2019</strong></span>
+                              </div>
+                              <!-- End .banner-title -->
+                            </div>
+                            <!-- End .banner-content -->
+                          </a>
+                        </div>
+                        <!-- End .banner -->
+                      </div>
+                      <!-- End .col-md-6 -->
+                    </div>
+                    <!-- End .row -->
+                  </div>
+                  <!-- End .megamenu megamenu-sm -->
+                </li>
 
-                          <!-- <li><a href="coming-soon.html">Coming Soon</a></li> -->
-                        </ul>
-                      </li>
+                <li>
+                  <a href="#" class="sf-with-ul">Pages</a>
+
+                  <ul>
+                    <!-- <li><a href="about.html">About</a></li> -->
+                    <li><a href="/contact-us">Contact</a></li>
+                    <li><a href="/login">Login</a></li>
+
+                    <!-- <li><a href="coming-soon.html">Coming Soon</a></li> -->
+                  </ul>
+                </li>
               </ul>
               <!-- End .menu -->
             </nav>
@@ -337,21 +337,43 @@
                             </a>
                           </h3>
                           <!-- End .product-title -->
-                          <div class="product-price">
+                          <!-- <div class="product-price">
                             ₹<%= product.price %>
-                          </div>
-                          <!-- End .product-price -->
-                          <div class="ratings-container">
-                            <div class="ratings">
-                              <div class="ratings-val" style="width: 20%"></div>
-                              <!-- End .ratings-val -->
-                            </div>
-                            <!-- End .ratings -->
-                            <span class="ratings-text">( 2 Reviews )</span>
-                          </div>
-                          <!-- End .rating-container -->
+                          </div> -->
 
-                          <!-- End .product-nav -->
+                          <% if(product.discountedPrice && product.price> product.discountedPrice){ %>
+                            <div class="row ">
+                              <div class="product-price mx-3">
+                                ₹<%= product.discountedPrice %>
+                              </div>
+                              <div class="product-price mx-3" style="font-size: 13px;">
+                                <del>₹<%= product.price %></del>
+                              </div>
+                              <% const discountPercentage=Math.round(((product.price - product.discountedPrice) /
+                                product.price) * 100); %>
+                                <div class="product-price" style="font-size: 13px;">
+                                  <%= discountPercentage %>% off
+                                </div>
+                            </div>
+                            <% } else { %>
+                              <div class="product-price">
+                                ₹<%= product.price %>
+                              </div>
+                              <% } %>
+
+                                <!-- End .product-price -->
+
+                                <div class="ratings-container">
+                                  <div class="ratings">
+                                    <div class="ratings-val" style="width: 20%"></div>
+                                    <!-- End .ratings-val -->
+                                  </div>
+                                  <!-- End .ratings -->
+                                  <span class="ratings-text">( 2 Reviews )</span>
+                                </div>
+                                <!-- End .rating-container -->
+
+                                <!-- End .product-nav -->
                         </div>
 
                         <!-- End .product-body -->
