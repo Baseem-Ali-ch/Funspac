@@ -189,49 +189,15 @@
 
 
                                 <li>
-                                    <a href=" category.html" class="sf-with-ul">Brand</a>
-
-                                    <div class="megamenu megamenu-sm">
-                                        <div class="row no-gutters">
-                                            <div class="col-md-6">
-                                                <div class="menu-col">
-                                                    <div class="menu-title"></div>
-                                                    <!-- End .menu-title -->
-                                                    <ul>
-                                                        <li><a href="product.html">IKEA</a></li>
-                                                        <li><a href="product-centered.html">Durian</a></li>
-                                                        <li><a href="product-extended.html">Hometown</a></li>
-                                                        <li>
-                                                            <a href="product-gallery.html">Urban Ladder</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <!-- End .menu-col -->
-                                            </div>
-                                            <!-- End .col-md-6 -->
-
-                                            <div class="col-md-6">
-                                                <div class="banner banner-overlay">
-                                                    <a href="category.html">
-                                                        <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
-
-                                                        <div class="banner-content banner-content-bottom">
-                                                            <div class="banner-title text-white">
-                                                                New Trends<br /><span><strong>spring
-                                                                        2019</strong></span>
-                                                            </div>
-                                                            <!-- End .banner-title -->
-                                                        </div>
-                                                        <!-- End .banner-content -->
-                                                    </a>
-                                                </div>
-                                                <!-- End .banner -->
-                                            </div>
-                                            <!-- End .col-md-6 -->
-                                        </div>
-                                        <!-- End .row -->
-                                    </div>
-                                    <!-- End .megamenu megamenu-sm -->
+                                    <a href=" #" class="sf-with-ul">Brand</a>
+                                    <ul>
+                                        <li><a href="#">IKEA</a></li>
+                                        <li><a href="#">DURIAN</a></li>
+                                        <li><a href="#">URBAN LADDER</a></li>
+                                        <li><a href="#">FURNITURE PARK</a></li>
+                                        <li><a href="#">HOME TOWN</a></li>
+                                        <li><a href="#">WOODEN STREET</a></li>
+                                    </ul>
                                 </li>
 
                                 <li>
@@ -366,8 +332,9 @@
                                                         <td class="quantity-col">
                                                             <div class="cart-product-quantity">
                                                                 <input type="number" class="form-control"
-                                                                    value="<%= item.quantity %>" min="1" max="10"
-                                                                    step="1" data-decimals="0" required>
+                                                                    value="<%= item.quantity %>" min="1"
+                                                                    max="<%= item.productId.stock %>" step="1"
+                                                                    data-decimals="0" required>
                                                             </div>
                                                         </td>
                                                         <td class="total-col">

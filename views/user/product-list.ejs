@@ -139,48 +139,15 @@
 
 
                 <li>
-                  <a href=" category.html" class="sf-with-ul">Brand</a>
-
-                  <div class="megamenu megamenu-sm">
-                    <div class="row no-gutters">
-                      <div class="col-md-6">
-                        <div class="menu-col">
-                          <div class="menu-title"></div>
-                          <!-- End .menu-title -->
-                          <ul>
-                            <li><a href="product.html">IKEA</a></li>
-                            <li><a href="product-centered.html">Durian</a></li>
-                            <li><a href="product-extended.html">Hometown</a></li>
-                            <li>
-                              <a href="product-gallery.html">Urban Ladder</a>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- End .menu-col -->
-                      </div>
-                      <!-- End .col-md-6 -->
-
-                      <div class="col-md-6">
-                        <div class="banner banner-overlay">
-                          <a href="category.html">
-                            <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
-
-                            <div class="banner-content banner-content-bottom">
-                              <div class="banner-title text-white">
-                                New Trends<br /><span><strong>spring 2019</strong></span>
-                              </div>
-                              <!-- End .banner-title -->
-                            </div>
-                            <!-- End .banner-content -->
-                          </a>
-                        </div>
-                        <!-- End .banner -->
-                      </div>
-                      <!-- End .col-md-6 -->
-                    </div>
-                    <!-- End .row -->
-                  </div>
-                  <!-- End .megamenu megamenu-sm -->
+                  <a href=" #" class="sf-with-ul">Brand</a>
+                  <ul>
+                    <li><a href="#">IKEA</a></li>
+                    <li><a href="#">DURIAN</a></li>
+                    <li><a href="#">URBAN LADDER</a></li>
+                    <li><a href="#">FURNITURE PARK</a></li>
+                    <li><a href="#">HOME TOWN</a></li>
+                    <li><a href="#">WOODEN STREET</a></li>
+                  </ul>
                 </li>
 
                 <li>
@@ -207,7 +174,7 @@
               <form action="#" method="get">
                 <div class="header-search-wrapper">
                   <label for="q" class="sr-only">Search</label>
-                  <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required />
+                  <input type="search" class="form-control" name="q" id="searchInput" placeholder="Search in..." required />
                 </div>
                 <!-- End .header-search-wrapper -->
               </form>
@@ -275,11 +242,11 @@
                         <figure class="product-media">
                           <span class="product-label label-new " style="background-color: rgba(223, 223, 223, 0.925);">
                             <% if (product.stock> 10) { %>
-                              <p style="color: rgb(0, 39, 167);">In stock</p>
+                              <p style="color: #50C878;">In stock</p>
                               <% } else if (product.stock> 0 && product.stock <= 10) { %>
-                                  <p style="color: rgb(209, 171, 0);">Few left</p>
+                                  <p style="color: #dbba00;">Few left</p>
                                   <% } else { %>
-                                    <p style="color: rgb(245, 0, 0);">Out of stock</p>
+                                    <p style="color: #DC143C;">Out of stock</p>
                                     <% } %>
                           </span>
                           <a href="/product/<%= product._id %>">
@@ -305,10 +272,28 @@
                             <a href="#" class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></a>
                           </div> -->
                           <div class="product-action">
-                            <a href="#" class="btn-product btn-cart" id="btn-cart-<%= product._id %>"
-                              onclick="addToCart('<%= product._id %>');">
-                              <span>add to cart</span>
-                            </a>
+                            <% if(product.status=='unavailable' ){ %>
+                              <a href="#" class="btn-product btn-cart" style=" pointer-events: none;"
+                                id="btn-cart-<%= product._id %>" onclick="addToCart('<%= product._id %>')">
+                                <span>Sold out</span>
+                              </a>
+                              <% }else if(product.stock===0){ %>
+                                <a href="#" class="btn-product btn-cart" style=" pointer-events: none;"
+                                  id="btn-cart-<%= product._id %>" aria-disabled="true"
+                                  onclick="addToCart('<%= product._id %>')">
+                                  <span>Sold out</span>
+                                </a>
+                                <% }else if(product.stock < 10){ %>
+                                  <a href="#" class="btn-product btn-cart" id="btn-cart-<%= product._id %>"
+                                    onclick="addToCart('<%= product._id %>')">
+                                    <span>Add to cart</span>
+                                  </a>
+                                  <% }else{ %>
+                                    <a href="#" class="btn-product btn-cart" id="btn-cart-<%= product._id %>"
+                                      onclick="addToCart('<%= product._id %>')">
+                                      <span>Add to cart</span>
+                                    </a>
+                                    <% } %>
                           </div>
 
 
@@ -327,6 +312,7 @@
                               <% }else{ %>
                                 <a href="#">No Category</a>
                                 <% } %>
+
 
                           </div>
 
@@ -678,9 +664,9 @@
 
       <form action="#" method="get" class="mobile-search">
         <label for="mobile-search" class="sr-only">Search</label>
-        <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..."
+        <input type="search" class="form-control" name="mobile-search" id="productSearch" placeholder="Search in..."
           required />
-        <button class="btn btn-primary" type="submit">
+        <button class="btn btn-primary" type="submit" onclick="searchProducts()">
           <i class="icon-search"></i>
         </button>
       </form>
@@ -1178,11 +1164,48 @@
         alertMessage.style.display = 'none';
       }, 3000);
     }
-
-    // Function to save product ID to local storage
-
-
   </script>
 
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('searchInput');
+      const productElements = document.querySelectorAll('.product');
+      const productsContainer = document.querySelector('.products .row');
+
+      function searchProducts() {
+        const searchTerm = searchInput.value.toLowerCase();
+        let visibleProductsCount = 0;
+
+        productElements.forEach(productElement => {
+          const productName = productElement.querySelector('.product-title a').textContent.toLowerCase();
+          const productCategory = productElement.querySelector('.product-cat a').textContent.toLowerCase();
+
+          if (productName.includes(searchTerm) || productCategory.includes(searchTerm)) {
+            productElement.style.display = '';
+            visibleProductsCount++;
+          } else {
+            productElement.style.display = 'none';
+          }
+        });
+
+        // Handle no results
+        const noResultsElement = document.querySelector('.no-results');
+        if (visibleProductsCount === 0) {
+          if (!noResultsElement) {
+            const noResults = document.createElement('p');
+            noResults.className = 'no-results';
+            noResults.textContent = 'No products found.';
+            productsContainer.before(noResults);
+          }
+        } else if (noResultsElement) {
+          noResultsElement.remove();
+        }
+      }
+
+      searchInput.addEventListener('input', searchProducts);
+    });
+  </script>
+  f
 
   <%- include('../layout/footer.ejs') %>

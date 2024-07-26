@@ -576,29 +576,33 @@
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                          <form id="editCustomerForm">
+                          <form id="editCustomerForm" onsubmit="return validateForm()">
                             <input type="hidden" id="customer-id">
                             <div class="mb-3">
                               <label for="edit-name" class="form-label">Customer Name</label>
                               <input type="text" class="form-control" id="edit-name" required>
+                              <div class="invalid-feedback" id="nameError">Please enter a valid name.</div>
                             </div>
                             <div class="mb-3">
                               <label for="edit-email" class="form-label">Email</label>
                               <input type="email" class="form-control" id="edit-email" required>
+                              <div class="invalid-feedback" id="emailError">Please enter a valid email.</div>
                             </div>
                             <div class="mb-3">
                               <label for="edit-phone" class="form-label">Phone No</label>
                               <input type="text" class="form-control" id="edit-phone" required>
+                              <div class="invalid-feedback" id="phoneError">Please enter a valid phone number.</div>
                             </div>
                             <div class="mb-3">
                               <label for="edit-status" class="form-label">Status</label>
                               <select class="form-select" id="edit-status">
                                 <option value="">Select Status</option>
                                 <option value="true">Active</option>
-                                <option value="false">InActive</option>
+                                <option value="false">Inactive</option>
                               </select>
+                              <div class="invalid-feedback" id="statusError">Please select a status.</div>
                             </div>
-                            <button type="button" class="btn btn-primary" id="saveCustomerButton">Save Changes</button>
+                            <button type="submit" class="btn btn-primary" id="saveCustomerButton">Save Changes</button>
                           </form>
                         </div>
                       </div>
@@ -710,10 +714,57 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+
+
+  <script>
+    function validateForm() {
+      let isValid = true;
+
+      const name = document.getElementById('edit-name').value.trim();
+      const email = document.getElementById('edit-email').value.trim();
+      const phone = document.getElementById('edit-phone').value.trim();
+      const status = document.getElementById('edit-status').value.trim();
+
+      const namePattern = /^[a-zA-Z\s]+$/;
+      const phonePattern = /^[1-9][0-9]{9}$/;
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!name.match(namePattern) || name.startsWith(' ')) {
+        isValid = false;
+        document.getElementById('nameError').style.display = 'block';
+      } else {
+        document.getElementById('nameError').style.display = 'none';
+      }
+
+      if (!email.match(emailPattern)) {
+        isValid = false;
+        document.getElementById('emailError').style.display = 'block';
+      } else {
+        document.getElementById('emailError').style.display = 'none';
+      }
+
+      if (!phone.match(phonePattern) || phone.startsWith(' ') || phone.startsWith('0')) {
+        isValid = false;
+        document.getElementById('phoneError').style.display = 'block';
+      } else {
+        document.getElementById('phoneError').style.display = 'none';
+      }
+
+      if (status === '') {
+        isValid = false;
+        document.getElementById('statusError').style.display = 'block';
+      } else {
+        document.getElementById('statusError').style.display = 'none';
+      }
+
+      return isValid;
+    }
+  </script>
+
   <script>
 
-
-    let originalCustomerData = {}; // To store the original data
+    let originalCustomerData = {};
 
     document.getElementById('saveCustomerButton').addEventListener('click', saveChanges);
 
@@ -748,9 +799,11 @@
         originalCustomerData.phone !== currentPhone ||
         originalCustomerData.status !== currentStatus;
     }
-
+    
+    
     function saveChanges() {
-      if (!hasChanges()) {
+      if(validateForm()){
+        if (!hasChanges()) {
         Swal.fire({
           title: 'No Changes Detected',
           text: 'No changes were made to the customer.',
@@ -759,7 +812,7 @@
         });
         return;
       }
-
+      
       const form = document.getElementById('editCustomerForm');
       const customerId = document.getElementById('customer-id').value;
       const payload = {
@@ -790,7 +843,6 @@
               icon: 'success',
               confirmButtonText: 'OK'
             }).then(() => {
-              // Reload the page or update the table
               location.reload();
             });
           } else {
@@ -812,10 +864,8 @@
           });
         });
     }
-
-
-
-
+      }
+ 
   </script>
 
 
@@ -851,6 +901,7 @@
 
 
 
+  
 
 
 

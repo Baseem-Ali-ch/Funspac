@@ -1,16 +1,17 @@
-const Category = require("../model/categoryModel");
-const Product = require("../model/productModel");
+const Category = require("../../model/categoryModel");
+const Product = require("../../model/productModel");
 
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs").promises;
 const mongoose = require("mongoose");
 
+//load product list in admin side
 const loadProductList = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Current page number
-    const limit = 10; // Number of products per page
-    const skip = (page - 1) * limit; // Number of products to skip
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
     const isAdmin = req.session.admin;
     const products = await Product.find().populate("category").skip(skip).limit(limit);
@@ -31,6 +32,7 @@ const loadProductList = async (req, res) => {
   }
 };
 
+//load add product page
 const loadAddProduct = async (req, res) => {
   try {
     const isAdmin = req.session.admin;
@@ -41,11 +43,10 @@ const loadAddProduct = async (req, res) => {
   }
 };
 
+//admin can add product
 const addProduct = async (req, res) => {
   try {
     const { productTitle, productDescription, productPrice, productDiscountedPrice, category: categoryId, isListed, stock } = req.body;
-
-    // Fetch the category details using the provided category ID
     const category = await Category.findById(categoryId);
 
     if (!category) {
@@ -53,23 +54,20 @@ const addProduct = async (req, res) => {
       return res.status(404).send("Category not found");
     }
 
-    // Handle multiple images
     let imageUrl_1 = req.files["productImage1"] ? "/assets/images/add-product/" + req.files["productImage1"][0].filename : "";
     let imageUrl_2 = req.files["productImage2"] ? "/assets/images/add-product/" + req.files["productImage2"][0].filename : "";
     let imageUrl_3 = req.files["productImage3"] ? "/assets/images/add-product/" + req.files["productImage3"][0].filename : "";
 
-    // Function to crop and resize images using sharp
     const cropAndResizeImage = async (imagePath) => {
       const outputFileName = `cropped-${path.basename(imagePath)}`;
       await sharp(imagePath)
         .resize({ width: 300, height: 300 })
-        .extract({ width: 300, height: 300, left: 0, top: 0 }) // Use extract for cropping
+        .extract({ width: 300, height: 300, left: 0, top: 0 })
         .toFile(path.join(path.dirname(imagePath), outputFileName));
 
       return outputFileName;
     };
 
-    // Crop and resize each image if it exists
     if (req.files && req.files["productImage1"]) {
       const croppedImageUrl_1 = await cropAndResizeImage(req.files["productImage1"][0].path);
       imageUrl_1 = `/assets/images/add-product/${croppedImageUrl_1}`;
@@ -83,20 +81,18 @@ const addProduct = async (req, res) => {
       imageUrl_3 = `/assets/images/add-product/${croppedImageUrl_3}`;
     }
 
-    // Create new product instance
     const product = new Product({
       name: productTitle,
       description: productDescription,
       price: productPrice,
       discountedPrice: productDiscountedPrice,
-      category: category._id, // Store the category ID
-      isListed: isListed === "true", // Convert string to boolean
+      category: category._id,
+      isListed: isListed === "true",
       stock: stock,
       imageUrl_1: imageUrl_1,
       imageUrl_2: imageUrl_2,
       imageUrl_3: imageUrl_3,
     });
-
     await product.save();
 
     const cleanUpTempFiles = async (files) => {
@@ -120,20 +116,17 @@ const addProduct = async (req, res) => {
   }
 };
 
+//admin can edit product details
 const updateProduct = async (req, res) => {
   const productId = req.params.id;
   const { name, description, category, price, discountPrice, stock, status } = req.body;
-
   try {
-    // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(category)) {
       return res.status(400).json({ success: false, message: "Invalid category ID" });
     }
-
     const product = await Product.findById(productId);
 
     if (product) {
-      // Check if there are any changes
       const changes = [];
       if (product.name !== name) changes.push("name");
       if (product.description !== description) changes.push("description");
@@ -146,7 +139,6 @@ const updateProduct = async (req, res) => {
         return res.json({ success: false, message: "No changes detected" });
       }
 
-      // Update the product fields
       product.name = name;
       product.description = description;
       product.category = new mongoose.Types.ObjectId(category);
@@ -178,13 +170,13 @@ const updateProduct = async (req, res) => {
   }
 };
 
+//load category list in admin side
 const loadCategoryList = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Current page number
-    const limit = 10; // Number of categories per page
-    const skip = (page - 1) * limit; // Number of categories to skip
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
-    // Get categories with pagination
     const categories = await Category.find().skip(skip).limit(limit);
     const totalCategories = await Category.countDocuments();
     const totalPages = Math.ceil(totalCategories / limit);
@@ -203,6 +195,7 @@ const loadCategoryList = async (req, res) => {
   }
 };
 
+//admin can add categories
 const addCategory = async (req, res) => {
   try {
     const { title, slug, isListed } = req.body;
@@ -219,7 +212,6 @@ const addCategory = async (req, res) => {
       image,
       isListed: isListed === "true",
     });
-
     await newCategory.save();
     return res.status(201).json({ message: "Category added successfully" });
   } catch (error) {
@@ -228,18 +220,16 @@ const addCategory = async (req, res) => {
   }
 };
 
+//admin can edit categories
 const updateCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
-    const { title, description, status } = req.body; // `status` from form
+    const { title, description, status } = req.body;
     const image = req.file ? req.file.filename : null;
-
-    console.log("Update Data:", { title, description, status });
-
     const updateData = {
       title,
       description,
-      isListed: status === "active", // Convert 'active' to true and 'inactive' to false
+      isListed: status === "active",
     };
 
     if (image) {

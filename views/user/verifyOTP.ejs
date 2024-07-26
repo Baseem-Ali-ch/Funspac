@@ -52,7 +52,7 @@
   </div>
 
   <script>
-    
+
     document.getElementById("otp-form").addEventListener("submit", function (event) {
       event.preventDefault();
       const otpDigits = document.querySelectorAll(".otp-digit");
@@ -62,62 +62,60 @@
 
       $.ajax({
         type: "POST",
-        url: "/verify-otp", 
+        url: "/verify-otp",
         data: { email: "<%= email %>", otp: otp },
         success: function (response) {
           if (response.success) {
-            
             window.location.href = response.redirectUrl;
           } else {
-            
             document.getElementById("otp-message").textContent = response.message;
           }
         },
         error: function (xhr, status, error) {
-          console.error(error); 
-          alert("Failed to verify OTP. Please try again."); 
+          console.error(error);
+          alert("Failed to verify OTP. Please try again.");
         },
       });
     });
 
-    
+
     let timer;
     const startTimer = () => {
-      let timeInSeconds = 60; 
+      let timeInSeconds = 60;
       timer = setInterval(() => {
         timeInSeconds--;
         if (timeInSeconds <= 0) {
           clearInterval(timer);
           document.getElementById("resend-otp-btn").style.display = "block";
-          document.getElementById("timer-container").style.display = "none"; 
+          document.getElementById("timer-container").style.display = "none";
         } else {
           document.getElementById("timer").textContent = timeInSeconds;
         }
       }, 1000);
     };
 
-    
+
     startTimer();
 
     function resendOTP() {
-      clearInterval(timer); 
+      clearInterval(timer);
       document.getElementById("resend-otp-btn").style.display = "none";
       document.getElementById("timer-container").style.display = "block";
-      document.getElementById("timer").textContent = "60"; 
+      document.getElementById("timer").textContent = "60";
 
-      
+
       $.ajax({
         type: "GET",
         url: "/resend-otp",
-        data: { email: "<%= email %>" }, 
+        data: { email: "<%= email %>" },
         success: function (response) {
-          console.log(response); 
-          document.getElementById("otp-message").textContent = "OTP resent. Check your inbox."; 
+          console.log(response);
+          document.getElementById("otp-message").textContent = "OTP resent. Check your inbox.";
           startTimer();
         },
         error: function (xhr, status, error) {
           console.error(error);
-          alert("Failed to resend OTP. Please try again."); 
+          alert("Failed to resend OTP. Please try again.");
         },
       });
     }

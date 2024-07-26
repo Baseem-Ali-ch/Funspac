@@ -1,11 +1,11 @@
 //controllers
-const Token = require("../model/tokenModel");
-const Category = require("../model/categoryModel");
-const userModel = require("../model/userModel");
+const Token = require("../../model/tokenModel");
+const Category = require("../../model/categoryModel");
+const userModel = require("../../model/userModel");
 
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+//load user profile
 const loadProfile = async (req, res) => {
   try {
     const user = req.session.user || req.user;
@@ -25,6 +26,7 @@ const loadProfile = async (req, res) => {
   }
 };
 
+//user can edit their own
 const updateProfile = async (req, res) => {
   try {
     const userId = req.session.user ? req.session.user._id : req.user ? req.user._id : null;
@@ -46,9 +48,7 @@ const updateProfile = async (req, res) => {
     if (!updatedUser) {
       return res.status(404).send("User not found");
     }
-
     req.session.user = updatedUser;
-
     res.json({
       name: updatedUser.name,
       email: updatedUser.email,
@@ -60,6 +60,7 @@ const updateProfile = async (req, res) => {
   }
 };
 
+//load forget password
 const forgetPassword = async (req, res) => {
   try {
     res.render("forgetPassword");
@@ -68,6 +69,7 @@ const forgetPassword = async (req, res) => {
   }
 };
 
+//load forget password page and send a token to email
 const verifyForgetPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -106,6 +108,7 @@ const verifyForgetPassword = async (req, res) => {
   }
 };
 
+//load reset password page
 const resetPasswordPage = async (req, res) => {
   try {
     const { token, id } = req.query;
@@ -122,6 +125,7 @@ const resetPasswordPage = async (req, res) => {
   }
 };
 
+//reset the password
 const resetPassword = async (req, res) => {
   try {
     const { token, userId, password } = req.body;

@@ -192,48 +192,15 @@
                   </li>
 
                   <li>
-                    <a href=" category.html" class="sf-with-ul">Brand</a>
-
-                    <div class="megamenu megamenu-sm">
-                      <div class="row no-gutters">
-                        <div class="col-md-6">
-                          <div class="menu-col">
-                            <div class="menu-title"></div>
-                            <!-- End .menu-title -->
-                            <ul>
-                              <li><a href="product.html">IKEA</a></li>
-                              <li><a href="product-centered.html">Durian</a></li>
-                              <li><a href="product-extended.html">Hometown</a></li>
-                              <li>
-                                <a href="product-gallery.html">Urban Ladder</a>
-                              </li>
-                            </ul>
-                          </div>
-                          <!-- End .menu-col -->
-                        </div>
-                        <!-- End .col-md-6 -->
-
-                        <div class="col-md-6">
-                          <div class="banner banner-overlay">
-                            <a href="category.html">
-                              <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
-
-                              <div class="banner-content banner-content-bottom">
-                                <div class="banner-title text-white">
-                                  New Trends<br /><span><strong>spring 2019</strong></span>
-                                </div>
-                                <!-- End .banner-title -->
-                              </div>
-                              <!-- End .banner-content -->
-                            </a>
-                          </div>
-                          <!-- End .banner -->
-                        </div>
-                        <!-- End .col-md-6 -->
-                      </div>
-                      <!-- End .row -->
-                    </div>
-                    <!-- End .megamenu megamenu-sm -->
+                    <a href=" #" class="sf-with-ul">Brand</a>
+                    <ul>
+                      <li><a href="#">IKEA</a></li>
+                      <li><a href="#">DURIAN</a></li>
+                      <li><a href="#">URBAN LADDER</a></li>
+                      <li><a href="#">FURNITURE PARK</a></li>
+                      <li><a href="#">HOME TOWN</a></li>
+                      <li><a href="#">WOODEN STREET</a></li>
+                    </ul>
                   </li>
 
                   <li>
@@ -303,9 +270,9 @@
                         <img id="product-zoom" src="<%= product.imageUrl_1 %>"
                           data-zoom-image="<%= product.imageUrl_1 %>" alt="product image" />
                         <div id="zoom-result" class="img-zoom-result"></div>
-                        <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                        <!-- <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                           <i class="icon-arrows"></i>
-                        </a>
+                        </a> -->
                       </figure>
                       <div id="product-zoom-gallery" class="product-image-gallery">
                         <% if (product.imageUrl_1) { %>
@@ -371,6 +338,7 @@
                       <%= product.description %>
                     </p>
                   </div>
+
                   <div class="details-filter-row details-row-size">
                     <label>Color:</label>
                     <div class="product-nav product-nav-thumbs">
@@ -390,24 +358,45 @@
                         data-decimals="0" required />
                     </div>
                   </div>
+                  
                   <div class="product-details-action">
-
-                    <a href="#" class="btn-product btn-cart" id="btn-cart-<%= product._id %>"
-                      onclick="addToCart('<%= product._id %>')">
-                      <span>add to cart</span>
-                    </a>
-
-                    <div class="details-action-wrapper">
-                      <a href="#" class="btn-product btn-wishlist" title="Add to Wishlist"
-                        onclick="addToWishlist('<%= product._id %>')">
-                        <span>Add to Wishlist</span>
+                    <% if(product.status=='unavailable' ){ %>
+                      <a href="#" class="btn-product btn-cart"
+                        style="background-color: #ffc1c1; color: black; pointer-events: none;"
+                        id="btn-cart-<%= product._id %>" onclick="addToCart('<%= product._id %>')">
+                        <span>Sold out</span>
                       </a>
+                      <% }else if(product.stock===0){ %>
+                        <a href="#" class="btn-product btn-cart"
+                          style="background-color: #ffc1c1; color: black; pointer-events: none;"
+                          id="btn-cart-<%= product._id %>" aria-disabled="true"
+                          onclick="addToCart('<%= product._id %>')">
+                          <span>Sold out</span>
+                        </a>
+                        <% }else if(product.stock < 10){ %>
+                          <a href="#" class="btn-product btn-cart" style="background-color: #fffebb; color: black;"
+                            id="btn-cart-<%= product._id %>" onclick="addToCart('<%= product._id %>')">
+                            <span>>Add to cart</span>
+                          </a>
+                          <% }else{ %>
+                            <a href="#" class="btn-product btn-cart" style="background-color: #c9ffbb; color: black;"
+                              id="btn-cart-<%= product._id %>" onclick="addToCart('<%= product._id %>')">
+                              <span>Add to cart</span>
+                            </a>
+                            <% } %>
 
 
-                      <!-- <a href="#" class="btn-product btn-compare" title="Compare">
+                              <div class="details-action-wrapper">
+                                <a href="#" class="btn-product btn-wishlist" title="Add to Wishlist"
+                                  onclick="addToWishlist('<%= product._id %>')">
+                                  <span>Add to Wishlist</span>
+                                </a>
+
+
+                                <!-- <a href="#" class="btn-product btn-compare" title="Compare">
                           <span>Add to Compare</span>
                         </a> -->
-                    </div>
+                              </div>
                   </div>
                   <div class="product-details-footer">
                     <div class="product-cat">
@@ -642,109 +631,104 @@
           </div>
           <!-- End .product-details-tab -->
 
-          <h2 class="title text-center mb-4">You May Also Like</h2>
+          <h2 class="title text-center mb-4" style="text-decoration: underline;">You May Also Like</h2>
           <!-- End .title text-center -->
-
-          <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow owl-loaded owl-drag"
-            data-toggle="owl" data-owl-options="{
-            &quot;nav&quot;: false, 
-            &quot;dots&quot;: true,
-            &quot;margin&quot;: 20,
-            &quot;loop&quot;: false,
-            &quot;responsive&quot;: {
-                &quot;0&quot;: {
-                    &quot;items&quot;:1
-                },
-                &quot;480&quot;: {
-                    &quot;items&quot;:2
-                },
-                &quot;768&quot;: {
-                    &quot;items&quot;:3
-                },
-                &quot;992&quot;: {
-                    &quot;items&quot;:4
-                },
-                &quot;1200&quot;: {
-                    &quot;items&quot;:4,
-                    &quot;nav&quot;: true,
-                    &quot;dots&quot;: false
-                }
-            }
-        }">
-
-            <div class="owl-stage-outer">
-              <div class="owl-stage"
-                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1486px;">
-                <div class="owl-item active" style="width: 277.007px; margin-right: 20px;">
+          <div class="container">
+            <div class="row">
+              <% relatedProduct.forEach(function(product, index) { %>
+                <div class="col-md-3 mb-4">
                   <div class="product product-7 text-center">
                     <figure class="product-media">
-                      <span class="product-label label-new">New</span>
-                      <a href="product.html">
-                        <img src="<%= product.imageUrl_1%>" alt="Product image" class="product-image">
+                      <span class="product-label label-new" style="background-color: rgba(223, 223, 223, 0.925);">
+                        <% if (product.stock> 10) { %>
+                          <p style="color: #50C878;">In stock</p>
+                          <% } else if (product.stock> 0 && product.stock <= 10) { %>
+                              <p style="color: #dbba00;">Few left</p>
+                              <% } else { %>
+                                <p style="color: #DC143C;">Out of stock</p>
+                                <% } %>
+                      </span>
+                      <a href="/product/<%= product._id %>">
+                        <img src="<%= product.imageUrl_1%>" alt="<%= product.name %>" class="product-image">
                       </a>
 
                       <div class="product-action-vertical">
-                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
-                            wishlist</span></a>
-
-
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"
+                          onclick="addToWishlist('<%= product._id %>',1); return false;">
+                          <span>Add to Wishlist</span>
+                        </a>
                       </div><!-- End .product-action-vertical -->
 
                       <div class="product-action">
-                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                      </div><!-- End .product-action -->
+                        <% if(product.status=='unavailable' || product.stock===0){ %>
+                          <a href="#" class="btn-product btn-cart" style="pointer-events: none;"
+                            id="btn-cart-<%= product._id %>" aria-disabled="true">
+                            <span>Sold out</span>
+                          </a>
+                          <% } else { %>
+                            <a href="#" class="btn-product btn-cart" id="btn-cart-<%= product._id %>"
+                              onclick="addToCart('<%= product._id %>')">
+                              <span>Add to cart</span>
+                            </a>
+                            <% } %>
+                      </div>
+                      <!-- End .product-action -->
                     </figure><!-- End .product-media -->
 
                     <div class="product-body">
                       <div class="product-cat">
-                        <a href="#">
-                          <%= product.category.title %>
+                        <% if(categories){ %>
+                          <a href="#">
+                            <%= product.category.title %>
+                          </a>
+                          <% } else { %>
+                            <a href="#">No Category</a>
+                            <% } %>
+                      </div>
+                      <!-- End .product-cat -->
+                      <h3 class="product-title">
+                        <a href="product.html">
+                          <%= product.name %>
                         </a>
-                      </div><!-- End .product-cat -->
-                      <h3 class="product-title"><a href="product.html"><%= product.name %></a></h3>
+                      </h3>
                       <!-- End .product-title -->
-                      <div class="product-price">
-                        $60.00
-                      </div><!-- End .product-price -->
-                      <div class="ratings-container">
-                        <div class="ratings">
-                          <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                        </div><!-- End .ratings -->
-                        <span class="ratings-text">( 2 Reviews )</span>
-                      </div><!-- End .rating-container -->
 
-                      
+                      <% if(product.discountedPrice && product.price> product.discountedPrice){ %>
+                        <div class="row justify-content-center">
+                          <div class="product-price mx-2">
+                            ₹<%= product.discountedPrice %>
+                          </div>
+                          <div class="product-price mx-2" style="font-size: 13px;">
+                            <del>₹<%= product.price %></del>
+                          </div>
+                          <% const discountPercentage=Math.round(((product.price - product.discountedPrice) /
+                            product.price) * 100); %>
+                            <div class="product-price" style="font-size: 13px;">
+                              <%= discountPercentage %>% off
+                            </div>
+                        </div>
+                        <% } else { %>
+                          <div class="product-price">
+                            ₹<%= product.price %>
+                          </div>
+                          <% } %>
+
+                            <!-- End .product-price -->
+
+                            <div class="ratings-container">
+                              <div class="ratings">
+                                <div class="ratings-val" style="width: 20%"></div>
+                                <!-- End .ratings-val -->
+                              </div>
+                              <!-- End .ratings -->
+                              <span class="ratings-text">( 2 Reviews )</span>
+                            </div>
+                            <!-- End .rating-container -->
                     </div><!-- End .product-body -->
                   </div>
                 </div>
-                <div class="owl-item active" style="width: 277.007px; margin-right: 20px;">
-                  <div class="product product-7 text-center">
-
-                  </div>
-                </div>
-                <div class="owl-item active" style="width: 277.007px; margin-right: 20px;">
-                  <div class="product product-7 text-center">
-
-                  </div>
-                </div>
-                <div class="owl-item active" style="width: 277.007px; margin-right: 20px;">
-                  <div class="product product-7 text-center">
-
-                  </div>
-                </div>
-                <div class="owl-item active" style="width: 277.007px; margin-right: 20px;">
-                  <div class="product product-7 text-center">
-
-
-
-                  </div>
-                </div>
-              </div>
+                <% }) %>
             </div>
-            <div class="owl-nav"><button type="button" role="presentation" class="owl-prev disabled"><i
-                  class="icon-angle-left"></i></button><button type="button" role="presentation" class="owl-next"><i
-                  class="icon-angle-right"></i></button></div>
-            <div class="owl-dots disabled"></div>
           </div>
           <!-- End .owl-carousel -->
         </div>

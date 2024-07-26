@@ -1,5 +1,5 @@
-const productController = require("../controller/productController");
-const adminController = require("../controller/adminController");
+const productController = require("../controller/admin/productController");
+const adminController = require("../controller/admin/adminController");
 const upload = require("../middleware/multer");
 const { isAdminAuthenticated } = require("../middleware/adminAuth");
 const adminBreadcrumbs = require("../middleware/adminBreadcrumbs");
@@ -58,6 +58,7 @@ adminRoute.get("/order-details", isAdminAuthenticated, adminController.loadOrder
 adminRoute.get("/allCustomer", isAdminAuthenticated, adminController.loadAllUser);
 adminRoute.patch("/allCustomer/:id", isAdminAuthenticated, adminController.updateCustomer);
 
+//admin profile
 adminRoute.get("/admin-profile", isAdminAuthenticated, adminController.loadAdmProfile);
 adminRoute.post("/logout", isAdminAuthenticated, adminController.adminLogout);
 

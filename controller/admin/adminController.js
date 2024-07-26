@@ -1,6 +1,7 @@
-const userModel = require("../model/userModel"); // Adjust the path as per your project structure
+const userModel = require("../../model/userModel"); // Adjust the path as per your project structure
 const bcrypt = require("bcrypt");
 
+//load login page for admin
 const loadLogin = async (req, res) => {
   try {
     return res.render("login");
@@ -10,6 +11,7 @@ const loadLogin = async (req, res) => {
   }
 };
 
+//verify admin login
 const verifyLogin = async (req, res) => {
   try {
     const { "login-email": email, "login-password": password } = req.body;
@@ -18,13 +20,13 @@ const verifyLogin = async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       if (passwordMatch) {
         if (userData.is_admin) {
-          req.session.admin = userData; // Set admin in session
+          req.session.admin = userData;
 
           return res.redirect("/admin/dashboard");
         } else {
           return res.render("login", {
             message: "Email and Password are incorrect or you are not authorized as admin.",
-          }); // Redirect non-admin users back to admin login
+          });
         }
       } else {
         return res.render("login", {
@@ -42,6 +44,7 @@ const verifyLogin = async (req, res) => {
   }
 };
 
+//load admin dashboard
 const loadHome = async (req, res) => {
   try {
     const isAdmin = req.session.admin;
@@ -53,6 +56,7 @@ const loadHome = async (req, res) => {
   }
 };
 
+//load order list in admin side
 const loadOrderList = async (req, res) => {
   try {
     const isAdmin = req.session.admin;
@@ -62,6 +66,7 @@ const loadOrderList = async (req, res) => {
   }
 };
 
+//load order list in admin side
 const loadOrderDeatails = async (req, res) => {
   try {
     const isAdmin = req.session.admin;
@@ -71,17 +76,18 @@ const loadOrderDeatails = async (req, res) => {
   }
 };
 
+//load all user list in admin side
 const loadAllUser = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Current page number
-    const limit = 10; // Number of users per page
-    const skip = (page - 1) * limit; // Number of users to skip
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
-    const userData = await userModel.find().skip(skip).limit(limit); // Fetch paginated user data
-    const totalUsers = await userModel.countDocuments(); // Get total number of users
-    const totalPages = Math.ceil(totalUsers / limit); // Calculate total pages
-
+    const userData = await userModel.find().skip(skip).limit(limit);
+    const totalUsers = await userModel.countDocuments();
+    const totalPages = Math.ceil(totalUsers / limit);
     const isAdmin = req.session.admin;
+
     return res.render("all-customer", {
       customers: userData,
       isAdmin,
@@ -94,6 +100,7 @@ const loadAllUser = async (req, res) => {
   }
 };
 
+//admin edit user details
 const updateCustomer = async (req, res) => {
   const customerId = req.params.id;
   const { name, email, phone, isListed } = req.body;
@@ -112,6 +119,7 @@ const updateCustomer = async (req, res) => {
   }
 };
 
+//admin logout
 const adminLogout = async (req, res) => {
   try {
     req.session.destroy((error) => {
@@ -128,6 +136,7 @@ const adminLogout = async (req, res) => {
   }
 };
 
+//load admin profile
 const loadAdmProfile = async (req, res) => {
   try {
     const isAdmin = req.session.admin;

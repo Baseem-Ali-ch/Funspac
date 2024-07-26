@@ -1,9 +1,10 @@
 //controllers
-const Wishlist = require("../model/wishlistModel");
-const Cart = require("../model/cartModel");
-const Product = require('../model/productModel')
-const Category = require('../model/categoryModel')
+const Wishlist = require("../../model/wishlistModel");
+const Cart = require("../../model/cartModel");
+const Product = require("../../model/productModel");
+const Category = require("../../model/categoryModel");
 
+const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -15,12 +16,12 @@ const breadcrumbs = async (req, res) => {
   }
 };
 
+//load home page for user
 const loadHome = async (req, res) => {
   try {
     const user = req.session.user || req.user;
     const userId = user ? user._id : null;
-
-    console.log("User ID:", userId);
+    console.log("user session:", user);
 
     let wishlistItems = [];
     if (userId) {
@@ -34,9 +35,8 @@ const loadHome = async (req, res) => {
       cartItems = cart ? cart.items : [];
     }
 
-    const products = await Product.find({ isListed: "true" }).limit(6).sort({ createdAt: -1 });
+    const products = await Product.find({ isListed: "true" }).limit(6).sort({ _id: -1 });
     const categories = await Category.find({ isListed: "true" });
-    console.log("Wishlist Items:", wishlistItems);
 
     res.render("home", {
       user,
@@ -51,21 +51,19 @@ const loadHome = async (req, res) => {
   }
 };
 
+//load contact page for user, if the user already login
 const loadContact = async (req, res) => {
   try {
     const user = req.session.user || req.user;
     const userId = user ? user._id : null;
 
-    // Fetch cart, wishlist, and categories
     const cart = await Cart.findOne({ userId }).populate("items.productId");
     const wishlistItems = await Wishlist.findOne({ userId }).populate("products.productId");
     const categories = await Category.find({ isListed: "true" });
 
-    // Handle cases where cart or wishlistItems might be null
     const cartItems = cart && cart.items ? cart.items : [];
     const wishlistItemsList = wishlistItems ? wishlistItems.products : [];
 
-    // Render the contact-us page
     res.render("contact-us", {
       user,
       cartItems,
@@ -78,13 +76,57 @@ const loadContact = async (req, res) => {
   }
 };
 
+//the contact page message send to the owner email
+const sendMessage = async (req, res) => {
+  try {
+    const { cname, cemail, cphone, csubject, cmessage } = req.body;
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
+    let mailOptions = {
+      from: `"${cname}" <${cemail}>`,
+      to: process.env.EMAIL_USER,
+      subject: `New Contact Form Submission: ${csubject}`,
+      text: `
+        Name: ${cname}
+        Email: ${cemail}
+        Phone: ${cphone}
+        Subject: ${csubject}
+        Message: ${cmessage}
+      `,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${cname}</p>
+        <p><strong>Email:</strong> ${cemail}</p>
+        <p><strong>Phone:</strong> ${cphone}</p>
+        <p><strong>Subject:</strong> ${csubject}</p>
+        <p><strong>Message:</strong> ${cmessage}</p>
+      `,
+    };
 
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        res.status(500).json({ success: false });
+      } else {
+        console.log("Message sent: %s", info.messageId);
+        res.json({ success: true });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false });
+  }
+};
 
-
-
-
-
+//load product detailed page for user
 const loadProduct = async (req, res) => {
   try {
     const productId = req.params.id;
@@ -93,6 +135,8 @@ const loadProduct = async (req, res) => {
 
     const product = await Product.findById(productId).populate("category", "title");
     const categories = await Category.find({ isListed: "true" });
+    const relatedProduct = await Product.find({ category: product.category, _id: { $ne: productId } }).limit(4);
+
     let wishlistItems = [];
     if (userId) {
       const wishlist = await Wishlist.findOne({ userId }).populate("products.productId");
@@ -112,7 +156,7 @@ const loadProduct = async (req, res) => {
     const breadcrumbs = [
       { name: "Home", url: "/" },
       { name: "Product List", url: "/product-list" },
-      { name: product.name, url: `/product/${product._id}` }, // Use product name here
+      { name: product.name, url: `/product/${product._id}` },
     ];
 
     res.render("product", {
@@ -122,6 +166,7 @@ const loadProduct = async (req, res) => {
       cartItems,
       breadcrumbs,
       categories,
+      relatedProduct,
     });
   } catch (error) {
     console.error(error);
@@ -129,23 +174,17 @@ const loadProduct = async (req, res) => {
   }
 };
 
+//load product list page, contain all product
 const loadProductList = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Current page number
-    const limit = 9; // Number of products per page
-    const skip = (page - 1) * limit; // Number of products to skip
+    const page = parseInt(req.query.page) || 1;
+    const limit = 9;
+    const skip = (page - 1) * limit;
 
-    // const categories = await Category.find({ isListed: 'true' }).select("_id");
     const listedCategories = await Category.find({ isListed: "true" }).select("_id");
-
     const categories = await Category.find({ isListed: "true" });
-
     const products = await Product.find({ isListed: "true" })
-      .populate({
-        path: "category",
-        match: { isListed: "true" },
-        select: "title",
-      })
+      .populate({ path: "category", match: { isListed: "true" }, select: "title" })
       .skip(skip)
       .limit(limit);
 
@@ -154,7 +193,6 @@ const loadProductList = async (req, res) => {
       category: { $in: listedCategories.map((cat) => cat._id) },
     });
     const totalPages = Math.ceil(totalProducts / limit);
-
     const user = req.session.user || req.user;
     const userId = user ? user._id : null;
 
@@ -188,9 +226,7 @@ const loadProductList = async (req, res) => {
 const filterProduct = async (req, res) => {
   try {
     const { categories } = req.body;
-    const products = await Product.find({
-      category: { $in: categories },
-    }).populate("category");
+    const products = await Product.find({ category: { $in: categories } }).populate("category");
     res.json({ products });
   } catch (error) {
     console.error("Error fetching filtered products:", error);
@@ -198,10 +234,11 @@ const filterProduct = async (req, res) => {
   }
 };
 
+//load wishlist page who have account
 const loadWishlist = async (req, res) => {
   try {
     const user = req.session.user || req.user;
-    console.log("User from session:", user); // Debugging line
+    console.log("User from session:", user);
     const userId = user ? user._id : null;
 
     if (!userId) {
@@ -222,6 +259,7 @@ const loadWishlist = async (req, res) => {
   }
 };
 
+//add product to wishlist with productId and userId
 const addToWishlist = async (req, res) => {
   try {
     const userId = req.session.user ? req.session.user._id : null;
@@ -257,6 +295,7 @@ const addToWishlist = async (req, res) => {
   }
 };
 
+//remove products on the wishlist page
 const removeFromWishlist = async (req, res) => {
   try {
     const userId = req.session.user ? req.session.user._id : null;
@@ -293,10 +332,10 @@ const removeFromWishlist = async (req, res) => {
   }
 };
 
+//load cart page who have an account
 const loadCart = async (req, res) => {
   try {
     const user = req.session.user || req.user;
-    console.log("User from session:", user); // Debugging line
     const userId = user ? user._id : null;
 
     if (!userId) {
@@ -321,14 +360,11 @@ const loadCart = async (req, res) => {
   }
 };
 
+//add the products on the cart
 const addToCart = async (req, res) => {
   try {
     const userId = req.session.user ? req.session.user._id : null;
     const { productId, quantity } = req.body;
-
-    console.log("User ID:", userId); // Log userId
-    console.log("Product ID:", productId); // Log productId
-    console.log("Quantity:", quantity); // Log quantity
 
     if (!userId) {
       return res.status(401).json({ message: "Please login and continue", success: false });
@@ -341,15 +377,12 @@ const addToCart = async (req, res) => {
     if (cart) {
       const itemIndex = cart.items.findIndex((item) => item.productId.equals(productId));
       if (itemIndex > -1) {
-        // Product is already in the cart, update the quantity
         cart.items[itemIndex].quantity += quantity;
       } else {
-        // Product is not in the cart, add it
         cart.items.push({ productId, quantity });
       }
       await cart.save();
     } else {
-      // Create a new cart if it doesn't exist
       const newCart = new Cart({
         userId,
         items: [{ productId, quantity }],
@@ -364,6 +397,7 @@ const addToCart = async (req, res) => {
   }
 };
 
+//remove products from cart
 const removeFromCart = async (req, res) => {
   try {
     const userId = req.session.user ? req.session.user._id : null;
@@ -378,46 +412,33 @@ const removeFromCart = async (req, res) => {
       return res.status(400).json({ message: "Product ID is required", error: true });
     }
 
-    // Find the cart associated with the user
     const cart = await Cart.findOne({ userId });
 
-    // If no cart is found, return a 404 error
     if (!cart) {
       console.log("Cart not found");
       return res.status(404).json({ message: "Cart not found", error: true });
     }
 
-    // Ensure products field is an array
     if (!Array.isArray(cart.items)) {
       console.log("Products field is not an array");
       return res.status(500).json({ message: "Internal server error", error: true });
     }
 
     const initialLength = cart.items.length;
-
-    // Remove the item with the specified product ID from the cart
-    cart.itmes = cart.items.filter((item) => !item.productId.equals(productId));
-
+    cart.items = cart.items.filter((item) => !item.productId.equals(productId));
     const finalLength = cart.items.length;
 
-    // Check if the product was found and removed
     if (initialLength === finalLength) {
       console.log("Product ID not found in cart");
       return res.status(404).json({ message: "Product not found in cart", error: true });
     }
-
-    // Save the updated cart
     await cart.save();
-
-    console.log("Item removed from cart");
     return res.status(200).json({ message: "Item removed from cart", error: false });
   } catch (error) {
     console.error("Error removing item from cart:", error);
     return res.status(500).json({ message: "Error removing item from cart", error: true });
   }
 };
-
-
 
 module.exports = {
   breadcrumbs,
@@ -432,4 +453,5 @@ module.exports = {
   loadCart,
   addToCart,
   removeFromCart,
+  sendMessage,
 };

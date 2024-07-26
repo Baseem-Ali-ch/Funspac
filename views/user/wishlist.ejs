@@ -205,48 +205,15 @@
                 </li>
 
                 <li>
-                  <a href=" category.html" class="sf-with-ul">Brand</a>
-
-                  <div class="megamenu megamenu-sm">
-                    <div class="row no-gutters">
-                      <div class="col-md-6">
-                        <div class="menu-col">
-                          <div class="menu-title"></div>
-                          <!-- End .menu-title -->
-                          <ul>
-                            <li><a href="product.html">IKEA</a></li>
-                            <li><a href="product-centered.html">Durian</a></li>
-                            <li><a href="product-extended.html">Hometown</a></li>
-                            <li>
-                              <a href="product-gallery.html">Urban Ladder</a>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- End .menu-col -->
-                      </div>
-                      <!-- End .col-md-6 -->
-
-                      <div class="col-md-6">
-                        <div class="banner banner-overlay">
-                          <a href="category.html">
-                            <img src="assets/images/menu/banner-1.jpg" alt="Banner" />
-
-                            <div class="banner-content banner-content-bottom">
-                              <div class="banner-title text-white">
-                                New Trends<br /><span><strong>spring 2019</strong></span>
-                              </div>
-                              <!-- End .banner-title -->
-                            </div>
-                            <!-- End .banner-content -->
-                          </a>
-                        </div>
-                        <!-- End .banner -->
-                      </div>
-                      <!-- End .col-md-6 -->
-                    </div>
-                    <!-- End .row -->
-                  </div>
-                  <!-- End .megamenu megamenu-sm -->
+                  <a href=" #" class="sf-with-ul">Brand</a>
+                  <ul>
+                    <li><a href="#">IKEA</a></li>
+                    <li><a href="#">DURIAN</a></li>
+                    <li><a href="#">URBAN LADDER</a></li>
+                    <li><a href="#">FURNITURE PARK</a></li>
+                    <li><a href="#">HOME TOWN</a></li>
+                    <li><a href="#">WOODEN STREET</a></li>
+                  </ul>
                 </li>
 
                 <li>
@@ -380,16 +347,34 @@
                             <% } else if (item.productId.stock> 0 && item.productId.stock <= 10) { %>
                                 <p style="color: rgb(202, 165, 0); font-weight: normal;">Few Stock</p>
                                 <% } else { %>
-                                  <p style="color: rgb(245, 0, 0); font-weight: normal;">Out of Stock</p>
+                                  <p style="color: rgb(245, 0, 0); font-weight: normal;">Sold out</p>
                                   <% } %>
                         </span>
                       </td>
                       <td class="action-col">
                         <div class="dropdown">
-                          <button class="btn btn-block btn-outline-primary-2" aria-haspopup="true" aria-expanded="false"
-                            style="width: 0px;">
-                            <i class="icon-shopping-cart"></i>Add To Cart
-                          </button>
+                          <% if(item.productId.stock==='unavailable' ){ %>
+                            <button class="btn btn-block btn-outline-primary-2" aria-haspopup="true"
+                              aria-expanded="false" style="width: 0px; pointer-events: none;">
+                              <i class="icon-shopping-cart"></i>Sold out
+                            </button>
+                            <% }else if(item.productId.stock===0){ %>
+                              <button class="btn btn-block btn-outline-primary-2" aria-haspopup="true"
+                                aria-expanded="false" style="width: 0px; pointer-events: none;">
+                                <i class="icon-shopping-cart"></i>Sold out
+                              </button>
+                              <% }else if(item.productId.stock < 10){ %>
+                                <button class="btn btn-block btn-outline-primary-2" aria-haspopup="true"
+                                  aria-expanded="false" style="width: 0px; ">
+                                  <i class="icon-shopping-cart"></i>Add To Cart
+                                </button>
+                                <% }else{ %>
+                                  <button class="btn btn-block btn-outline-primary-2" aria-haspopup="true"
+                                    aria-expanded="false" style="width: 0px;">
+                                    <i class="icon-shopping-cart"></i>Add To Cart
+                                  </button>
+                                  <% } %>
+
                         </div>
                       </td>
                       <td class="remove-col">
