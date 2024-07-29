@@ -1,154 +1,45 @@
 <%- include('../layout/header.ejs') %>
 
-
-
     <style>
-        /* CSS for alert messages */
-        .alert-message {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 20px;
-            background-color: #4caf50;
-            color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
+        .d-none {
             display: none;
-            /* Initially hidden */
         }
 
-        .alert-error {
-            background-color: #f44336;
-            /* Red for errors */
-        }
-
-
-
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .wishlist-container {
-            width: 80%;
-            margin: auto;
-        }
-
-        .wishlist-header {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .empty-wishlist {
-            text-align: center;
-            margin: 50px 0;
-        }
-
-        .empty-wishlist p {
-            font-size: 28px;
-            color: #333;
-            font-weight: normal;
-        }
-
-        .wishlist-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .wishlist-table th,
-        .wishlist-table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        .product-col img {
-            max-width: 50px;
-            max-height: 50px;
-        }
-
-        .product-title a {
-            color: #333;
-            text-decoration: none;
-        }
-
-        .in-stock {
-            color: #a6c76c;
-            font-weight: normal;
-        }
-
-        .few-stock {
-            color: rgb(202, 165, 0);
-            font-weight: normal;
-        }
-
-        .out-of-stock {
-            color: rgb(245, 0, 0);
-            font-weight: normal;
-        }
-
-        .btn-remove {
-            color: #ff0000;
-            cursor: pointer;
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            z-index: 10;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .popup-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 7px;
-            position: relative;
-        }
-
-        .popup-content h2 {
-            margin-top: 0;
-        }
-
-        .popup-buttons {
+        .success-message {
             display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .popup-buttons .confirm {
-            background-color: #c96;
+            align-items: center;
+            background-color: #333;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 4px;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            width: 21em;
         }
 
-        .popup-buttons .cancel {
-            background-color: #ccc;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 4px;
+        .success-message span {
+            margin-left: 10px;
+            font-size: 12px;
         }
 
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
+
+
+        .error-message {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            width: 21em;
+        }
+
+        .error-message span {
+            margin-left: 10px;
+            font-size: 12px;
         }
     </style>
+
 
     <div class="page-wrapper">
         <header class="header">
@@ -178,15 +69,14 @@
                             <!-- End .container -->
                         </nav>
                         <!-- End .breadcrumb-nav -->
-                    </div><!-- End .header-left -->
-
-                    <div class="header-right">
+                    </div>
+                    <div class="header-right col-lg-5">
                         <ul class="top-menu">
                             <li>
                                 <a href="#">Links</a>
                                 <ul>
-
                                     <li>
+
                                         <a href="/wishlist"><i class="icon-heart-o"></i>Wishlist
                                             <% if(wishlistItems){ %>
                                                 <span>
@@ -199,28 +89,30 @@
                                                     <% } %>
 
                                         </a>
-
                                     </li>
+                                    <li><a href="about.html">About Us</a></li>
+                                    <li><a href="/contact-us">Contact Us</a></li>
+                                    <% if (user) { %>
+                                        <li>
+                                            <a href="/account"><i class="icon-user"></i>
+                                                <%= user.name || user.displayName %>
+                                            </a>
+                                        </li>
+                                        <% } else { %>
+                                            <li>
+                                                <a href="/login"><i class="icon-user"></i>Login</a>
+                                            </li>
+                                            <% } %>
+                                </ul>
                             </li>
-                            <li><a href="about.html">About Us</a></li>
-                            <li><a href="/contact-us">Contact Us</a></li>
-                            <% if (user) { %>
-                                <li>
-                                    <a href="/profile"><i class="icon-user"></i>
-                                        <%= user.name || user.displayName %>
-                                    </a>
-                                </li>
-                                <% } else { %>
-                                    <li>
-                                        <a href="/login"><i class="icon-user"></i>Login</a>
-                                    </li>
-                                    <% } %>
                         </ul>
-                        </li>
-                        </ul><!-- End .top-menu -->
-                    </div><!-- End .header-right -->
-                </div><!-- End .container -->
-            </div><!-- End .header-top -->
+                        <!-- End .top-menu -->
+                    </div>
+                    <!-- End .header-right -->
+                </div>
+                <!-- End .container -->
+            </div>
+            <!-- End .header-top -->
 
             <div class="header-middle sticky-header">
                 <div class="container">
@@ -230,8 +122,9 @@
                             <i class="icon-bars"></i>
                         </button>
 
-                        <a href="/home" class="logo">
-                            <img src="/assets/images/furnspace logo black.png " alt=Molla Logo" width="105" height="25">
+                        <a href="/" class="logo">
+                            <img src="/assets/images/furnspace logo black.png" alt="Molla Logo" width="105"
+                                height="25" />
                         </a>
 
                         <nav class="main-nav">
@@ -240,8 +133,22 @@
                                     <a href="/home" class="">Home</a>
                                 </li>
                                 <li>
-                                    <a href="/product-list">Product</a>
+                                    <a href="/product-list" ">Product</a>
+                    </li>
+      
+                    <li>
+                      <a href=" #" class="sf-with-ul">Category</a>
+                                    <ul>
+                                        <% categories.forEach(function(category) { %>
+
+                                            <li><a href="/category/<%= category._id %>">
+                                                    <%= category.title %>
+                                                </a></li>
+
+                                            <% }) %>
+                                    </ul>
                                 </li>
+
 
 
                                 <li>
@@ -255,22 +162,26 @@
                                         <li><a href="#">WOODEN STREET</a></li>
                                     </ul>
                                 </li>
+                                <!-- End .megamenu megamenu-sm -->
+
 
                                 <li>
                                     <a href="#" class="sf-with-ul">Pages</a>
 
                                     <ul>
-                                        <li><a href="about.html">About</a></li>
+                                        <!-- <li><a href="about.html">About</a></li> -->
                                         <li><a href="/contact-us">Contact</a></li>
                                         <li><a href="/login">Login</a></li>
 
-                                        <li><a href="coming-soon.html">Coming Soon</a></li>
+                                        <!-- <li><a href="coming-soon.html">Coming Soon</a></li> -->
                                     </ul>
                                 </li>
                             </ul>
                             <!-- End .menu -->
-                        </nav><!-- End .main-nav -->
-                    </div><!-- End .header-left -->
+                        </nav>
+                        <!-- End .main-nav -->
+                    </div>
+                    <!-- End .header-left -->
 
                     <div class="header-right">
                         <div class="header-search">
@@ -278,14 +189,14 @@
                                     class="icon-search"></i></a>
                             <form action="#" method="get">
                                 <div class="header-search-wrapper">
-                                    <label for="search-input" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="search-input"
-                                        placeholder="Search in..." required onkeyup="searchCart()" />
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
+                                        required />
                                 </div>
                                 <!-- End .header-search-wrapper -->
                             </form>
-                        </div><!-- End .header-search -->
-
+                        </div>
+                        <!-- End .header-search -->
 
                         <div class="dropdown cart-dropdown">
                             <a href="/cart" class="dropdown-toggle">
@@ -300,263 +211,207 @@
 
                             </a>
                         </div>
-                    </div><!-- End .header-right -->
-                </div><!-- End .container -->
-            </div><!-- End .header-middle -->
-        </header><!-- End .header -->
+                        <!-- End .cart-dropdown -->
+                    </div>
+                    <!-- End .header-right -->
+                </div>
+                <!-- End .container -->
+            </div>
+            <!-- End .header-middle -->
+        </header>
+        <!-- End .header -->
 
         <main class="main">
             <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
                 <div class="container">
-                    <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+                    <h1 class="page-title">My Account<span>Shop</span></h1>
                 </div><!-- End .container -->
             </div><!-- End .page-header -->
-            <div class="page-content">
-                <div class="cart">
+
+
+            <div class="page-content mt-2">
+                <div class="dashboard">
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-9">
-                                <% if (cartItems.length===0) { %>
-                                    <div class="empty-wishlist">
-                                        <p>Your cart is empty</p>
-                                    </div>
-                                    <% } else { %>
-                                        <table class="table table-cart table-mobile" id="cartTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Price</th>
-                                                    <th>Quantity</th>
-                                                    <th>Total</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% cartItems.forEach(item => { %>
-                                                    <% if(item.productId && item.productId._id){ %>
-
-
-                                                        <tr data-cart-item-id="<%= item.productId._id %>">
-                                                            <td class="product-col">
-                                                                <div class="product">
-                                                                    <% if (item.productId && item.productId.imageUrl_1)
-                                                                        { %>
-                                                                        <figure class="product-media">
-                                                                            <a href="#">
-                                                                                <img src="<%= item.productId.imageUrl_1 %>"
-                                                                                    alt="Product image">
-                                                                            </a>
-                                                                        </figure>
-                                                                        <% } else { %>
-                                                                            <p>No image available</p>
-                                                                            <% } %>
-                                                                                <% if (item.productId) { %>
-                                                                                    <h3 class="product-title">
-                                                                                        <a href="#">
-                                                                                            <%= item.productId.name %>
-                                                                                        </a>
-                                                                                    </h3>
-                                                                                    <% } else { %>
-                                                                                        <p>Product details unavailable
-                                                                                        </p>
-                                                                                        <% } %>
-                                                                </div>
-                                                            </td>
-                                                            <td class="price-col ">
-                                                                <% if(item.productId.discountedPrice &&
-                                                                    item.productId.price>
-                                                                    item.productId.discountedPrice){
-                                                                    %>
-                                                                    <div class="row ">
-                                                                        <div class="product-price mx-4">
-                                                                            ₹<%= item.productId.discountedPrice %>
-                                                                        </div>
-                                                                        <div class="product-price mx-4"
-                                                                            style="font-size: 13px;">
-                                                                            <del>₹<%= item.productId.price %></del>
-                                                                        </div>
-                                                                        <% const
-                                                                            discountPercentage=Math.round(((item.productId.price
-                                                                            - item.productId.discountedPrice) /
-                                                                            item.productId.price) * 100); %>
-                                                                            <div class="product-price"
-                                                                                style="font-size: 13px;">
-                                                                                <%= discountPercentage %>% off
-                                                                            </div>
-                                                                    </div>
-                                                                    <% } else { %>
-                                                                        <div class="product-price">
-                                                                            ₹<%= item.productId.price %>
-                                                                        </div>
-                                                                        <% } %>
-
-                                                            </td>
-                                                            <td class="quantity-col">
-                                                                <div class="cart-product-quantity">
-                                                                    <input type="number"
-                                                                        class="form-control quantity-input"
-                                                                        value="<%= item.quantity %>" min="1"
-                                                                        max="<%= item.productId.stock + item.quantity %>"
-                                                                        step="1" data-decimals="0" required
-                                                                        data-product-id="<%= item.productId._id %>"
-                                                                        data-total-stock="<%= item.productId.stock + item.quantity %>">
-                                                                </div>
-                                                            </td>
-                                                            <td class="total-col">
-                                                                <% if(item.productId.discountedPrice){ %>
-                                                                    ₹<%= (item.productId.discountedPrice *
-                                                                        item.quantity).toFixed(2) %>
-                                                                        <% }else{ %>
-                                                                            ₹<%= (item.productId.price *
-                                                                                item.quantity).toFixed(2) %>
-                                                                                <% } %>
-
-                                                            </td>
-                                                            <td class="remove-col">
-                                                                <a href="#" class="btn-remove" title="Remove Product"
-                                                                    data-product-id="<%= item.productId._id %>">
-                                                                    <i class="icon-close"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                        <% } %>
-                                                            <% }) %>
-                                            </tbody>
-                                        </table>
-                                        <% } %>
-                                            <div id="alertMessage" class="alert-message" style="display: none;"></div>
-
-
-                                            <div class="cart-bottom">
-                                                <div class="cart-discount">
-                                                    <form action="#">
-                                                        <div class="input-group">
-                                                            <input type="text" class="form-control" required
-                                                                placeholder="coupon code">
-                                                            <div class="input-group-append">
-                                                                <button class="btn btn-outline-primary-2"
-                                                                    type="submit"><i
-                                                                        class="icon-long-arrow-right"></i></button>
-                                                            </div><!-- .End .input-group-append -->
-                                                        </div><!-- End .input-group -->
-                                                    </form>
-                                                </div><!-- End .cart-discount -->
-
-                                                <a href="/product-list" class="btn btn-outline-dark-2"><span>UPDATE
-                                                        CART</span><i class="icon-refresh"></i></a>
-                                            </div><!-- End .cart-bottom -->
-                            </div><!-- End .col-lg-9 -->
-                            <aside class="col-lg-3">
-                                <div class="summary summary-cart">
-                                    <h3 class="summary-title">Price Details</h3>
-                                    <% let totalPrice=0; let totalDiscountedPrice=0; let deliveryCharge=0;
-                                        cartItems.forEach(item=> {
-                                        if (item.productId.discountedPrice && item.productId.price >
-                                        item.productId.discountedPrice) {
-                                        totalPrice += item.productId.price * item.quantity;
-                                        totalDiscountedPrice += item.productId.discountedPrice * item.quantity;
-                                        } else {
-                                        totalPrice += item.productId.price * item.quantity;
-                                        totalDiscountedPrice += item.productId.price * item.quantity;
-                                        }
-                                        });
-                                        let discount = totalPrice - totalDiscountedPrice;
-                                        let grandTotal = totalDiscountedPrice + deliveryCharge;
-                                        %>
-                                        <table class="table table-summary">
-                                            <tbody>
-
-                                                <tr class="summary-subtotal">
-                                                    <td>Price(<%= cartItems.length %>)</td>
-                                                    <td>
-                                                        ₹<%= totalPrice.toFixed(2) %>
-                                                    </td>
-                                                </tr>
-                                                <tr class="summary-subtotal">
-                                                    <td>Discount</td>
-                                                    <td>
-                                                        ₹<%= discount.toFixed(2) %>
-                                                    </td>
-                                                </tr>
-                                                <tr class="summary-subtotal">
-                                                    <td>Delivery Charges</td>
-                                                    <td>
-                                                        ₹<%= deliveryCharge.toFixed(2) %>
-                                                    </td>
-                                                </tr>
-                                                <!-- Corrected this line -->
-
-                                                <!-- Add other rows related to shipping and address change here -->
-                                                <!-- <tr class="summary-shipping">
-                                                    <td>Shipping:</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
-    
-                                                <tr class="summary-shipping-row">
-                                                    <td>
-                                                        <div class="custom-control custom-radio">
-                                                            <input type="radio" id="free-shipping" name="shipping"
-                                                                class="custom-control-input">
-                                                            <label class="custom-control-label" for="free-shipping">Free
-                                                                Shipping</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>₹0.00</td>
-                                                </tr>
-    
-                                                <tr class="summary-shipping-row">
-                                                    <td>
-                                                        <div class="custom-control custom-radio">
-                                                            <input type="radio" id="standart-shipping" name="shipping"
-                                                                class="custom-control-input">
-                                                            <label class="custom-control-label"
-                                                                for="standart-shipping">Standard:</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>₹10.00</td>
-                                                </tr>
-    
-                                                <tr class="summary-shipping-row">
-                                                    <td>
-                                                        <div class="custom-control custom-radio">
-                                                            <input type="radio" id="express-shipping" name="shipping"
-                                                                class="custom-control-input">
-                                                            <label class="custom-control-label"
-                                                                for="express-shipping">Express:</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>₹20.00</td>
-                                                </tr>
-    
-                                                <tr class="summary-shipping-estimate">
-                                                    <td>Estimate for Your Country<br> <a href="dashboard.html">Change
-                                                            address</a></td>
-                                                    <td>&nbsp;</td>
-                                                </tr>-->
-
-                                                <tr class="summary-total">
-                                                    <td>Total:</td>
-                                                    <td>
-                                                        ₹<%= grandTotal.toFixed(2) %>
-                                                    </td>
-                                                </tr><!-- End .summary-total -->
-                                            </tbody>
-                                        </table>
-
-
-                                        <!-- End .table table-summary -->
-
-                                        <a href="/checkout"
-                                            class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO
-                                            CHECKOUT</a>
-                                </div><!-- End .summary -->
-
-                                <a href="/product-list" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE
-                                        SHOPPING</span><i class="icon-refresh"></i></a>
+                            <aside class="col-md-4 col-lg-3">
+                                <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab"
+                                            href="#tab-dashboard" role="tab" aria-controls="tab-dashboard"
+                                            aria-selected="true">Dashboard</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders"
+                                            role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-downloads-link" data-toggle="tab"
+                                            href="#tab-downloads" role="tab" aria-controls="tab-downloads"
+                                            aria-selected="false">Downloads</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address"
+                                            role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account"
+                                            role="tab" aria-controls="tab-account" aria-selected="false">Account
+                                            Details</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/logout">Sign Out</a>
+                                    </li>
+                                </ul>
                             </aside><!-- End .col-lg-3 -->
+
+                            <div class="col-md-8 col-lg-9">
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
+                                        aria-labelledby="tab-dashboard-link">
+                                        <p>Hello <span class="font-weight-normal text-dark">User</span> (not <span
+                                                class="font-weight-normal text-dark">User</span>? <a href="#">Log
+                                                out</a>)
+                                            <br>
+                                            From your account dashboard you can view your <a href="#tab-orders"
+                                                class="tab-trigger-link link-underline">recent orders</a>, manage your
+                                            <a href="#tab-address" class="tab-trigger-link">shipping and billing
+                                                addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit
+                                                your password and account details</a>.
+                                        </p>
+                                    </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="tab-orders" role="tabpanel"
+                                        aria-labelledby="tab-orders-link">
+                                        <p>No order has been made yet.</p>
+                                        <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+                                                class="icon-long-arrow-right"></i></a>
+                                    </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="tab-downloads" role="tabpanel"
+                                        aria-labelledby="tab-downloads-link">
+                                        <p>No downloads available yet.</p>
+                                        <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+                                                class="icon-long-arrow-right"></i></a>
+                                    </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="tab-address" role="tabpanel"
+                                        aria-labelledby="tab-address-link">
+                                        <button>
+                                            <a href="">
+                                                Add New Address
+                                            </a>
+                                        </button>
+                                        <p class="mt-1">The following addresses will be used on the checkout page by
+                                            default.</p>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="card card-dashboard">
+                                                    <div class="card-body">
+                                                        <h3 class="card-title">Billing Address</h3>
+                                                        <!-- End .card-title -->
+
+
+
+                                                        <p>User Name<br>
+                                                            User Company<br>
+                                                            John str<br>
+                                                            New York, NY 10001<br>
+                                                            1-234-987-6543<br>
+                                                            yourmail@mail.com<br>
+                                                            <a href="#">Edit <i class="icon-edit"></i></a>
+                                                        </p>
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .card-dashboard -->
+                                            </div><!-- End .col-lg-6 -->
+
+                                            <div class="col-lg-6">
+                                                <div class="card card-dashboard">
+                                                    <div class="card-body">
+                                                        <h3 class="card-title">Shipping Address</h3>
+                                                        <!-- End .card-title -->
+
+                                                        <p>You have not set up this type of address yet.<br>
+                                                            <a href="#">Edit <i class="icon-edit"></i></a>
+                                                        </p>
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .card-dashboard -->
+                                            </div><!-- End .col-lg-6 -->
+                                        </div><!-- End .row -->
+                                    </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="tab-account" role="tabpanel"
+                                        aria-labelledby="tab-account-link">
+                                        <form id="userProfileForm" action="/account" method="post"
+                                            data-user='<%- JSON.stringify(user) %>'>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Full Name *</label>
+                                                    <input type="text" id="fullName" class="form-control" required
+                                                        readonly>
+                                                    <small id="fullNameError" class="form-text text-danger d-none">Full
+                                                        Name can only contain letters and spaces.</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Display Name *</label>
+                                                    <input type="text" id="displayName" class="form-control" required
+                                                        readonly>
+                                                    <small id="displayNameError"
+                                                        class="form-text text-danger d-none">Display Name can only
+                                                        contain letters and spaces.</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Phone Number *</label>
+                                                    <input type="text" id="phone" class="form-control" required
+                                                        readonly>
+                                                    <small id="phoneError" class="form-text text-danger d-none">Phone
+                                                        Number must be 10 digits and cannot start with 0.</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Email address *</label>
+                                                    <input type="email" id="email" class="form-control" required
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-outline-primary-2" id="editButton">
+                                                <span>EDIT</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
+                                            <button type="submit" class="btn btn-outline-primary-2 d-none"
+                                                id="saveButton">
+                                                <span>SAVE CHANGES</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary-2 " id="">
+                                                <a href="/forget-password">
+                                                    <span>CHANGE PASSWORD</span>
+                                                    <i class="icon-long-arrow-right"></i>
+                                                </a>
+
+                                            </button>
+                                        </form>
+                                        <div id="successMessage" class="success-message d-none">
+                                            <i class="fa fa-check" style="color: green;"></i>
+                                            <span id="successText"></span>
+
+                                        </div>
+                                        <div id="errorMessage" class="error-message d-none">
+                                            <i class="fa fa-close" style="color: red;"></i>
+                                            <span id="errorText"></span>
+                                        </div>
+
+                                    </div><!-- .End .tab-pane -->
+                                </div>
+                            </div><!-- End .col-lg-9 -->
                         </div><!-- End .row -->
                     </div><!-- End .container -->
-                </div><!-- End .cart -->
+                </div><!-- End .dashboard -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
 
@@ -566,8 +421,8 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget widget-about">
-                                <img src="/assets/images/furnspace logo black.png" class="footer-logo" alt="Footer Logo"
-                                    width="105" height="25">
+                                <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105"
+                                    height="25">
                                 <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
                                     magna eros eu erat. </p>
 
@@ -946,20 +801,6 @@
         </div><!-- End .modal-dialog -->
     </div><!-- End .modal -->
 
-
-    <!-- confirm popup for remove product from wishlist-->
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="close">&times;</span>
-            <h6>Remove Item</h6>
-            <p>Are you sure you want to remove this item?</p>
-            <div class="popup-buttons">
-                <button id="confirmRemove" class="confirm">Remove</button>
-                <button id="cancelRemove" class="cancel">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Plugins JS File -->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -967,186 +808,139 @@
     <script src="assets/js/jquery.waypoints.min.js"></script>
     <script src="assets/js/superfish.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
-    <script src="assets/js/bootstrap-input-spinner.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 
-
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userProfileForm = document.getElementById('userProfileForm');
+            const userDetails = JSON.parse(userProfileForm.dataset.user);
+            console.log('User Details:', userDetails);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const popup = document.getElementById('popup');
-            const closeButton = document.querySelector('.close');
-            const confirmRemove = document.getElementById('confirmRemove');
-            const cancelRemove = document.getElementById('cancelRemove');
-            let currentProductId = null;
-            let currentButtonElement = null;
+            if (userDetails) {
+                document.getElementById('fullName').value = userDetails.fullName || '';
+                document.getElementById('displayName').value = userDetails.displayName || '';
+                document.getElementById('phone').value = userDetails.phone || '';
+                document.getElementById('email').value = userDetails.email || '';
+            }
 
-            document.querySelectorAll('.btn-remove').forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    currentProductId = this.getAttribute('data-product-id');
-                    currentButtonElement = this;
-                    popup.style.display = 'flex';
-                });
+            document.getElementById('editButton').addEventListener('click', function () {
+                toggleEdit(true);
             });
 
-            closeButton.addEventListener('click', () => {
-                popup.style.display = 'none';
-            });
-
-            cancelRemove.addEventListener('click', () => {
-                popup.style.display = 'none';
-            });
-
-            confirmRemove.addEventListener('click', () => {
-                if (currentProductId) {
-                    removeFromCart(currentProductId, currentButtonElement);
-                    popup.style.display = 'none';
+            document.getElementById('saveButton').addEventListener('click', function (event) {
+                event.preventDefault();
+                if (validateForm()) {
+                    updateUserProfile();
                 }
             });
 
-            window.addEventListener('click', (event) => {
-                if (event.target === popup) {
-                    popup.style.display = 'none';
+            document.getElementById('userProfileForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                if (validateForm()) {
+                    updateUserProfile();
                 }
             });
         });
 
-        function removeFromCart(productId, buttonElement) {
-            console.log('Remove button clicked! Product ID:', productId); // Debugging line
+        function toggleEdit(editable) {
+            const fields = ['fullName', 'displayName', 'phone', 'email'];
+            fields.forEach(field => {
+                document.getElementById(field).readOnly = !editable;
+            });
 
-            fetch(`/cart/${productId}`, {
-                method: 'DELETE',
+            document.getElementById('editButton').classList.toggle('d-none', editable);
+            document.getElementById('saveButton').classList.toggle('d-none', !editable);
+        }
+
+        function validateForm() {
+            const fullNameInput = document.getElementById('fullName');
+            const displayNameInput = document.getElementById('displayName');
+            const phoneInput = document.getElementById('phone');
+            const fullNameError = document.getElementById('fullNameError');
+            const displayNameError = document.getElementById('displayNameError');
+            const phoneError = document.getElementById('phoneError');
+
+            const nameRegex = /^[A-Za-z\s]+$/;
+            const phoneRegex = /^[1-9][0-9]{9}$/;
+
+            let isValid = true;
+
+            if (!nameRegex.test(fullNameInput.value)) {
+                fullNameError.classList.remove('d-none');
+                fullNameInput.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                fullNameError.classList.add('d-none');
+                fullNameInput.classList.remove('is-invalid');
+            }
+
+            if (!nameRegex.test(displayNameInput.value)) {
+                displayNameError.classList.remove('d-none');
+                displayNameInput.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                displayNameError.classList.add('d-none');
+                displayNameInput.classList.remove('is-invalid');
+            }
+
+            if (!phoneRegex.test(phoneInput.value)) {
+                phoneError.classList.remove('d-none');
+                phoneInput.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                phoneError.classList.add('d-none');
+                phoneInput.classList.remove('is-invalid');
+            }
+
+            return isValid;
+        }
+
+        function updateUserProfile() {
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                displayName: document.getElementById('displayName').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+            };
+
+            fetch('/account', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-                .then(response => {
-                    console.log('Response status:', response.status); // Log status
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Data received:', data); // Debugging line
-                    if (data.message) {
-                        showAlert(data.message, data.error ? 'error' : 'success');
-                        if (!data.error) {
-                            // Remove the item from the DOM
-                            const tableRow = buttonElement.closest('tr');
-                            if (tableRow) {
-                                tableRow.remove();
-
-                            }
-                        }
-                    } else {
-                        console.error('No message received in response');
-                        showAlert('Failed to remove item from cart', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error removing from cart:', error);
-                    showAlert('Error removing item from cart', 'error');
-                });
-        }
-
-        function showAlert(message, type) {
-            const alertMessage = document.getElementById('alertMessage');
-            alertMessage.textContent = message;
-            alertMessage.className = 'alert-message'; // Reset classes
-            if (type === 'error') {
-                alertMessage.classList.add('alert-error');
-            } else if (type === 'success') {
-                alertMessage.classList.add('alert-success');
-            }
-            alertMessage.style.display = 'block';
-
-            // Append the alert message to the bottom of the table
-            const cartTable = document.getElementById('cartTable');
-            cartTable.insertAdjacentElement('afterend', alertMessage);
-
-            setTimeout(() => {
-                window.location.reload()
-                alertMessage.style.display = 'none';
-            }, 1000); // Hide after 3 seconds
-        }
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const quantityInputs = document.querySelectorAll('.quantity-input')
-
-            quantityInputs.forEach(input => {
-                input.addEventListener('change', function () {
-                    const productId = this.dataset.productId;
-                    const newQuantity = parseInt(this.value);
-                    const totalStock = parseInt(this.dataset.totalStock);
-
-                    if (newQuantity < 1) {
-                        this.value = 1;
-                        return;
-                    }
-                    if (newQuantity > totalStock) {
-                        this.value = totalStock;
-                        return;
-                    }
-                    updateCartItemQty(productId, newQuantity)
-                })
-            })
-        })
-
-        function updateCartItemQty(productId, newQuantity) {
-            fetch(`/cart/${productId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ quantity: newQuantity })
+                body: JSON.stringify(formData)
             })
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Response from server:', data);
                     if (data.success) {
-                        console.log('Quantity updated successfully');
-                        const input = document.querySelector(`[data-product-id="${productId}"]`);
-                        if (input) {
-                            input.max = data.totalStock;
-                            input.dataset.totalStock = data.totalStock;
-                        }
-                        window.location.reload()
+                        const successMessage = `You've changed this profile successfully!`;
+                        document.getElementById('successText').textContent = successMessage;
+                        document.getElementById('successMessage').classList.remove('d-none');
+                        // Update the form fields with the new data
+                        document.getElementById('fullName').value = data.fullName;
+                        document.getElementById('displayName').value = data.displayName;
+                        document.getElementById('phone').value = data.phone;
+                        document.getElementById('email').value = data.email;
+                        toggleEdit(false); // Revert the fields to read-only mode
                     } else {
-                        console.log('Error updating quantity', data.message);
+                        const errorMessage = `Error updating profile!`;
+                        document.getElementById('errorText').textContent = errorMessage;
+                        document.getElementById('errorMessage').classList.remove('d-none');
                     }
                 })
                 .catch(error => {
-                    console.log('Error', error);
-                })
-        }
+                    console.error('Error updating profile:', error);
+                    const errorMessage = `Error updating profile!`;
+                    document.getElementById('errorText').textContent = errorMessage;
+                    document.getElementById('errorMessage').classList.remove('d-none');
+                });
 
-
-    </script>
-
-
-
-    <script>
-        function searchCart() {
-            // Get the search input and filter value
-            const input = document.getElementById('search-input');
-            const filter = input.value.toLowerCase();
-
-            // Get the table body and rows
-            const tableBody = document.querySelector('.table-cart tbody');
-            const rows = tableBody.getElementsByTagName('tr');
-
-            // Loop through rows to filter based on search query
-            for (let i = 0; i < rows.length; i++) {
-                const productTitle = rows[i].querySelector('.product-title a') ? rows[i].querySelector('.product-title a').textContent.toLowerCase() : '';
-
-                // Show or hide rows based on the search query
-                if (productTitle.includes(filter)) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
-            }
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'none';
+            }, 3000);
         }
     </script>
 

@@ -89,6 +89,63 @@
       color: #ff0000;
       cursor: pointer;
     }
+
+
+    .popup {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 7px;
+      position: relative;
+    }
+
+    .popup-content h2 {
+      margin-top: 0;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .popup-buttons .confirm {
+      background-color: #c96;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .popup-buttons .cancel {
+      background-color: #ccc;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+      cursor: pointer;
+    }
   </style>
 
 
@@ -255,7 +312,14 @@
             <div class="dropdown cart-dropdown">
               <a href="/cart" class="dropdown-toggle">
                 <i class="icon-shopping-cart"></i>
-                <span class="cart-count">0</span>
+                <% if(cartItems){ %>
+                  <span class="cart-count">
+                    <%= cartItems.length %>
+                  </span>
+                  <% }else{ %>
+                    <span class="cart-count">0</span>
+                    <% } %>
+
               </a>
             </div>
             <!-- End .header-right -->
@@ -365,12 +429,14 @@
                               </button>
                               <% }else if(item.productId.stock < 10){ %>
                                 <button class="btn btn-block btn-outline-primary-2" aria-haspopup="true"
-                                  aria-expanded="false" style="width: 0px; ">
+                                  id="btn-cart-<%= item.productId._id %>" aria-expanded="false" style="width: 0px; "
+                                  onclick="addToCart('<%= item.productId._id %>')">
                                   <i class="icon-shopping-cart"></i>Add To Cart
                                 </button>
                                 <% }else{ %>
                                   <button class="btn btn-block btn-outline-primary-2" aria-haspopup="true"
-                                    aria-expanded="false" style="width: 0px;">
+                                    id="btn-cart-<%= item.productId._id %>" aria-expanded="false" style="width: 0px;"
+                                    onclick="addToCart('<%= item.productId._id %>')">
                                     <i class="icon-shopping-cart"></i>Add To Cart
                                   </button>
                                   <% } %>
@@ -856,6 +922,19 @@
   </div>
   <!-- End .modal -->
 
+  <!-- confirm popup for remove product from wishlist-->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <span class="close">&times;</span>
+      <h6>Remove Item</h6>
+      <p>Are you sure you want to remove this item?</p>
+      <div class="popup-buttons">
+        <button id="confirmRemove" class="confirm">Remove</button>
+        <button id="cancelRemove" class="cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Plugins JS File -->
   <script src="assets/js/jquery.min.js"></script>
   <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -869,18 +948,98 @@
 
 
   <script>
+    function addToCart(productId) {
+      const quantity = 1; // Set quantity to 1
+      console.log('Adding to cart:', productId, quantity); // Log productId and quantity
+
+      fetch('/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ productId, quantity })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            showAlert(data.message, 'success'); // Show success message
+            // Change button to "View Cart"
+            const btnCart = document.getElementById(`btn-cart-${productId}`);
+            btnCart.innerHTML = '<span>view cart</span>';
+            btnCart.setAttribute('onclick', 'viewCart()');
+
+          } else {
+            showAlert(data.message, 'error'); // Show error message
+          }
+        })
+        .catch(error => {
+          console.error('Error adding item to cart:', error);
+          showAlert('Error adding item to cart', 'error');
+        });
+    }
+
+    // Function to redirect to the cart page
+    function viewCart() {
+      window.location.href = '/cart'; // Redirect to the cart page
+    }
+
+    // Function to show alert messages
+    function showAlert(message, type) {
+      const alertMessage = document.getElementById('alertMessage');
+      alertMessage.textContent = message;
+      alertMessage.className = 'alert-message';
+      alertMessage.classList.add(type === 'error' ? 'alert-error' : 'alert-success');
+      alertMessage.style.display = 'block';
+
+      setTimeout(() => {
+        alertMessage.style.display = 'none';
+      }, 3000);
+    }
+
+
+
     document.addEventListener('DOMContentLoaded', () => {
+      const popup = document.getElementById('popup');
+      const closeButton = document.querySelector('.close');
+      const confirmRemove = document.getElementById('confirmRemove');
+      const cancelRemove = document.getElementById('cancelRemove');
+      let currentProductId = null;
+      let currentButtonElement = null;
+
       document.querySelectorAll('.btn-remove').forEach(button => {
         button.addEventListener('click', function (event) {
           event.preventDefault();
-          const productId = this.getAttribute('data-product-id');
-          removeFromWishlist(productId, this);
+          currentProductId = this.getAttribute('data-product-id');
+          currentButtonElement = this;
+          popup.style.display = 'flex';
         });
+      });
+
+      closeButton.addEventListener('click', () => {
+        popup.style.display = 'none';
+      });
+
+      cancelRemove.addEventListener('click', () => {
+        popup.style.display = 'none';
+      });
+
+      confirmRemove.addEventListener('click', () => {
+        if (currentProductId) {
+          removeFromWishlist(currentProductId, currentButtonElement);
+          popup.style.display = 'none';
+        }
+      });
+
+      window.addEventListener('click', (event) => {
+        if (event.target === popup) {
+          popup.style.display = 'none';
+        }
       });
     });
 
     function removeFromWishlist(productId, buttonElement) {
-      console.log('Remove button clicked! Product ID:', productId); // Debugging line
+      console.log('Remove button clicked! Product ID:', productId);
 
       fetch(`/wishlist/${productId}`, {
         method: 'DELETE',
@@ -890,11 +1049,11 @@
         }
       })
         .then(response => {
-          console.log('Response status:', response.status); // Log status
+          console.log('Response status:', response.status);
           return response.json();
         })
         .then(data => {
-          console.log('Data received:', data); // Debugging line
+          console.log('Data received:', data);
           if (data.message) {
             showAlert(data.message, data.error ? 'error' : 'success');
             if (!data.error) {
@@ -918,7 +1077,7 @@
     function showAlert(message, type) {
       const alertMessage = document.getElementById('alertMessage');
       alertMessage.textContent = message;
-      alertMessage.className = 'alert-message'; // Reset classes
+      alertMessage.className = 'alert-message';
       if (type === 'error') {
         alertMessage.classList.add('alert-error');
       } else if (type === 'success') {
@@ -926,13 +1085,12 @@
       }
       alertMessage.style.display = 'block';
 
-      // Append the alert message to the bottom of the table
       const wishlistTable = document.getElementById('wishlistTable');
       wishlistTable.insertAdjacentElement('afterend', alertMessage);
 
       setTimeout(() => {
         alertMessage.style.display = 'none';
-      }, 3000); // Hide after 3 seconds
+      }, 3000);
     }
 
 
@@ -961,6 +1119,8 @@
         }
       }
     }
+
+
   </script>
 
 

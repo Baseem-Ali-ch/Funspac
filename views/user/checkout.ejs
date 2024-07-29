@@ -1,154 +1,13 @@
 <%- include('../layout/header.ejs') %>
 
 
-
     <style>
-        /* CSS for alert messages */
-        .alert-message {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 20px;
-            background-color: #4caf50;
-            color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            display: none;
-            /* Initially hidden */
-        }
-
-        .alert-error {
-            background-color: #f44336;
-            /* Red for errors */
-        }
-
-
-
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .wishlist-container {
-            width: 80%;
-            margin: auto;
-        }
-
-        .wishlist-header {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .empty-wishlist {
-            text-align: center;
-            margin: 50px 0;
-        }
-
-        .empty-wishlist p {
-            font-size: 28px;
-            color: #333;
-            font-weight: normal;
-        }
-
-        .wishlist-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .wishlist-table th,
-        .wishlist-table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        .product-col img {
-            max-width: 50px;
-            max-height: 50px;
-        }
-
-        .product-title a {
-            color: #333;
-            text-decoration: none;
-        }
-
-        .in-stock {
-            color: #a6c76c;
-            font-weight: normal;
-        }
-
-        .few-stock {
-            color: rgb(202, 165, 0);
-            font-weight: normal;
-        }
-
-        .out-of-stock {
-            color: rgb(245, 0, 0);
-            font-weight: normal;
-        }
-
-        .btn-remove {
-            color: #ff0000;
-            cursor: pointer;
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            z-index: 10;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .popup-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 7px;
-            position: relative;
-        }
-
-        .popup-content h2 {
-            margin-top: 0;
-        }
-
-        .popup-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .popup-buttons .confirm {
-            background-color: #c96;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .popup-buttons .cancel {
-            background-color: #ccc;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
+        .error-message {
+            color: red;
+            font-size: 0.875em;
         }
     </style>
+
 
     <div class="page-wrapper">
         <header class="header">
@@ -160,14 +19,12 @@
                                 <ol class="breadcrumb">
                                     <% breadcrumbs.forEach((crumb, index)=> { %>
                                         <% if (index < breadcrumbs.length - 1) { %>
-                                            <!-- Breadcrumbs with links -->
                                             <li class="breadcrumb-item">
                                                 <a href="<%= crumb.url %>">
                                                     <%= crumb.name %>
                                                 </a>
                                             </li>
                                             <% } else { %>
-                                                <!-- Current page breadcrumb without link -->
                                                 <li class="breadcrumb-item active" aria-current="page">
                                                     <%= crumb.name %>
                                                 </li>
@@ -308,255 +165,278 @@
         <main class="main">
             <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
                 <div class="container">
-                    <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+                    <h1 class="page-title">Checkout<span>Shop</span></h1>
                 </div><!-- End .container -->
             </div><!-- End .page-header -->
+
+
             <div class="page-content">
-                <div class="cart">
+                <div class="checkout">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-lg-9">
-                                <% if (cartItems.length===0) { %>
-                                    <div class="empty-wishlist">
-                                        <p>Your cart is empty</p>
+                        <div class="checkout-discount">
+                            <form action="#">
+                                <input type="text" class="form-control" required id="checkout-discount-input">
+                                <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click
+                                        here to enter your code</span></label>
+                            </form>
+                        </div><!-- End .checkout-discount -->
+                        <form action="/checkout" method="post">
+                            <div class="row">
+                                <div class="col-lg-9">
+                                    <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>First Name *</label>
+                                            <input type="text" id="firstName" name="firstName" class="form-control"
+                                                required>
+                                            <span id="firstNameError" class="error-message"></span>
+                                        </div><!-- End .col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <label>Last Name *</label>
+                                            <input type="text" id="lastName" name="lastName" class="form-control"
+                                                required>
+                                            <span id="lastNameError" class="error-message"></span>
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+
+                                    <label>Street address *</label>
+                                    <input type="text" id="streetAddress" name="streetAddress" class="form-control"
+                                        placeholder="House number and Street name" required>
+                                    <span id="streetAddressError" class="error-message"></span>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Apartment *</label>
+                                            <input type="text" id="apartment" name="apartment" class="form-control"
+                                                required>
+                                            <span id="apartmentError" class="error-message"></span>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Town *</label>
+                                            <input type="text" id="town" name="town" class="form-control" required>
+                                            <span id="townError" class="error-message"></span>
+                                        </div><!-- End .col-sm-6 -->
                                     </div>
-                                    <% } else { %>
-                                        <table class="table table-cart table-mobile" id="cartTable">
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>City *</label>
+                                            <input type="text" id="city" name="city" class="form-control" required>
+                                            <span id="cityError" class="error-message"></span>
+                                        </div><!-- End .col-sm-6 -->
+                                        <div class="col-sm-6">
+                                            <label>State *</label>
+                                            <input type="text" id="state" name="state" class="form-control" required>
+                                            <span id="stateError" class="error-message"></span>
+                                        </div>
+                                    </div><!-- End .row -->
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Postcode *</label>
+                                            <input type="text" id="pin_code" name="pin_code" class="form-control"
+                                                required>
+                                            <span id="pinCodeError" class="error-message"></span>
+                                        </div><!-- End .col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <label>Phone *</label>
+                                            <input type="tel" id="phone" name="phone" class="form-control" required>
+                                            <span id="phoneError" class="error-message"></span>
+                                            <button id="sendOTP" class="btn btn-primary" style="display:none;">Send
+                                                OTP</button>
+                                            <button id="resendOTP" class="btn btn-secondary" style="display:none;"
+                                                disabled>Resend OTP</button>
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+
+                                    <label>Email address *</label>
+                                    <input type="email" id="email" name="email" class="form-control" required>
+                                    <span id="emailError" class="error-message"></span>
+
+
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="checkout-create-acc">
+                                        <label class="custom-control-label" for="checkout-create-acc">Create an
+                                            account?</label>
+                                    </div><!-- End .custom-checkbox -->
+
+                                    <!-- <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="checkout-diff-address">
+                                        <label class="custom-control-label" for="checkout-diff-address">Ship to a
+                                            different address?</label>
+                                    </div>End .custom-checkbox -->
+
+                                    <label>Order notes (optional)</label>
+                                    <textarea class="form-control" cols="30" rows="4"
+                                        placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+
+                                    
+
+                                    
+                                </div><!-- End .col-lg-9 -->
+
+                                <aside class="col-lg-3">
+                                    <div class="summary">
+                                        <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+                                        <table class="table table-summary">
                                             <thead>
                                                 <tr>
                                                     <th>Product</th>
-                                                    <th>Price</th>
-                                                    <th>Quantity</th>
                                                     <th>Total</th>
-                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <% cartItems.forEach(item => { %>
-                                                    <% if(item.productId && item.productId._id){ %>
-
-
-                                                        <tr data-cart-item-id="<%= item.productId._id %>">
-                                                            <td class="product-col">
-                                                                <div class="product">
-                                                                    <% if (item.productId && item.productId.imageUrl_1)
-                                                                        { %>
-                                                                        <figure class="product-media">
-                                                                            <a href="#">
-                                                                                <img src="<%= item.productId.imageUrl_1 %>"
-                                                                                    alt="Product image">
-                                                                            </a>
-                                                                        </figure>
-                                                                        <% } else { %>
-                                                                            <p>No image available</p>
-                                                                            <% } %>
-                                                                                <% if (item.productId) { %>
-                                                                                    <h3 class="product-title">
-                                                                                        <a href="#">
-                                                                                            <%= item.productId.name %>
-                                                                                        </a>
-                                                                                    </h3>
-                                                                                    <% } else { %>
-                                                                                        <p>Product details unavailable
-                                                                                        </p>
-                                                                                        <% } %>
-                                                                </div>
-                                                            </td>
-                                                            <td class="price-col ">
-                                                                <% if(item.productId.discountedPrice &&
-                                                                    item.productId.price>
-                                                                    item.productId.discountedPrice){
-                                                                    %>
-                                                                    <div class="row ">
-                                                                        <div class="product-price mx-4">
-                                                                            ₹<%= item.productId.discountedPrice %>
-                                                                        </div>
-                                                                        <div class="product-price mx-4"
-                                                                            style="font-size: 13px;">
-                                                                            <del>₹<%= item.productId.price %></del>
-                                                                        </div>
-                                                                        <% const
-                                                                            discountPercentage=Math.round(((item.productId.price
-                                                                            - item.productId.discountedPrice) /
-                                                                            item.productId.price) * 100); %>
-                                                                            <div class="product-price"
-                                                                                style="font-size: 13px;">
-                                                                                <%= discountPercentage %>% off
-                                                                            </div>
-                                                                    </div>
-                                                                    <% } else { %>
-                                                                        <div class="product-price">
-                                                                            ₹<%= item.productId.price %>
-                                                                        </div>
-                                                                        <% } %>
-
-                                                            </td>
-                                                            <td class="quantity-col">
-                                                                <div class="cart-product-quantity">
-                                                                    <input type="number"
-                                                                        class="form-control quantity-input"
-                                                                        value="<%= item.quantity %>" min="1"
-                                                                        max="<%= item.productId.stock + item.quantity %>"
-                                                                        step="1" data-decimals="0" required
-                                                                        data-product-id="<%= item.productId._id %>"
-                                                                        data-total-stock="<%= item.productId.stock + item.quantity %>">
-                                                                </div>
-                                                            </td>
-                                                            <td class="total-col">
-                                                                <% if(item.productId.discountedPrice){ %>
-                                                                    ₹<%= (item.productId.discountedPrice *
-                                                                        item.quantity).toFixed(2) %>
-                                                                        <% }else{ %>
-                                                                            ₹<%= (item.productId.price *
-                                                                                item.quantity).toFixed(2) %>
-                                                                                <% } %>
-
-                                                            </td>
-                                                            <td class="remove-col">
-                                                                <a href="#" class="btn-remove" title="Remove Product"
-                                                                    data-product-id="<%= item.productId._id %>">
-                                                                    <i class="icon-close"></i>
+                                                <% let total=0 %>
+                                                    <% cartItems.forEach(item=> { %>
+                                                        <tr>
+                                                            <td>
+                                                                <a href="/product/<%= item.productId._id %>">
+                                                                    <%= item.productId.name %>
                                                                 </a>
+
+                                                            </td>
+                                                            <td>
+                                                                <%= item.productId.price * item.quantity %>
+                                                                    <% total +=item.productId.price * item.quantity %>
                                                             </td>
                                                         </tr>
-                                                        <% } %>
-                                                            <% }) %>
+                                                        <% }) %>
+                                                            <tr class="summary-subtotal">
+                                                                <td>
+                                                                    Subtotal
+                                                                </td>
+                                                                <td>
+                                                                    <%= total %>
+                                                                </td>
+                                                            </tr><!-- End .summary-subtotal -->
+                                                            <tr>
+                                                                <td>Shipping:</td>
+                                                                <td>Free shipping</td>
+                                                            </tr>
+                                                            <tr class="summary-total">
+                                                                <td>Total:</td>
+                                                                <td>
+                                                                    <%= total %>
+                                                                </td>
+                                                            </tr><!-- End .summary-total -->
                                             </tbody>
-                                        </table>
-                                        <% } %>
-                                            <div id="alertMessage" class="alert-message" style="display: none;"></div>
+                                        </table><!-- End .table table-summary -->
 
+                                        <div class="accordion-summary" id="accordion-payment">
+                                            <div class="card">
+                                                <div class="card-header" id="heading-1">
+                                                    <h2 class="card-title">
+                                                        <a role="button" data-toggle="collapse" href="#collapse-1"
+                                                            aria-expanded="true" aria-controls="collapse-1">
+                                                            Direct bank transfer
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-1" class="collapse show" aria-labelledby="heading-1"
+                                                    data-parent="#accordion-payment">
+                                                    <!-- <div class="card-body">
+                                                        Make your payment directly into our bank account. Please use
+                                                        your Order ID as the payment reference. Your order will not be
+                                                        shipped until the funds have cleared in our account.
+                                                    </div>End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
 
-                                            <div class="cart-bottom">
-                                                <div class="cart-discount">
-                                                    <form action="#">
-                                                        <div class="input-group">
-                                                            <input type="text" class="form-control" required
-                                                                placeholder="coupon code">
-                                                            <div class="input-group-append">
-                                                                <button class="btn btn-outline-primary-2"
-                                                                    type="submit"><i
-                                                                        class="icon-long-arrow-right"></i></button>
-                                                            </div><!-- .End .input-group-append -->
-                                                        </div><!-- End .input-group -->
-                                                    </form>
-                                                </div><!-- End .cart-discount -->
+                                            <div class="card">
+                                                <div class="card-header" id="heading-2">
+                                                    <h2 class="card-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                                            href="#collapse-2" aria-expanded="false"
+                                                            aria-controls="collapse-2">
+                                                            Check payments
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-2" class="collapse" aria-labelledby="heading-2"
+                                                    data-parent="#accordion-payment">
+                                                    <!-- <div class="card-body">
+                                                        Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.
+                                                        Quisque volutpat mattis eros. Nullam malesuada erat ut turpis.
+                                                    </div>End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
 
-                                                <a href="/product-list" class="btn btn-outline-dark-2"><span>UPDATE
-                                                        CART</span><i class="icon-refresh"></i></a>
-                                            </div><!-- End .cart-bottom -->
-                            </div><!-- End .col-lg-9 -->
-                            <aside class="col-lg-3">
-                                <div class="summary summary-cart">
-                                    <h3 class="summary-title">Price Details</h3>
-                                    <% let totalPrice=0; let totalDiscountedPrice=0; let deliveryCharge=0;
-                                        cartItems.forEach(item=> {
-                                        if (item.productId.discountedPrice && item.productId.price >
-                                        item.productId.discountedPrice) {
-                                        totalPrice += item.productId.price * item.quantity;
-                                        totalDiscountedPrice += item.productId.discountedPrice * item.quantity;
-                                        } else {
-                                        totalPrice += item.productId.price * item.quantity;
-                                        totalDiscountedPrice += item.productId.price * item.quantity;
-                                        }
-                                        });
-                                        let discount = totalPrice - totalDiscountedPrice;
-                                        let grandTotal = totalDiscountedPrice + deliveryCharge;
-                                        %>
-                                        <table class="table table-summary">
-                                            <tbody>
+                                            <div class="card">
+                                                <div class="card-header" id="heading-3">
+                                                    <h2 class="card-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                                            href="#collapse-3" aria-expanded="false"
+                                                            aria-controls="collapse-3">
+                                                            Cash on delivery
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-3" class="collapse" aria-labelledby="heading-3"
+                                                    data-parent="#accordion-payment">
+                                                    <!-- <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum
+                                                        dolor sit amet, consectetuer adipiscing elit. Donec odio.
+                                                        Quisque volutpat mattis eros.
+                                                    </div>End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
 
-                                                <tr class="summary-subtotal">
-                                                    <td>Price(<%= cartItems.length %>)</td>
-                                                    <td>
-                                                        ₹<%= totalPrice.toFixed(2) %>
-                                                    </td>
-                                                </tr>
-                                                <tr class="summary-subtotal">
-                                                    <td>Discount</td>
-                                                    <td>
-                                                        ₹<%= discount.toFixed(2) %>
-                                                    </td>
-                                                </tr>
-                                                <tr class="summary-subtotal">
-                                                    <td>Delivery Charges</td>
-                                                    <td>
-                                                        ₹<%= deliveryCharge.toFixed(2) %>
-                                                    </td>
-                                                </tr>
-                                                <!-- Corrected this line -->
+                                            <div class="card">
+                                                <div class="card-header" id="heading-4">
+                                                    <h2 class="card-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                                            href="#collapse-4" aria-expanded="false"
+                                                            aria-controls="collapse-4">
+                                                            PayPal <small class="float-right paypal-link">What is
+                                                                PayPal?</small>
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-4" class="collapse" aria-labelledby="heading-4"
+                                                    data-parent="#accordion-payment">
+                                                    <!-- <div class="card-body">
+                                                        Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra
+                                                        non, semper suscipit, posuere a, pede. Donec nec justo eget
+                                                        felis facilisis fermentum.
+                                                    </div>End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
 
-                                                <!-- Add other rows related to shipping and address change here -->
-                                                <!-- <tr class="summary-shipping">
-                                                    <td>Shipping:</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
-    
-                                                <tr class="summary-shipping-row">
-                                                    <td>
-                                                        <div class="custom-control custom-radio">
-                                                            <input type="radio" id="free-shipping" name="shipping"
-                                                                class="custom-control-input">
-                                                            <label class="custom-control-label" for="free-shipping">Free
-                                                                Shipping</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>₹0.00</td>
-                                                </tr>
-    
-                                                <tr class="summary-shipping-row">
-                                                    <td>
-                                                        <div class="custom-control custom-radio">
-                                                            <input type="radio" id="standart-shipping" name="shipping"
-                                                                class="custom-control-input">
-                                                            <label class="custom-control-label"
-                                                                for="standart-shipping">Standard:</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>₹10.00</td>
-                                                </tr>
-    
-                                                <tr class="summary-shipping-row">
-                                                    <td>
-                                                        <div class="custom-control custom-radio">
-                                                            <input type="radio" id="express-shipping" name="shipping"
-                                                                class="custom-control-input">
-                                                            <label class="custom-control-label"
-                                                                for="express-shipping">Express:</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>₹20.00</td>
-                                                </tr>
-    
-                                                <tr class="summary-shipping-estimate">
-                                                    <td>Estimate for Your Country<br> <a href="dashboard.html">Change
-                                                            address</a></td>
-                                                    <td>&nbsp;</td>
-                                                </tr>-->
+                                            <div class="card">
+                                                <div class="card-header" id="heading-5">
+                                                    <h2 class="card-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                                            href="#collapse-5" aria-expanded="false"
+                                                            aria-controls="collapse-5">
+                                                            Credit Card (Stripe)
+                                                            <img src="assets/images/payments-summary.png"
+                                                                alt="payments cards">
+                                                        </a>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-5" class="collapse" aria-labelledby="heading-5"
+                                                    data-parent="#accordion-payment">
+                                                    <!-- <div class="card-body"> Donec nec justo eget felis facilisis
+                                                        fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                                        elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum
+                                                        dolor sit ame.
+                                                    </div>End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
+                                        </div><!-- End .accordion -->
 
-                                                <tr class="summary-total">
-                                                    <td>Total:</td>
-                                                    <td>
-                                                        ₹<%= grandTotal.toFixed(2) %>
-                                                    </td>
-                                                </tr><!-- End .summary-total -->
-                                            </tbody>
-                                        </table>
-
-
-                                        <!-- End .table table-summary -->
-
-                                        <a href="/checkout"
-                                            class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO
-                                            CHECKOUT</a>
-                                </div><!-- End .summary -->
-
-                                <a href="/product-list" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE
-                                        SHOPPING</span><i class="icon-refresh"></i></a>
-                            </aside><!-- End .col-lg-3 -->
-                        </div><!-- End .row -->
+                                        <button type="submit" id="submitForm"
+                                            class="btn btn-outline-primary-2 btn-order btn-block">
+                                            <span class="btn-text">Place Order</span>
+                                            <span class="btn-hover-text">Proceed to Checkout</span>
+                                        </button>
+                                    </div><!-- End .summary -->
+                                </aside><!-- End .col-lg-3 -->
+                            </div><!-- End .row -->
+                        </form>
                     </div><!-- End .container -->
-                </div><!-- End .cart -->
+                </div><!-- End .checkout -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
 
@@ -566,8 +446,8 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget widget-about">
-                                <img src="/assets/images/furnspace logo black.png" class="footer-logo" alt="Footer Logo"
-                                    width="105" height="25">
+                                <img src="/assets/images/furnspace logo black.png " class="footer-logo"
+                                    alt="Footer Logo" width="105" height="25">
                                 <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
                                     magna eros eu erat. </p>
 
@@ -946,20 +826,6 @@
         </div><!-- End .modal-dialog -->
     </div><!-- End .modal -->
 
-
-    <!-- confirm popup for remove product from wishlist-->
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="close">&times;</span>
-            <h6>Remove Item</h6>
-            <p>Are you sure you want to remove this item?</p>
-            <div class="popup-buttons">
-                <button id="confirmRemove" class="confirm">Remove</button>
-                <button id="cancelRemove" class="cancel">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Plugins JS File -->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -967,187 +833,69 @@
     <script src="assets/js/jquery.waypoints.min.js"></script>
     <script src="assets/js/superfish.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
-    <script src="assets/js/bootstrap-input-spinner.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 
 
-    <script>
 
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const popup = document.getElementById('popup');
-            const closeButton = document.querySelector('.close');
-            const confirmRemove = document.getElementById('confirmRemove');
-            const cancelRemove = document.getElementById('cancelRemove');
-            let currentProductId = null;
-            let currentButtonElement = null;
+            const formFields = [
+                { id: 'firstName', validation: validateName },
+                { id: 'lastName', validation: validateName },
+                { id: 'streetAddress', validation: validateNonEmpty },
+                { id: 'apartment', validation: validateNonEmpty },
+                { id: 'town', validation: validateNonEmpty },
+                { id: 'city', validation: validateNonEmpty },
+                { id: 'state', validation: validateNonEmpty },
+                { id: 'pin_code', validation: validatePinCode },
+                { id: 'phone', validation: validatePhone },
+                { id: 'email', validation: validateEmail },
+            ];
 
-            document.querySelectorAll('.btn-remove').forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    currentProductId = this.getAttribute('data-product-id');
-                    currentButtonElement = this;
-                    popup.style.display = 'flex';
+            formFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                input.addEventListener('blur', () => {
+                    const errorMessage = field.validation(input.value);
+                    const errorElement = document.getElementById(field.id + 'Error');
+                    errorElement.textContent = errorMessage;
+
+                    
                 });
             });
 
-            closeButton.addEventListener('click', () => {
-                popup.style.display = 'none';
-            });
+            
 
-            cancelRemove.addEventListener('click', () => {
-                popup.style.display = 'none';
-            });
-
-            confirmRemove.addEventListener('click', () => {
-                if (currentProductId) {
-                    removeFromCart(currentProductId, currentButtonElement);
-                    popup.style.display = 'none';
-                }
-            });
-
-            window.addEventListener('click', (event) => {
-                if (event.target === popup) {
-                    popup.style.display = 'none';
-                }
-            });
-        });
-
-        function removeFromCart(productId, buttonElement) {
-            console.log('Remove button clicked! Product ID:', productId); // Debugging line
-
-            fetch(`/cart/${productId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-                .then(response => {
-                    console.log('Response status:', response.status); // Log status
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Data received:', data); // Debugging line
-                    if (data.message) {
-                        showAlert(data.message, data.error ? 'error' : 'success');
-                        if (!data.error) {
-                            // Remove the item from the DOM
-                            const tableRow = buttonElement.closest('tr');
-                            if (tableRow) {
-                                tableRow.remove();
-
-                            }
-                        }
-                    } else {
-                        console.error('No message received in response');
-                        showAlert('Failed to remove item from cart', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error removing from cart:', error);
-                    showAlert('Error removing item from cart', 'error');
-                });
-        }
-
-        function showAlert(message, type) {
-            const alertMessage = document.getElementById('alertMessage');
-            alertMessage.textContent = message;
-            alertMessage.className = 'alert-message'; // Reset classes
-            if (type === 'error') {
-                alertMessage.classList.add('alert-error');
-            } else if (type === 'success') {
-                alertMessage.classList.add('alert-success');
+            function validateName(name) {
+                if (name.trim() === '') return 'This field is required.';
+                if (/[^a-zA-Z\s]/.test(name)) return 'Name cannot contain numbers or special characters.';
+                return '';
             }
-            alertMessage.style.display = 'block';
 
-            // Append the alert message to the bottom of the table
-            const cartTable = document.getElementById('cartTable');
-            cartTable.insertAdjacentElement('afterend', alertMessage);
+            function validateNonEmpty(value) {
+                if (value.trim() === '') return 'This field is required.';
+                return '';
+            }
 
-            setTimeout(() => {
-                window.location.reload()
-                alertMessage.style.display = 'none';
-            }, 1000); // Hide after 3 seconds
-        }
+            function validatePinCode(pinCode) {
+                if (pinCode.trim() === '') return 'This field is required.';
+                if (!/^\d{6}$/.test(pinCode)) return 'Postcode must be exactly 6 digits.';
+                return '';
+            }
 
+            function validatePhone(phone) {
+                if (phone.trim() === '') return 'This field is required.';
+                if (!/^[1-9]\d{9}$/.test(phone)) return 'Phone number must be 10 digits and cannot start with 0.';
+                return '';
+            }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const quantityInputs = document.querySelectorAll('.quantity-input')
-
-            quantityInputs.forEach(input => {
-                input.addEventListener('change', function () {
-                    const productId = this.dataset.productId;
-                    const newQuantity = parseInt(this.value);
-                    const totalStock = parseInt(this.dataset.totalStock);
-
-                    if (newQuantity < 1) {
-                        this.value = 1;
-                        return;
-                    }
-                    if (newQuantity > totalStock) {
-                        this.value = totalStock;
-                        return;
-                    }
-                    updateCartItemQty(productId, newQuantity)
-                })
-            })
+            function validateEmail(email) {
+                if (email.trim() === '') return 'This field is required.';
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
+                return '';
+            }
         })
-
-        function updateCartItemQty(productId, newQuantity) {
-            fetch(`/cart/${productId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantity: newQuantity })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log('Quantity updated successfully');
-                        const input = document.querySelector(`[data-product-id="${productId}"]`);
-                        if (input) {
-                            input.max = data.totalStock;
-                            input.dataset.totalStock = data.totalStock;
-                        }
-                        window.location.reload()
-                    } else {
-                        console.log('Error updating quantity', data.message);
-                    }
-                })
-                .catch(error => {
-                    console.log('Error', error);
-                })
-        }
-
-
     </script>
 
-
-
-    <script>
-        function searchCart() {
-            // Get the search input and filter value
-            const input = document.getElementById('search-input');
-            const filter = input.value.toLowerCase();
-
-            // Get the table body and rows
-            const tableBody = document.querySelector('.table-cart tbody');
-            const rows = tableBody.getElementsByTagName('tr');
-
-            // Loop through rows to filter based on search query
-            for (let i = 0; i < rows.length; i++) {
-                const productTitle = rows[i].querySelector('.product-title a') ? rows[i].querySelector('.product-title a').textContent.toLowerCase() : '';
-
-                // Show or hide rows based on the search query
-                if (productTitle.includes(filter)) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
-            }
-        }
-    </script>
 
     <%- include('../layout/footer.ejs') %>

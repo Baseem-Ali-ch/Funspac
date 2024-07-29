@@ -267,8 +267,8 @@
                   <div class="product-gallery product-gallery-vertical">
                     <div class="row">
                       <figure class="product-main-image img-zoom-container">
-                        <img id="product-zoom" src="<%= product.imageUrl_1 %>"
-                          data-zoom-image="<%= product.imageUrl_1 %>" alt="product image" />
+                        <img id="product-zoom" src="<%= product.imageUrl_1 %>" data-zoom-image="<%= product.imageUrl %>"
+                          alt="product image" />
                         <div id="zoom-result" class="img-zoom-result"></div>
                         <!-- <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                           <i class="icon-arrows"></i>
@@ -352,13 +352,19 @@
                   </div>
 
                   <div class="details-filter-row details-row-size">
-                    <label for="qty">Qty:</label>
+                    <!-- <label for="qty">Qty:</label>
                     <div class="product-details-quantity">
-                      <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1"
-                        data-decimals="0" required />
-                    </div>
+                      <% if(product.stock <=0){ %>
+                        <input type="number" id="qty" class="form-control" value="0" min="0" max="<%= product.stock %>"
+                          step="1" data-decimals="0" required disabled />
+                        <% }else{ %>
+                          <input type="number" id="qty" class="form-control" value="1" min="1"
+                            max="<%= product.stock %>" step="1" data-decimals="0" required />
+                          <% } %>
+
+                    </div> -->
                   </div>
-                  
+
                   <div class="product-details-action">
                     <% if(product.status=='unavailable' ){ %>
                       <a href="#" class="btn-product btn-cart"
@@ -376,7 +382,7 @@
                         <% }else if(product.stock < 10){ %>
                           <a href="#" class="btn-product btn-cart" style="background-color: #fffebb; color: black;"
                             id="btn-cart-<%= product._id %>" onclick="addToCart('<%= product._id %>')">
-                            <span>>Add to cart</span>
+                            <span>Add to cart</span>
                           </a>
                           <% }else{ %>
                             <a href="#" class="btn-product btn-cart" style="background-color: #c9ffbb; color: black;"
@@ -1394,8 +1400,7 @@
           .then(response => response.json())
           .then(data => {
             if (data.success) {
-              showAlert(data.message, 'success'); // Show success message
-              // Change button to "View Cart"
+              showAlert(data.message, 'success');
               const btnCart = document.getElementById(`btn-cart-${productId}`);
               btnCart.innerHTML = '<span>view cart</span>';
               btnCart.setAttribute('onclick', 'viewCart()');

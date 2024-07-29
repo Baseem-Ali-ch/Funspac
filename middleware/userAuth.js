@@ -28,6 +28,7 @@ const isUserWishlistPage = (req, res, next) => {
   try {
     if (req.session.user) {
       res.render("wishlist", { user: req.session.user });
+      next()
     } else {
       res.redirect("/login");
     }
@@ -41,6 +42,7 @@ const isUserContactPage = (req, res, next) => {
   try {
     if (req.session.user) {
       res.render("contact-us", { user: req.session.user });
+      next()
     } else {
       res.redirect("/login");
     }

@@ -548,16 +548,18 @@
                                 </span></div>
                             </div>
                           </td>
-                          <td><span class="status-label fw-medium text-truncate">
+                          <td>
+                            <span class="status-label fw-medium text-truncate">
                               <%= customer.isListed==='true' ? 'Active' : 'InActive' %>
-                            </span></td>
+                            </span>
+                          </td>
                           <td></td>
                           <td></td>
                           <td>
                             <button
-                              class="btn btn-primary btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill"
+                              class="btn btn-primary btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill mx-2"
                               onclick="populateCustomerModal({ _id: '<%= customer._id %>', name: '<%= customer.name %>', email: '<%= customer.email %>', phone: '<%= customer.phone %>', status: '<%= customer.isListed %>' })">
-                              Edit
+                              <i class="ri-edit-box-line ri-22px"></i>
                             </button>
                           </td>
                         </tr>
@@ -799,73 +801,73 @@
         originalCustomerData.phone !== currentPhone ||
         originalCustomerData.status !== currentStatus;
     }
-    
-    
-    function saveChanges() {
-      if(validateForm()){
-        if (!hasChanges()) {
-        Swal.fire({
-          title: 'No Changes Detected',
-          text: 'No changes were made to the customer.',
-          icon: 'info',
-          confirmButtonText: 'OK'
-        });
-        return;
-      }
-      
-      const form = document.getElementById('editCustomerForm');
-      const customerId = document.getElementById('customer-id').value;
-      const payload = {
-        name: form.querySelector('#edit-name').value,
-        email: form.querySelector('#edit-email').value,
-        phone: form.querySelector('#edit-phone').value,
-        isListed: form.querySelector('#edit-status').value
-      };
 
-      fetch(`/admin/allCustomer/${customerId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Server responded with status ${response.status}`);
-          }
-          return response.json();
+
+    function saveChanges() {
+      if (validateForm()) {
+        if (!hasChanges()) {
+          Swal.fire({
+            title: 'No Changes Detected',
+            text: 'No changes were made to the customer.',
+            icon: 'info',
+            confirmButtonText: 'OK'
+          });
+          return;
+        }
+
+        const form = document.getElementById('editCustomerForm');
+        const customerId = document.getElementById('customer-id').value;
+        const payload = {
+          name: form.querySelector('#edit-name').value,
+          email: form.querySelector('#edit-email').value,
+          phone: form.querySelector('#edit-phone').value,
+          isListed: form.querySelector('#edit-status').value
+        };
+
+        fetch(`/admin/allCustomer/${customerId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
         })
-        .then(data => {
-          if (data.success) {
-            Swal.fire({
-              title: 'Success',
-              text: data.message || 'Customer updated successfully',
-              icon: 'success',
-              confirmButtonText: 'OK'
-            }).then(() => {
-              location.reload();
-            });
-          } else {
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Server responded with status ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.success) {
+              Swal.fire({
+                title: 'Success',
+                text: data.message || 'Customer updated successfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              }).then(() => {
+                location.reload();
+              });
+            } else {
+              Swal.fire({
+                title: 'Error',
+                text: 'Error updating customer: ' + (data.message || 'Unknown error'),
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
             Swal.fire({
               title: 'Error',
-              text: 'Error updating customer: ' + (data.message || 'Unknown error'),
+              text: 'Error updating customer: ' + error.message,
               icon: 'error',
               confirmButtonText: 'OK'
             });
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          Swal.fire({
-            title: 'Error',
-            text: 'Error updating customer: ' + error.message,
-            icon: 'error',
-            confirmButtonText: 'OK'
           });
-        });
-    }
       }
- 
+    }
+
   </script>
 
 
@@ -901,7 +903,7 @@
 
 
 
-  
+
 
 
 

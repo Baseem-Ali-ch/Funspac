@@ -713,9 +713,9 @@
                           <td></td>
                           <td>
                             <button
-                              class="btn btn-primary btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill"
+                              class="btn btn-primary btn-sm btn-icon btn-text-secondary waves-effect waves-light rounded-pill mx-2"
                               onclick="populateCategoryModal({ _id: '<%= category._id %>', title: '<%= category.title %>', description: '<%= category.slug %>', image: '<%= category.image %>' })">
-                              Edit
+                              <i class="ri-edit-box-line ri-22px"></i>
                             </button>
                           </td>
                         </tr>
@@ -838,7 +838,7 @@
                     <label for="ecommerce-category-title">Title</label>
                     <div class="form-floating form-floating-outline mb-5 fv-plugins-icon-container">
                       <input type="text" class="form-control" id="ecommerce-category-title" name="title"
-                        placeholder="Enter category title" required>
+                        placeholder="Enter title" required>
 
                       <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
                       </div>
@@ -847,8 +847,8 @@
                     <!-- Slug -->
                     <label for="ecommerce-category-slug">Description</label>
                     <div class="form-floating form-floating-outline mb-5 fv-plugins-icon-container">
-                      <input type="text" id="ecommerce-category-slug" class="form-control" placeholder="Enter slug"
-                        name="slug" required>
+                      <input type="text" id="ecommerce-category-slug" class="form-control"
+                        placeholder="Enter description" name="slug" required>
 
                       <!-- <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div> -->
 
@@ -871,10 +871,7 @@
                     
                   </div>
                    -->
-                      <label for="ecommerce-category-image">Category Image</label>
-                      <div class="form-floating form-floating-outline mb-5">
 
-                      </div>
 
 
 

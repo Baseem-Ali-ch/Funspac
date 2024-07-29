@@ -86,7 +86,7 @@
                   <li><a href="/contact-us">Contact Us</a></li>
                   <% if (user) { %>
                     <li>
-                      <a href="/profile"><i class="icon-user"></i>
+                      <a href="/account"><i class="icon-user"></i>
                         <%= user.name || user.displayName %>
                       </a>
                     </li>
@@ -1764,7 +1764,7 @@
         })
         .catch(error => {
           console.error('Error adding to wishlist:', error);
-          showAlert('Error adding to wishlist ! Please login and continue', 'error');
+          showAlert('Please login and continue', 'error');
         });
     }
 

@@ -2,6 +2,8 @@
 const loginController = require("../controller/user/loginController");
 const userController = require("../controller/user/userController");
 const accountController = require("../controller/user/accountController");
+const productController = require("../controller/user/productController");
+const orderController = require("../controller/user/orderController");
 const breadcrumbs = require("../middleware/breadcrumbs");
 const auth = require("../middleware/userAuth");
 
@@ -19,19 +21,24 @@ userRoute.use(breadcrumbs);
 //main user route
 userRoute.get("/", userController.loadHome);
 userRoute.get("/home", userController.loadHome);
-userRoute.get("/product/:id", userController.loadProduct);
-userRoute.get("/product-list", userController.loadProductList);
-userRoute.post("/filter-products", userController.filterProduct);
+userRoute.get("/product/:id", productController.loadProduct);
+userRoute.get("/product-list", productController.loadProductList);
+userRoute.post("/filter-products", productController.filterProduct);
 
 //cart routes
-userRoute.get("/cart", userController.loadCart);
-userRoute.post("/cart", userController.addToCart);
-userRoute.delete("/cart/:productId", auth.isUserAuthenticated, userController.removeFromCart);
+userRoute.get("/cart", productController.loadCart);
+userRoute.post("/cart", productController.addToCart);
+userRoute.patch("/cart/:productId", productController.updateCartItemQty);
+userRoute.delete("/cart/:productId", auth.isUserAuthenticated, productController.removeFromCart);
 
 // wishlist routes
-userRoute.get("/wishlist", auth.isUserAuthenticated, userController.loadWishlist);
-userRoute.post("/wishlist", auth.isUserAuthenticated, userController.addToWishlist);
-userRoute.delete("/wishlist/:productId", auth.isUserAuthenticated, userController.removeFromWishlist);
+userRoute.get("/wishlist", auth.isUserAuthenticated, productController.loadWishlist);
+userRoute.post("/wishlist", auth.isUserAuthenticated, productController.addToWishlist);
+userRoute.delete("/wishlist/:productId", auth.isUserAuthenticated, productController.removeFromWishlist);
+
+//checkout and order routes
+userRoute.get("/checkout", auth.isUserAuthenticated, orderController.loadCheckout);
+userRoute.post("/checkout", auth.isUserAuthenticated, orderController.insertAddress);
 
 //contact routes
 userRoute.get("/contact-us", auth.isUserAuthenticated, userController.loadContact);
@@ -48,8 +55,9 @@ userRoute.post("/login", auth.isUserLogout, loginController.verifyLogin);
 userRoute.get("/logout", auth.isUserAuthenticated, loginController.userLogout);
 
 //account manage. account controller
-userRoute.get("/profile", auth.isUserAuthenticated, accountController.loadProfile);
-userRoute.post("/update-profile", auth.isUserAuthenticated, accountController.updateProfile);
+// userRoute.get("/profile", auth.isUserAuthenticated, accountController.loadProfile);
+userRoute.get("/account", auth.isUserAuthenticated, accountController.loadProfile);
+userRoute.post("/account", auth.isUserAuthenticated, accountController.updateProfile);
 userRoute.get("/forget-password", accountController.forgetPassword);
 userRoute.post("/forget-password", accountController.verifyForgetPassword);
 userRoute.get("/reset-password", accountController.resetPasswordPage);

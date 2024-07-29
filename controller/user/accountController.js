@@ -2,6 +2,8 @@
 const Token = require("../../model/tokenModel");
 const Category = require("../../model/categoryModel");
 const userModel = require("../../model/userModel");
+const Wishlist = require("../../model/wishlistModel");
+const Cart = require("../../model/cartModel");
 
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
@@ -16,11 +18,49 @@ const transporter = nodemailer.createTransport({
 });
 
 //load user profile
+// const loadProfile = async (req, res) => {
+//   try {
+//     const user = req.session.user || req.user;
+//     const categories = await Category.find({ isListed: "true" });
+//     res.render("profile", { user, categories });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 const loadProfile = async (req, res) => {
   try {
     const user = req.session.user || req.user;
+    const userId = user ? user._id : null;
+    console.log("user session:", user);
+
+    let wishlistItems = [];
+    if (userId) {
+      const wishlist = await Wishlist.findOne({ userId }).populate("products.productId");
+      wishlistItems = wishlist ? wishlist.products : [];
+    }
+
+    let cartItems = [];
+    if (userId) {
+      const cart = await Cart.findOne({ userId }).populate("items.productId");
+      cartItems = cart ? cart.items : [];
+    }
     const categories = await Category.find({ isListed: "true" });
-    res.render("profile", { user, categories });
+
+    const userDetails = user
+      ? {
+          fullName: user.name,
+          displayName: user.displayName,
+          phone: user.phone,
+          email: user.email,
+        }
+      : null;
+    console.log("user details", userDetails);
+    res.render("account", {
+      user: userDetails,
+      categories,
+      wishlistItems,
+      cartItems,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -32,31 +72,37 @@ const updateProfile = async (req, res) => {
     const userId = req.session.user ? req.session.user._id : req.user ? req.user._id : null;
 
     if (!userId) {
-      return res.status(400).send("User not found");
+      return res.status(400).json({ success: false, message: "User not found" });
     }
 
+    const fullName = req.body.fullName; // Assuming fullName is a single string
+    let displayName = req.body.displayName;
     const updatedUser = await userModel.findByIdAndUpdate(
       userId,
       {
-        name: req.body.name,
-        email: req.body.email,
+        name: fullName,
+        displayName: displayName,
         phone: req.body.phone,
+        email: req.body.email,
       },
       { new: true },
     );
 
     if (!updatedUser) {
-      return res.status(404).send("User not found");
+      return res.status(404).json({ success: false, message: "User not found" });
     }
+
     req.session.user = updatedUser;
     res.json({
-      name: updatedUser.name,
-      email: updatedUser.email,
+      success: true,
+      fullName: updatedUser.name,
+      displayName: updatedUser.displayName,
       phone: updatedUser.phone,
+      email: updatedUser.email,
     });
   } catch (error) {
     console.error("Error updating profile:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 

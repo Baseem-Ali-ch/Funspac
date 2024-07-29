@@ -618,10 +618,10 @@
 
                           <td>
                             <button
-                              class="btn btn-sm btn-primary btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn"
+                              class="btn btn-sm btn-primary btn-icon btn-text-secondary waves-effect waves-light rounded-pill edit-btn mx-2"
                               data-bs-toggle="modal" data-bs-target="#editProductModal"
                               onclick="populateModal(<%= JSON.stringify(product) %>)">
-                              Edit
+                              <i class="ri-edit-box-line ri-22px"></i>
                             </button>
                           </td>
                         </tr>
@@ -710,8 +710,9 @@
                               <div id="productImages" class="row">
                                 <div class="col-md-4 mb-3">
                                   <img id="modalImage1" src="#" alt="Product Image 1" class="img-thumbnail">
-                                  <input type="file" class="form-control mt-2" id="modalInputImage1" accept=".jpeg, .jpg, .png"
-                                    name="productImage1" onchange="replaceModalImage(this, 'modalImage1')">
+                                  <input type="file" class="form-control mt-2" id="modalInputImage1"
+                                    accept=".jpeg, .jpg, .png" name="productImage1"
+                                    onchange="replaceModalImage(this, 'modalImage1')">
                                   <div class="d-flex justify-content-between mt-2">
                                     <button type="button" class="btn btn-warning btn-sm"
                                       onclick="triggerInputClick('modalInputImage1');">Replace</button>
@@ -721,8 +722,9 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                   <img id="modalImage2" src="#" alt="Product Image 2" class="img-thumbnail">
-                                  <input type="file" class="form-control mt-2" id="modalInputImage2" accept=".jpeg, .jpg, .png"
-                                    name="productImage2" onchange="replaceModalImage(this, 'modalImage2')">
+                                  <input type="file" class="form-control mt-2" id="modalInputImage2"
+                                    accept=".jpeg, .jpg, .png" name="productImage2"
+                                    onchange="replaceModalImage(this, 'modalImage2')">
                                   <div class="d-flex justify-content-between mt-2">
                                     <button type="button" class="btn btn-warning btn-sm"
                                       onclick="triggerInputClick('modalInputImage2');">Replace</button>
@@ -732,8 +734,9 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                   <img id="modalImage3" src="#" alt="Product Image 3" class="img-thumbnail">
-                                  <input type="file" class="form-control mt-2" id="modalInputImage3" accept=".jpeg, .jpg, .png"
-                                    name="productImage3" onchange="replaceModalImage(this, 'modalImage3')">
+                                  <input type="file" class="form-control mt-2" id="modalInputImage3"
+                                    accept=".jpeg, .jpg, .png" name="productImage3"
+                                    onchange="replaceModalImage(this, 'modalImage3')">
                                   <div class="d-flex justify-content-between mt-2">
                                     <button type="button" class="btn btn-warning btn-sm"
                                       onclick="triggerInputClick('modalInputImage3');">Replace</button>
@@ -848,7 +851,7 @@
                 description: product.description,
                 category: product.category ? product.category._id : '',
                 price: product.price,
-                discountPrice:product.discountedPrice,
+                discountPrice: product.discountedPrice,
                 stock: product.stock,
                 status: product.isListed,
                 image1: product.imageUrl_1,
