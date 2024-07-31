@@ -7,6 +7,30 @@
             font-size: 0.875em;
         }
     </style>
+    <style>
+        .address-container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+
+        .address-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .address-item input[type="radio"] {
+            margin-right: 15px;
+        }
+
+        .address-item p {
+            margin: 0;
+            line-height: 1.5;
+        }
+    </style>
 
 
     <div class="page-wrapper">
@@ -63,7 +87,7 @@
                             <li><a href="/contact-us">Contact Us</a></li>
                             <% if (user) { %>
                                 <li>
-                                    <a href="/profile"><i class="icon-user"></i>
+                                    <a href="/account"><i class="icon-user"></i>
                                         <%= user.name || user.displayName %>
                                     </a>
                                 </li>
@@ -180,101 +204,42 @@
                                         here to enter your code</span></label>
                             </form>
                         </div><!-- End .checkout-discount -->
+
+                        <div id="billingAddress"></div>
+
                         <form action="/checkout" method="post">
                             <div class="row">
                                 <div class="col-lg-9">
-                                    <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <label>First Name *</label>
-                                            <input type="text" id="firstName" name="firstName" class="form-control"
-                                                required>
-                                            <span id="firstNameError" class="error-message"></span>
-                                        </div><!-- End .col-sm-6 -->
+                                    <button type="button" class="btn btn-outline-primary-2" data-toggle="modal"
+                                        data-target="#addressModal">
+                                        Add New Address
+                                    </button>
 
-                                        <div class="col-sm-6">
-                                            <label>Last Name *</label>
-                                            <input type="text" id="lastName" name="lastName" class="form-control"
-                                                required>
-                                            <span id="lastNameError" class="error-message"></span>
-                                        </div><!-- End .col-sm-6 -->
-                                    </div><!-- End .row -->
+                                    <div class="address-container">
 
-                                    <label>Street address *</label>
-                                    <input type="text" id="streetAddress" name="streetAddress" class="form-control"
-                                        placeholder="House number and Street name" required>
-                                    <span id="streetAddressError" class="error-message"></span>
+                                        <% if (addresses && addresses.length> 0) { %>
+                                            <h6>Select the address</h6>
+                                            <% addresses.forEach(addr=> { %>
 
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <label>Apartment *</label>
-                                            <input type="text" id="apartment" name="apartment" class="form-control"
-                                                required>
-                                            <span id="apartmentError" class="error-message"></span>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label>Town *</label>
-                                            <input type="text" id="town" name="town" class="form-control" required>
-                                            <span id="townError" class="error-message"></span>
-                                        </div><!-- End .col-sm-6 -->
+                                                <div class="address-item">
+                                                    <input type="radio" name="address">
+                                                    <p>
+                                                        <strong>
+                                                            <%= addr.fullName %>
+                                                        </strong> <br>
+                                                        <%= addr.phone %> <br>
+                                                            <%= addr.streetAddress %>, <%= addr.apartment %><br>
+                                                                    <%= addr.town %>, <%= addr.city %>, <%= addr.state
+                                                                                %> <br>
+                                                                                <%= addr.postcode %>
+                                                    </p>
+                                                </div>
+
+                                                <% }) %>
+                                                    <% } else { %>
+                                                        <p>No address found !. Add a new address</p>
+                                                        <% } %>
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <label>City *</label>
-                                            <input type="text" id="city" name="city" class="form-control" required>
-                                            <span id="cityError" class="error-message"></span>
-                                        </div><!-- End .col-sm-6 -->
-                                        <div class="col-sm-6">
-                                            <label>State *</label>
-                                            <input type="text" id="state" name="state" class="form-control" required>
-                                            <span id="stateError" class="error-message"></span>
-                                        </div>
-                                    </div><!-- End .row -->
-
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <label>Postcode *</label>
-                                            <input type="text" id="pin_code" name="pin_code" class="form-control"
-                                                required>
-                                            <span id="pinCodeError" class="error-message"></span>
-                                        </div><!-- End .col-sm-6 -->
-
-                                        <div class="col-sm-6">
-                                            <label>Phone *</label>
-                                            <input type="tel" id="phone" name="phone" class="form-control" required>
-                                            <span id="phoneError" class="error-message"></span>
-                                            <button id="sendOTP" class="btn btn-primary" style="display:none;">Send
-                                                OTP</button>
-                                            <button id="resendOTP" class="btn btn-secondary" style="display:none;"
-                                                disabled>Resend OTP</button>
-                                        </div><!-- End .col-sm-6 -->
-                                    </div><!-- End .row -->
-
-                                    <label>Email address *</label>
-                                    <input type="email" id="email" name="email" class="form-control" required>
-                                    <span id="emailError" class="error-message"></span>
-
-
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="checkout-create-acc">
-                                        <label class="custom-control-label" for="checkout-create-acc">Create an
-                                            account?</label>
-                                    </div><!-- End .custom-checkbox -->
-
-                                    <!-- <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="checkout-diff-address">
-                                        <label class="custom-control-label" for="checkout-diff-address">Ship to a
-                                            different address?</label>
-                                    </div>End .custom-checkbox -->
-
-                                    <label>Order notes (optional)</label>
-                                    <textarea class="form-control" cols="30" rows="4"
-                                        placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
-
-                                    
-
-                                    
                                 </div><!-- End .col-lg-9 -->
 
                                 <aside class="col-lg-3">
@@ -826,6 +791,68 @@
         </div><!-- End .modal-dialog -->
     </div><!-- End .modal -->
 
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addressModalLabel">Add New Address</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 25px;">
+                    <form id="addressForm">
+                        <div class="form-group">
+                            <label for="modalFullName">Full Name *</label>
+                            <input type="text" class="form-control" id="modalFullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="streetAddress">Street Address *</label>
+                            <input type="text" class="form-control" id="streetAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apartment">Apartment/Suite *</label>
+                            <input type="text" class="form-control" id="apartment">
+                        </div>
+                        <div class="form-group">
+                            <label for="town">Town *</label>
+                            <input type="text" class="form-control" id="town" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City *</label>
+                            <input type="text" class="form-control" id="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State *</label>
+                            <input type="text" class="form-control" id="state" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postcode">Postcode *</label>
+                            <input type="text" class="form-control" id="postcode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modalPhone">Phone *</label>
+                            <input type="text" class="form-control" id="modalPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modalEmail">Email *</label>
+                            <input type="email" class="form-control" id="modalEmail" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" form="addressForm" data-dismiss="modal">Save
+                        Address</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Plugins JS File -->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -860,11 +887,11 @@
                     const errorElement = document.getElementById(field.id + 'Error');
                     errorElement.textContent = errorMessage;
 
-                    
+
                 });
             });
 
-            
+
 
             function validateName(name) {
                 if (name.trim() === '') return 'This field is required.';
@@ -896,6 +923,240 @@
             }
         })
     </script>
+
+
+    <!-- retrieve and display the address -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedAddress = localStorage.getItem('billingAddress')
+            console.log('bilin addres get localstorage');
+            if (storedAddress) {
+                const address = JSON.parse(storedAddress)
+                displayBillingAddress(address)
+            }
+        })
+
+        function displayBillingAddress(address) {
+            const billingAddress = `
+            <p>${address.fullName}</p>
+            <p>${address.phone}</p>
+            <p>${address.email}</p>
+            <p>${address.streetAddress}</p>
+            <p>${address.apartment}</p>
+            <p>${address.town}, ${address.city}, ${address.state}, ${address.postcode}</p>
+            `;
+            const billingAddressElement = document.getElementById('billingAddress').innerHTML = billingAddress
+            if (billingAddressElement) {
+                billingAddressElement.innerHTML = billingAddress
+            } else {
+                console.log('Billing address element not found');
+            }
+        }   
+    </script>
+
+
+    <!-- add new address script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addressForm = document.getElementById('addressForm');
+
+            addressForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                if (validateAddressForm()) {
+                    const formData = {
+                        fullName: document.getElementById('modalFullName').value,
+                        streetAddress: document.getElementById('streetAddress').value,
+                        apartment: document.getElementById('apartment').value,
+                        town: document.getElementById('town').value,
+                        city: document.getElementById('city').value,
+                        state: document.getElementById('state').value,
+                        postcode: document.getElementById('postcode').value,
+                        phone: document.getElementById('modalPhone').value,
+                        email: document.getElementById('modalEmail').value
+                    };
+
+                    fetch('/account/address', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Response from server:', data);
+                            if (data.success) {
+                                const successMessage = `Address saved successfully!`;
+                                document.getElementById('successText').textContent = successMessage;
+                                document.getElementById('successMessage').classList.remove('d-none');
+                                setTimeout(() => {
+                                    document.getElementById('successMessage').classList.add('d-none');
+                                }, 2000);
+                                $('#addressModal').modal('hide');
+                                fetchAddresses();
+                            } else {
+                                const errorMessage = 'Error saving address.';
+                                document.getElementById('errorText').textContent = errorMessage;
+                                document.getElementById('errorMessage').classList.remove('d-none');
+                                setTimeout(() => {
+                                    document.getElementById('errorMessage').classList.add('d-none');
+                                }, 2000);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error saving address:', error);
+                            const errorMessage = 'Error saving address.';
+                            document.getElementById('errorText').textContent = errorMessage;
+                            document.getElementById('errorMessage').classList.remove('d-none');
+                            setTimeout(() => {
+                                document.getElementById('errorMessage').classList.add('d-none');
+                            }, 2000);
+                        });
+                }
+            });
+
+            function validateAddressForm() {
+                const phoneRegex = /^[1-9][0-9]{9}$/;
+                const phone = document.getElementById('modalPhone').value;
+
+                if (!phoneRegex.test(phone)) {
+                    alert('Phone Number must be 10 digits and cannot start with 0.');
+                    return false;
+                }
+
+                return true;
+            }
+
+            function fetchAddresses() {
+                fetch('/account/address')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const addressList = document.getElementById('addressList');
+                            addressList.innerHTML = '';
+
+                            data.addresses.forEach(address => {
+                                const addressItem = `
+                        <div class="address-item mb-3 p-3 border">
+                            
+                            <h6>${address.fullName}</h6>
+                            <p>${address.phone}, <br> ${address.streetAddress}, ${address.apartment}, ${address.town},<br> ${address.city}, ${address.state}, ${address.postcode}</p>
+                            <button class="btn btn-xm btn-primary edit-button" data-id="${address._id}" data-toggle="modal" data-target="#editAddressModal">Edit</button>
+                            <button class="btn btn-xm btn-danger delete-button" data-id="${address._id}">Delete</button>
+                        </div>
+                    `;
+                                addressList.innerHTML += addressItem;
+                            });
+
+                            // Re-select the previously selected address
+                            const selectedAddressId = localStorage.getItem('selectedAddressId');
+                            if (selectedAddressId) {
+                                console.log('Selected address ID from localStorage:', selectedAddressId);
+                                const radioButton = document.querySelector(`input[name="selectedAddress"][data-id="${selectedAddressId}"]`);
+                                if (radioButton) {
+                                    radioButton.checked = true;
+                                    updateBillingAddress(selectedAddressId);
+                                } else {
+                                    console.log('No radio button found for address ID:', selectedAddressId);
+                                }
+                            }
+
+                            document.querySelectorAll('input[name="selectedAddress"]').forEach(radio => {
+                                radio.addEventListener('change', function () {
+                                    const selectedAddressId = this.getAttribute('data-id');
+                                    localStorage.setItem('selectedAddressId', selectedAddressId);
+                                    updateBillingAddress(selectedAddressId);
+                                });
+                            });
+
+                            document.querySelectorAll('.edit-button').forEach(button => {
+                                button.addEventListener('click', function () {
+                                    const addressId = this.getAttribute('data-id');
+                                    const address = data.addresses.find(addr => addr._id === addressId);
+
+                                    if (address) {
+                                        document.getElementById('editAddressId').value = address._id;
+                                        document.getElementById('editFullName').value = address.fullName;
+                                        document.getElementById('editStreetAddress').value = address.streetAddress;
+                                        document.getElementById('editApartment').value = address.apartment;
+                                        document.getElementById('editTown').value = address.town;
+                                        document.getElementById('editCity').value = address.city;
+                                        document.getElementById('editState').value = address.state;
+                                        document.getElementById('editPostcode').value = address.postcode;
+                                        document.getElementById('editPhone').value = address.phone;
+                                        document.getElementById('editEmail').value = address.email;
+                                    }
+                                });
+                            });
+
+                            document.querySelectorAll('.delete-button').forEach(button => {
+                                button.addEventListener('click', function () {
+                                    const addressId = this.getAttribute('data-id');
+
+                                    fetch(`/account/address/${addressId}`, {
+                                        method: 'DELETE'
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                const successMessage = `Address deleted successfully!`;
+                                                document.getElementById('successText').textContent = successMessage;
+                                                document.getElementById('successMessage').classList.remove('d-none');
+                                                setTimeout(() => {
+                                                    document.getElementById('successMessage').classList.add('d-none');
+                                                }, 2000);
+                                                fetchAddresses();
+                                            } else {
+                                                const errorMessage = 'Error deleting address.';
+                                                document.getElementById('errorText').textContent = errorMessage;
+                                                document.getElementById('errorMessage').classList.remove('d-none');
+                                                setTimeout(() => {
+                                                    document.getElementById('errorMessage').classList.add('d-none');
+                                                }, 2000);
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error deleting address:', error);
+                                            const errorMessage = 'Error deleting address.';
+                                            document.getElementById('errorText').textContent = errorMessage;
+                                            document.getElementById('errorMessage').classList.remove('d-none');
+                                            setTimeout(() => {
+                                                document.getElementById('errorMessage').classList.add('d-none');
+                                            }, 2000);
+                                        });
+                                });
+                            });
+
+                        } else {
+                            const errorMessage = 'Error fetching address.';
+                            document.getElementById('errorText').textContent = errorMessage;
+                            document.getElementById('errorMessage').classList.remove('d-none');
+                            setTimeout(() => {
+                                document.getElementById('errorMessage').classList.add('d-none');
+                            }, 2000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching addresses:', error);
+                        const errorMessage = 'Error fetching addresses.';
+                        document.getElementById('errorText').textContent = errorMessage;
+                        document.getElementById('errorMessage').classList.remove('d-none');
+                        setTimeout(() => {
+                            document.getElementById('errorMessage').classList.add('d-none');
+                        }, 2000);
+                    });
+            }
+
+            fetchAddresses();
+        });
+
+
+    </script>
+
+
+
+
 
 
     <%- include('../layout/footer.ejs') %>

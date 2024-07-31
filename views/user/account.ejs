@@ -38,6 +38,108 @@
             margin-left: 10px;
             font-size: 12px;
         }
+
+        /* Custom button styles */
+        .btn-xm {
+            padding: 4px 8px;
+            /* Adjust the padding to make the button smaller */
+            font-size: 12px;
+            /* Adjust the font size */
+            border-radius: 0px;
+            /* Optional: adjust border radius for rounded corners */
+        }
+
+        .btn-xm.btn-primary {
+            background-color: #fff;
+            /* Primary button color */
+            border: 1px solid #c96;
+            /* Remove border */
+            color: #c96;
+            /* Text color */
+        }
+
+        .btn-xm.btn-danger {
+            background-color: #fff;
+            /* Danger button color */
+            border: 1px solid #c96;
+            ;
+            /* Remove border */
+            color: #c96;
+            /* Text color */
+        }
+
+        /* Optional: hover effects */
+        .btn-xm.btn-primary:hover {
+            background-color: #c96;
+            color: #fff;
+            /* Darker shade of primary color on hover */
+        }
+
+        .btn-xm.btn-danger:hover {
+            background-color: #c96;
+            color: #fff;
+            /* Darker shade of danger color on hover */
+        }
+
+        .address-item {
+            padding: 10px;
+            margin-bottom: 0px;
+            /* Space below each address item */
+            border-bottom: 1px solid #ddd;
+            /* Bottom border line */
+        }
+
+        .address-item:last-child {
+            border-bottom: none;
+            /* Remove border from the last item */
+        }
+
+        #successAddressMessage,
+        #errorAddressMessage {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 90%;
+            max-width: 300px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: center;
+            padding: 12px;
+            background-color: black;
+            color: white;
+        }
+
+        .btn-edit-address,
+        .btn-delete-address {
+            background-color: #fff;
+            color: #000000;
+            padding: 10px;
+            margin-left: -9px;
+            font-weight: bolder;
+        }
+
+        .btn-edit-address:hover {
+            color: #c96;
+
+        }
+
+        .btn-delete-address:hover {
+            color: #c96;
+
+        }
+
+        #addAddressBtn {
+            color: #c96;
+            background-color: #fff;
+            border: 1px solid #c96;
+        }
+
+        #addAddressBtn:hover {
+            color: white;
+            background-color: #c96;
+        }
     </style>
 
 
@@ -235,10 +337,11 @@
                         <div class="row">
                             <aside class="col-md-4 col-lg-3">
                                 <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab"
-                                            href="#tab-dashboard" role="tab" aria-controls="tab-dashboard"
-                                            aria-selected="true">Dashboard</a>
+                                        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account"
+                                            role="tab" aria-controls="tab-account" aria-selected="false">Account
+                                            Details</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders"
@@ -253,11 +356,7 @@
                                         <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address"
                                             role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account"
-                                            role="tab" aria-controls="tab-account" aria-selected="false">Account
-                                            Details</a>
-                                    </li>
+
                                     <li class="nav-item">
                                         <a class="nav-link" href="/logout">Sign Out</a>
                                     </li>
@@ -266,81 +365,7 @@
 
                             <div class="col-md-8 col-lg-9">
                                 <div class="tab-content">
-                                    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
-                                        aria-labelledby="tab-dashboard-link">
-                                        <p>Hello <span class="font-weight-normal text-dark">User</span> (not <span
-                                                class="font-weight-normal text-dark">User</span>? <a href="#">Log
-                                                out</a>)
-                                            <br>
-                                            From your account dashboard you can view your <a href="#tab-orders"
-                                                class="tab-trigger-link link-underline">recent orders</a>, manage your
-                                            <a href="#tab-address" class="tab-trigger-link">shipping and billing
-                                                addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit
-                                                your password and account details</a>.
-                                        </p>
-                                    </div><!-- .End .tab-pane -->
-
-                                    <div class="tab-pane fade" id="tab-orders" role="tabpanel"
-                                        aria-labelledby="tab-orders-link">
-                                        <p>No order has been made yet.</p>
-                                        <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
-                                                class="icon-long-arrow-right"></i></a>
-                                    </div><!-- .End .tab-pane -->
-
-                                    <div class="tab-pane fade" id="tab-downloads" role="tabpanel"
-                                        aria-labelledby="tab-downloads-link">
-                                        <p>No downloads available yet.</p>
-                                        <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
-                                                class="icon-long-arrow-right"></i></a>
-                                    </div><!-- .End .tab-pane -->
-
-                                    <div class="tab-pane fade" id="tab-address" role="tabpanel"
-                                        aria-labelledby="tab-address-link">
-                                        <button>
-                                            <a href="">
-                                                Add New Address
-                                            </a>
-                                        </button>
-                                        <p class="mt-1">The following addresses will be used on the checkout page by
-                                            default.</p>
-
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="card card-dashboard">
-                                                    <div class="card-body">
-                                                        <h3 class="card-title">Billing Address</h3>
-                                                        <!-- End .card-title -->
-
-
-
-                                                        <p>User Name<br>
-                                                            User Company<br>
-                                                            John str<br>
-                                                            New York, NY 10001<br>
-                                                            1-234-987-6543<br>
-                                                            yourmail@mail.com<br>
-                                                            <a href="#">Edit <i class="icon-edit"></i></a>
-                                                        </p>
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .card-dashboard -->
-                                            </div><!-- End .col-lg-6 -->
-
-                                            <div class="col-lg-6">
-                                                <div class="card card-dashboard">
-                                                    <div class="card-body">
-                                                        <h3 class="card-title">Shipping Address</h3>
-                                                        <!-- End .card-title -->
-
-                                                        <p>You have not set up this type of address yet.<br>
-                                                            <a href="#">Edit <i class="icon-edit"></i></a>
-                                                        </p>
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .card-dashboard -->
-                                            </div><!-- End .col-lg-6 -->
-                                        </div><!-- End .row -->
-                                    </div><!-- .End .tab-pane -->
-
-                                    <div class="tab-pane fade" id="tab-account" role="tabpanel"
+                                    <div class="tab-pane fade show active" id="tab-account" role="tabpanel"
                                         aria-labelledby="tab-account-link">
                                         <form id="userProfileForm" action="/account" method="post"
                                             data-user='<%- JSON.stringify(user) %>'>
@@ -397,7 +422,7 @@
                                             </button>
                                         </form>
                                         <div id="successMessage" class="success-message d-none">
-                                            <i class="fa fa-check" style="color: green;"></i>
+                                            <i class="fa fa-check" style="color: lime;"></i>
                                             <span id="successText"></span>
 
                                         </div>
@@ -407,6 +432,69 @@
                                         </div>
 
                                     </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="tab-orders" role="tabpanel"
+                                        aria-labelledby="tab-orders-link">
+                                        <p>No order has been made yet.</p>
+                                        <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+                                                class="icon-long-arrow-right"></i></a>
+                                    </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="tab-downloads" role="tabpanel"
+                                        aria-labelledby="tab-downloads-link">
+                                        <p>No downloads available yet.</p>
+                                        <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+                                                class="icon-long-arrow-right"></i></a>
+                                    </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="tab-address" role="tabpanel"
+                                        aria-labelledby="tab-address-link">
+                                        <button type="button" class="btn btn-outline-primary-2" data-toggle="modal"
+                                            data-target="#addressModal">
+                                            Add New Address
+                                        </button>
+                                        <p class="mt-1">The following addresses will be used on the checkout page by
+                                            default.</p>
+                                        <div id="addressLis" class="mb-3">
+                                        </div>
+
+
+                                        <div id="addressList" style="border: 1px solid #ccc;">
+                                            <!-- Address items will be dynamically added here -->
+                                        </div>
+
+
+
+                                        <!-- <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="card card-dashboard">
+                                                    <!-- <div class="card-body">
+                                                        <h3 class="card-title">Billing Address</h3>
+                                                        <p id="billingAddress">
+                                                            
+                                                            <a href="#" id="editBillingAddress">Edit <i
+                                                                    class="icon-edit"></i></a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <div class="card card-dashboard">
+                                                    <div class="card-body">
+                                                        <h3 class="card-title">Shipping Address</h3>
+                                                        
+
+                                                        <p>You have not set up this type of address yet.<br>
+                                                            <a href="#">Edit <i class="icon-edit"></i></a>
+                                                        </p>
+                                                    </div>
+                                                </div><
+                                            </div>
+                                        </div>End .row -->
+                                    </div><!-- .End .tab-pane -->
+
+
                                 </div>
                             </div><!-- End .col-lg-9 -->
                         </div><!-- End .row -->
@@ -421,8 +509,8 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget widget-about">
-                                <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105"
-                                    height="25">
+                                <img src="/assets/images/furnspace logo black.png" class="footer-logo" alt="Footer Logo"
+                                    width="105" height="25">
                                 <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
                                     magna eros eu erat. </p>
 
@@ -801,6 +889,147 @@
         </div><!-- End .modal-dialog -->
     </div><!-- End .modal -->
 
+    <!-- Add Address Modal -->
+    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="addressForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addressModalLabel">Add New Address</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="padding: 20px;">
+                        <div class="form-group">
+                            <label for="modalFullName">Full Name</label>
+                            <input type="text" class="form-control" id="modalFullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="streetAddress">Street Address</label>
+                            <input type="text" class="form-control" id="modalStreetAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apartment">Apartment</label>
+                            <input type="text" class="form-control" id="modalApartment">
+                        </div>
+                        <div class="form-group">
+                            <label for="town">Town</label>
+                            <input type="text" class="form-control" id="modalTown" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" class="form-control" id="modalCity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" class="form-control" id="modalState" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postcode">Postcode</label>
+                            <input type="text" class="form-control" id="modalPostcode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modalPhone">Phone</label>
+                            <input type="text" class="form-control" id="modalPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modalEmail">Email</label>
+                            <input type="email" class="form-control" id="modalEmail" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="addAddressBtn"
+                            data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="addAddressBtn">Save Address</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Address Modal -->
+    <!-- Edit Address Modal -->
+    <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editAddressForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="padding: 20px;">
+                        <input type="hidden" id="editAddressId">
+                        <div class="form-group">
+                            <label for="editFullName">Full Name</label>
+                            <input type="text" class="form-control" id="editFullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editStreetAddress">Street Address</label>
+                            <input type="text" class="form-control" id="editStreetAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editApartment">Apartment</label>
+                            <input type="text" class="form-control" id="editApartment">
+                        </div>
+                        <div class="form-group">
+                            <label for="editTown">Town</label>
+                            <input type="text" class="form-control" id="editTown" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCity">City</label>
+                            <input type="text" class="form-control" id="editCity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editState">State</label>
+                            <input type="text" class="form-control" id="editState" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPostcode">Postcode</label>
+                            <input type="text" class="form-control" id="editPostcode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPhone">Phone</label>
+                            <input type="text" class="form-control" id="editPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmail">Email</label>
+                            <input type="email" class="form-control" id="editEmail" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="addAddressBtn"
+                            data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="addAddressBtn">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Address List -->
+    <!-- <div id="addressList" class="mt-4">
+       
+    </div> -->
+
+    <!-- Success and Error Messages -->
+    <div id="successAddressMessage" class="alert d-none" role="alert">
+        <i class="fa fa-check" style="color: lime;"></i>
+        <span id="successAddressText"></span>
+    </div>
+    <div id="errorAddressMessage" class="alert d-none" role="alert">
+        <i class="fa fa-close" style="color: red;"></i>
+        <span id="errorAddressText"></span>
+    </div>
+
+
+
+
     <!-- Plugins JS File -->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -943,5 +1172,261 @@
             }, 3000);
         }
     </script>
+
+
+    <!-- add new address script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addressForm = document.getElementById('addressForm');
+            const editAddressForm = document.getElementById('editAddressForm');
+
+            // Add new address
+            addressForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                if (validateAddressForm()) {
+                    const formData = {
+                        fullName: document.getElementById('modalFullName').value,
+                        streetAddress: document.getElementById('modalStreetAddress').value,
+                        apartment: document.getElementById('modalApartment').value,
+                        town: document.getElementById('modalTown').value,
+                        city: document.getElementById('modalCity').value,
+                        state: document.getElementById('modalState').value,
+                        postcode: document.getElementById('modalPostcode').value,
+                        phone: document.getElementById('modalPhone').value,
+                        email: document.getElementById('modalEmail').value
+                    };
+
+                    fetch('/account/address', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            handleServerResponse(data, 'Address saved successfully!', 'Error saving address.');
+                            if (data.success) {
+                                $('#addressModal').modal('hide');
+                                const successMessage = `Added new address successfully!`;
+                                document.getElementById('successAddressText').textContent = successMessage;
+                                document.getElementById('successAddressMessage').classList.remove('d-none');
+                                fetchAddresses();
+                            } else {
+                                const errorMessage = `Error to add new address !`;
+                                document.getElementById('errorAddressText').textContent = errorMessage;
+                                document.getElementById('errorAddressMessage').classList.remove('d-none');
+                            }
+                        })
+                        .catch(error => {
+                            handleServerError(error, 'Error saving address.');
+                        });
+                    setTimeout(() => {
+                        document.getElementById('successAddressMessage').style.display = 'none';
+                        document.getElementById('errorAddressMessage').style.display = 'none';
+                    }, 3000);
+                }
+            });
+
+            // Edit address
+            editAddressForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                if (validateAddressForm('edit')) {
+                    const addressId = document.getElementById('editAddressId').value;
+                    const formData = {
+                        fullName: document.getElementById('editFullName').value,
+                        streetAddress: document.getElementById('editStreetAddress').value,
+                        apartment: document.getElementById('editApartment').value,
+                        town: document.getElementById('editTown').value,
+                        city: document.getElementById('editCity').value,
+                        state: document.getElementById('editState').value,
+                        postcode: document.getElementById('editPostcode').value,
+                        phone: document.getElementById('editPhone').value,
+                        email: document.getElementById('editEmail').value
+                    };
+
+                    fetch(`/account/address/update/${addressId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            handleServerResponse(data, 'Address updated successfully!', 'Error updating address.');
+                            if (data.success) {
+                                $('#editAddressModal').modal('hide');
+                                fetchAddresses();
+                                const successMessage = `Address updated successfully!`;
+                                document.getElementById('successAddressText').textContent = successMessage;
+                                document.getElementById('successAddressMessage').classList.remove('d-none');
+                            } else {
+                                const errorMessage = `Error to update!`;
+                                document.getElementById('errorAddressText').textContent = errorMessage;
+                                document.getElementById('errorAddressMessage').classList.remove('d-none');
+                            }
+                        })
+                        .catch(error => {
+                            handleServerError(error, 'Error updating address.');
+                        });
+                    // setTimeout(() => {
+                    //     document.getElementById('successAddressMessage').style.display = 'none';
+                    //     document.getElementById('errorAddressMessage').style.display = 'none';
+                    // }, 3000);
+                }
+            });
+
+            // Delete address
+            document.addEventListener('click', function (event) {
+                if (event.target && event.target.classList.contains('btn-delete-address')) {
+                    const addressId = event.target.getAttribute('data-id');
+                    if (confirm('Are you sure you want to delete this address?')) {
+                        fetch(`/account/address/${addressId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                handleServerResponse(data, 'Address deleted successfully!', 'Error deleting address.');
+                                if (data.success) {
+                                    fetchAddresses();
+                                    const successMessage = `Address deleted successfully!`;
+                                    document.getElementById('successAddressText').textContent = successMessage;
+                                    document.getElementById('successAddressMessage').classList.remove('d-none');
+                                } else {
+                                    const errorMessage = `Error to delete address !`;
+                                    document.getElementById('errorAddressText').textContent = errorMessage;
+                                    document.getElementById('errorAddressMessage').classList.remove('d-none');
+                                }
+                            })
+                            .catch(error => {
+                                handleServerError(error, 'Error deleting address.');
+                            });
+                        setTimeout(() => {
+                            document.getElementById('successAddressMessage').style.display = 'none';
+                            document.getElementById('errorAddressMessage').style.display = 'none';
+                        }, 3000);
+                    }
+                }
+            });
+
+            function validateAddressForm(prefix = 'modal') {
+                const requiredFields = ['FullName', 'StreetAddress', 'Town', 'City', 'State', 'Postcode', 'Phone', 'Email'];
+                for (let field of requiredFields) {
+                    const element = document.getElementById(`${prefix}${field}`);
+                    if (!element) {
+                        console.error(`Element with ID ${prefix}${field} not found`);
+                        return false;
+                    }
+                    if (element.value.trim() === '') {
+                        alert(`${field.replace(/([A-Z])/g, ' $1')} is required`);
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function handleServerResponse(data, successMessage, errorMessage) {
+                if (data.success) {
+                    document.getElementById('successText').innerText = successMessage;
+                    document.getElementById('successMessage').classList.remove('d-none');
+                    setTimeout(() => {
+                        document.getElementById('successMessage').classList.add('d-none');
+                    }, 3000);
+                } else {
+                    document.getElementById('errorText').innerText = errorMessage;
+                    document.getElementById('errorMessage').classList.remove('d-none');
+                    setTimeout(() => {
+                        document.getElementById('errorMessage').classList.add('d-none');
+                    }, 3000);
+                }
+            }
+
+            function handleServerError(error, errorMessage) {
+                console.error('Error:', error);
+                document.getElementById('errorText').innerText = errorMessage;
+                document.getElementById('errorMessage').classList.remove('d-none');
+                setTimeout(() => {
+                    document.getElementById('errorMessage').classList.add('d-none');
+                }, 3000);
+            }
+
+            function fetchAddresses() {
+                fetch('/account/addresses') // Ensure this endpoint is correct
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Fetched data:', data); // Log the data to inspect its structure
+
+                        if (data.success && Array.isArray(data.addresses)) { // Check if `data.addresses` is an array
+                            const addressList = document.getElementById('addressList');
+                            addressList.innerHTML = '';
+                            data.addresses.forEach(address => {
+                                const addressItem = document.createElement('div');
+                                addressItem.className = 'address-item';
+                                addressItem.innerHTML = `
+            <p><strong>${address.fullName}</strong></p>
+            <p>${address.streetAddress},${address.apartment} <br>
+                ${address.town},${address.city} <br>
+                ${address.state},${address.postcode} <br>
+                ${address.phone} <br>
+                ${address.email}</p>
+           
+            <a href="#" class=" btn-edit-address" data-id="${address._id}">Edit</a>
+                        <a href="#" class=" btn-delete-address" data-id="${address._id}">Delete</a
+          `;
+                                addressList.appendChild(addressItem);
+                            });
+
+                            // Add event listeners for edit buttons
+                            const editButtons = document.querySelectorAll('.btn-edit-address');
+                            editButtons.forEach(button => {
+                                button.addEventListener('click', function () {
+                                    const addressId = this.getAttribute('data-id');
+                                    const address = data.addresses.find(addr => addr._id === addressId);
+                                    if (address) {
+                                        document.getElementById('editAddressId').value = address._id;
+                                        document.getElementById('editFullName').value = address.fullName;
+                                        document.getElementById('editStreetAddress').value = address.streetAddress;
+                                        document.getElementById('editApartment').value = address.apartment;
+                                        document.getElementById('editTown').value = address.town;
+                                        document.getElementById('editCity').value = address.city;
+                                        document.getElementById('editState').value = address.state;
+                                        document.getElementById('editPostcode').value = address.postcode;
+                                        document.getElementById('editPhone').value = address.phone;
+                                        document.getElementById('editEmail').value = address.email;
+
+                                        $('#editAddressModal').modal('show');
+                                    }
+                                });
+                            });
+                        } else {
+                            console.error('Expected an array but got:', data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching addresses:', error);
+                    });
+            }
+
+
+            fetchAddresses();
+
+        });
+
+
+
+    </script>
+
+
+
+
+
+
+
 
     <%- include('../layout/footer.ejs') %>

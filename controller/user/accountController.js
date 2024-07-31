@@ -4,6 +4,7 @@ const Category = require("../../model/categoryModel");
 const userModel = require("../../model/userModel");
 const Wishlist = require("../../model/wishlistModel");
 const Cart = require("../../model/cartModel");
+const Address = require("../../model/addressModel");
 
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
@@ -49,7 +50,7 @@ const loadProfile = async (req, res) => {
     const userDetails = user
       ? {
           fullName: user.name,
-          displayName: user.displayName,
+          displayName: user.displayName || user.name,
           phone: user.phone,
           email: user.email,
         }
@@ -194,6 +195,92 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// add new address
+const addAddress = async (req, res) => {
+  try {
+    const { fullName, streetAddress, apartment, town, city, state, postcode, phone, email } = req.body;
+    const user = req.session.user || req.user;
+    const userId = user ? user._id : null;
+    const newAddress = new Address({
+      fullName,
+      streetAddress,
+      apartment,
+      town,
+      city,
+      state,
+      postcode,
+      phone,
+      email,
+      userId,
+    });
+
+    await newAddress.save();
+    res.status(200).json({ message: "Address saved successfully", success: true });
+  } catch (error) {
+    console.log("Error saving address", error);
+    res.status(500).json({ message: "Error saving address", success: false });
+  }
+};
+
+const loadAddress = async (req, res) => {
+  try {
+    const user = req.session.user || req.user;
+    const userId = user ? user._id : null;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID not found." });
+    }
+
+    console.log("Fetching addresses for userId:", userId);
+
+    const addresses = await Address.find({ userId: userId });
+
+    res.status(200).json({ success: true, addresses });
+  } catch (error) {
+    console.error("Error fetching addresses:", error);
+    res.status(500).json({ success: false, message: "Error fetching addresses." });
+  }
+};
+
+// Assuming you have an endpoint to fetch all addresses
+const getAddress = async (req, res) => {
+  try {
+    const user = req.session.user || req.user;
+    const userId = user ? user._id : null;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID not found." });
+    }
+    const addresses = await Address.find({userId}); // Fetch all addresses
+    res.status(200).json({ success: true, addresses }); // Return addresses as an array
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching addresses.' });
+  }
+};
+
+
+
+const updateAddress = async (req, res) => {
+  try {
+    const addressId = req.params.id;
+    const { fullName, streetAddress, apartment, town, city, state, postcode, phone, email } = req.body;
+    await Address.findByIdAndUpdate(addressId, { fullName, streetAddress, apartment, town, city, state, postcode, phone, email });
+    res.status(200).json({ success: true, message: "Address updated successfully." });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error updating address." });
+  }
+};
+
+const deleteAddress = async (req, res) => {
+  try {
+    const addressId = req.params.id;
+    await Address.findByIdAndDelete(addressId);
+    res.status(200).json({ success: true, message: "Address deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error deleting address." });
+  }
+};
+
 module.exports = {
   loadProfile,
   updateProfile,
@@ -201,4 +288,9 @@ module.exports = {
   verifyForgetPassword,
   resetPasswordPage,
   resetPassword,
+  addAddress,
+  loadAddress,
+  updateAddress,
+  deleteAddress,
+  getAddress,
 };

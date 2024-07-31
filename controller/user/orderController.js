@@ -2,7 +2,7 @@
 const Wishlist = require("../../model/wishlistModel");
 const Cart = require("../../model/cartModel");
 const Order = require("../../model/orderModel");
-
+const Address = require("../../model/addressModel");
 //load the check out page
 const loadCheckout = async (req, res) => {
   try {
@@ -21,10 +21,16 @@ const loadCheckout = async (req, res) => {
       const cart = await Cart.findOne({ userId }).populate("items.productId");
       cartItems = cart ? cart.items : [];
     }
+
+    const addresses = await Address.find({ userId });
+    console.log(addresses);
+    
+
     res.render("checkout", {
       user,
       wishlistItems,
       cartItems,
+      addresses
     });
   } catch (error) {
     console.log(error);
@@ -36,7 +42,6 @@ const insertAddress = async (req, res) => {
   // try {
   //   const user = req.session.user || req.user;
   //   const userId = user ? user._id : null;
-
   //   if(!userId){
   //       return res.status(401).json({message:"User not found"})
   //   }

@@ -63,6 +63,18 @@ userRoute.post("/forget-password", accountController.verifyForgetPassword);
 userRoute.get("/reset-password", accountController.resetPasswordPage);
 userRoute.post("/reset-password", accountController.resetPassword);
 
+//manage checkout address, order, dashboard
+// userRoute.post("/account/address",auth.isUserAuthenticated,accountController.addAddress)
+// userRoute.get('/account/address',auth.isUserAuthenticated,accountController.loadAddress)
+// userRoute.patch('/account/address/update/:id',auth.isUserAuthenticated,accountController.editAddress)
+// userRoute.delete('/account/address/:id',auth.isUserAuthenticated,accountController.deleteAddress)
+// userRoute.get('/account/address/:id', auth.isUserAuthenticated, accountController.getAddressById);
+userRoute.post('/account/address', accountController.addAddress);
+userRoute.get('/account/address', accountController.loadAddress);
+userRoute.get('/account/addresses', accountController.getAddress);
+userRoute.patch('/account/address/update/:id', accountController.updateAddress);
+userRoute.delete('/account/address/:id', accountController.deleteAddress);
+
 // Authentication Routes
 const authRoute = require("./authRoutes"); // Ensure this path is correct
 userRoute.use("/", authRoute);
