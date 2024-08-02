@@ -364,7 +364,7 @@
                         <div class="product">
                           <% if(item.productId && item.productId.imageUrl_1){ %>
                             <figure class="product-media">
-                              <a href="#">
+                              <a href="/product/<%= item.productId._id %>">
                                 <img src="<%= item.productId.imageUrl_1 %>" alt="Product image">
                               </a>
                             </figure>
@@ -373,7 +373,7 @@
                               <% } %>
                                 <% if(item.productId){ %>
                                   <h3 class="product-title">
-                                    <a href="#">
+                                    <a href="/product/<%= item.productId._id %>">
                                       <%= item.productId.name %>
                                     </a>
                                   </h3><!-- End .product-title -->

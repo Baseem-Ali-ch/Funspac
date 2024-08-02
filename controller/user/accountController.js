@@ -5,6 +5,7 @@ const userModel = require("../../model/userModel");
 const Wishlist = require("../../model/wishlistModel");
 const Cart = require("../../model/cartModel");
 const Address = require("../../model/addressModel");
+const Order = require("../../model/orderModel");
 
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
@@ -46,7 +47,9 @@ const loadProfile = async (req, res) => {
       cartItems = cart ? cart.items : [];
     }
     const categories = await Category.find({ isListed: "true" });
-
+    const orders = await Order.find({ user: userId }).populate('items.product').populate("address");
+    
+     
     const userDetails = user
       ? {
           fullName: user.name,
@@ -61,6 +64,7 @@ const loadProfile = async (req, res) => {
       categories,
       wishlistItems,
       cartItems,
+      orders,
     });
   } catch (error) {
     console.log(error);
@@ -251,14 +255,12 @@ const getAddress = async (req, res) => {
     if (!userId) {
       return res.status(400).json({ success: false, message: "User ID not found." });
     }
-    const addresses = await Address.find({userId}); // Fetch all addresses
+    const addresses = await Address.find({ userId }); // Fetch all addresses
     res.status(200).json({ success: true, addresses }); // Return addresses as an array
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching addresses.' });
+    res.status(500).json({ success: false, message: "Error fetching addresses." });
   }
 };
-
-
 
 const updateAddress = async (req, res) => {
   try {

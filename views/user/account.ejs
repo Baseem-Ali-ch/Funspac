@@ -140,6 +140,104 @@
             color: white;
             background-color: #c96;
         }
+
+        .table-cart {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-cart th,
+        .table-cart td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table-cart th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .table-cart a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .table-cart a:hover {
+            text-decoration: underline;
+        }
+
+        .table-cart .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: #fff;
+        }
+
+        .table-cart .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .modal-header {
+            background-color: #343a40;
+            color: #fff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .modal-title {
+            font-weight: bold;
+        }
+
+        .modal-header .close {
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .table {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .modal-footer {
+            background-color: #f1f1f1;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .modal-footer .btn {
+            font-weight: bold;
+        }
+
+        #viewOrder {
+            border: 1px solid #c96;
+            color: #c96;
+            background-color: white;
+        }
+
+        #viewOrder:hover {
+            color: #fff;
+            background-color: #c96;
+        }
     </style>
 
 
@@ -335,7 +433,7 @@
                 <div class="dashboard">
                     <div class="container">
                         <div class="row">
-                            <aside class="col-md-4 col-lg-3">
+                            <aside class="col-md-4 col-lg-3" style="margin-left: -2em;">
                                 <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
 
                                     <li class="nav-item">
@@ -433,10 +531,50 @@
 
                                     </div><!-- .End .tab-pane -->
 
+
+
                                     <div class="tab-pane fade" id="tab-orders" role="tabpanel"
                                         aria-labelledby="tab-orders-link">
-                                        <p>No order has been made yet.</p>
-                                        <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+
+                                        <div class="" style="width: 66em;">
+                                            <table class="table table-cart table-mobile">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 25%;">Order ID</th>
+                                                        <th style="width: 30%;">Address Name</th>
+                                                        <th style="width: 20%;">Price</th>
+                                                        <th style="width: 20%;">Status</th>
+                                                        <th style="width: 10%;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% orders.forEach(order=> { %>
+                                                        <tr>
+                                                            <td><a href="#">
+                                                                    <%= order._id %>
+                                                                </a></td>
+                                                            <td>
+                                                                <%= order.address.fullName %>
+                                                            </td>
+                                                            <td>
+                                                                <%= order.totalPrice %>
+                                                            </td>
+                                                            <td>
+                                                                <%= order.order_status %>
+                                                            </td>
+                                                            <td><button class="btn btn-md" id="viewOrder"
+                                                                    data-toggle="modal"
+                                                                    data-target="#orderDetailsModal<%= order._id %>">View
+                                                                    Order</button>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                        <a href="/product-list" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
                                                 class="icon-long-arrow-right"></i></a>
                                     </div><!-- .End .tab-pane -->
 
@@ -905,38 +1043,47 @@
                         <div class="form-group">
                             <label for="modalFullName">Full Name</label>
                             <input type="text" class="form-control" id="modalFullName" required>
+                            <div class="invalid-feedback">Full Name is required.</div>
                         </div>
                         <div class="form-group">
                             <label for="streetAddress">Street Address</label>
                             <input type="text" class="form-control" id="modalStreetAddress" required>
+                            <div class="invalid-feedback">Street Address is required.</div>
                         </div>
                         <div class="form-group">
                             <label for="apartment">Apartment</label>
                             <input type="text" class="form-control" id="modalApartment">
+
                         </div>
                         <div class="form-group">
                             <label for="town">Town</label>
                             <input type="text" class="form-control" id="modalTown" required>
+                            <div class="invalid-feedback">Town is required.</div>
                         </div>
                         <div class="form-group">
                             <label for="city">City</label>
                             <input type="text" class="form-control" id="modalCity" required>
+                            <div class="invalid-feedback">City is required.</div>
                         </div>
                         <div class="form-group">
                             <label for="state">State</label>
                             <input type="text" class="form-control" id="modalState" required>
+                            <div class="invalid-feedback">State is required.</div>
                         </div>
                         <div class="form-group">
                             <label for="postcode">Postcode</label>
                             <input type="text" class="form-control" id="modalPostcode" required>
+                            <div class="invalid-feedback">Postcode is required.</div>
                         </div>
                         <div class="form-group">
                             <label for="modalPhone">Phone</label>
                             <input type="text" class="form-control" id="modalPhone" required>
+                            <div class="invalid-feedback">Phone is required.</div>
                         </div>
                         <div class="form-group">
                             <label for="modalEmail">Email</label>
                             <input type="email" class="form-control" id="modalEmail" required>
+                            <div class="invalid-feedback">Valid Email is required.</div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -949,7 +1096,7 @@
         </div>
     </div>
 
-    <!-- Edit Address Modal -->
+
     <!-- Edit Address Modal -->
     <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel"
         aria-hidden="true">
@@ -1027,177 +1174,287 @@
         <span id="errorAddressText"></span>
     </div>
 
+    <!-- confirm popup for delete the address -->
+    <div id="confirmDeleteModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 26em; margin-left: 18%;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remove Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="margin-left: 10px; b">
+                    <p>Are you sure you want to remove this item?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm " id="confirmDelete">REMOVE</button>
+                    <button type="button" class="btn " data-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <% orders.forEach(order=> { %>
+        <div class="modal fade" id="orderDetailsModal<%= order._id %>" tabindex="-1" role="dialog"
+            aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderDetailsModalLabel" style="color: #fff;">Order Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body" style="padding: 20px;">
+
+                        <!-- Order Information -->
+                        <div class="row mb-4">
+                            <div class="col-md-6"
+                                style="padding: 15px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                                <h6>Order Information</h6>
+                                <p><strong>Order ID:</strong>
+                                    <%= order._id %>
+                                </p>
+                                <p><strong>Order Date:</strong>
+                                    <%= order.createdAt.toLocaleDateString() %>
+                                </p>
+                                <p><strong>Total Amount:</strong> ₹<%= order.totalPrice %>
+                                </p>
+                                <p><strong>Order Status:</strong>
+                                    <%= order.order_status %>
+                                </p>
+                                <p><strong>Payment Type:</strong>
+                                    <%= order.paymentMethod %>
+                                </p>
+                                <p><strong>Payment Status:</strong>
+                                    <%= order.payment_status %>
+                                </p>
+                            </div>
+                            <div class="col-md-6"
+                                style="padding: 15px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                                <h6>Shipping Address</h6>
+                                <p><strong>Name:</strong>
+                                    <%= order.address.fullName %>
+                                </p>
+                                <p><strong>Street:</strong>
+                                    <%= order.address.street %>
+                                </p>
+                                <p><strong>City:</strong>
+                                    <%= order.address.city %>, <%= order.address.state %>
+                                            <%= order.address.zip %>
+                                </p>
+                                <p><strong>Country:</strong>
+                                    <%= order.address.country %>
+                                </p>
+                                <p><strong>Phone:</strong>
+                                    <%= order.address.phone %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Order Items -->
+                        <h6>Order Items</h6>
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% order.items.forEach(item=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= item.product.name %>
+                                        </td>
+                                        <td>
+                                            <%= item.quantity %>
+                                        </td>
+                                        <td>₹<%= item.product.price %>
+                                        </td>
+                                        <td>₹<%= item.quantity * item.product.price %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <div id="cancellationForm_<%= order._id %>" style="display: none; width: 100%;">
+                            <textarea id="cancellationReason_<%= order._id %>" class="form-control mb-2" rows="3"
+                                placeholder="Please provide a reason for cancellation"></textarea>
+                            <button type="button" class="btn btn-secondary"
+                                onclick="hideCancellationForm('<%= order._id %>')">Back</button>
+                            <button type="button" class="btn btn-danger"
+                                onclick="submitCancellation('<%= order._id %>')">Confirm Cancellation</button>
+                        </div>
+                        <% if (order.order_status !=='Cancel' ) { %>
+                            <button type="button" id="cancelButton_<%= order._id %>" class="btn btn-md btn-danger"
+                                onclick="showCancellationForm('<%= order._id %>')">Cancel Order</button>
+                            <% } %>
+                                <button type="button" class="btn btn-md" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <% }) %>
+
+            <!-- Plugins JS File -->
+            <script src="assets/js/jquery.min.js"></script>
+            <script src="assets/js/bootstrap.bundle.min.js"></script>
+            <script src="assets/js/jquery.hoverIntent.min.js"></script>
+            <script src="assets/js/jquery.waypoints.min.js"></script>
+            <script src="assets/js/superfish.min.js"></script>
+            <script src="assets/js/owl.carousel.min.js"></script>
+            <!-- Main JS File -->
+            <script src="assets/js/main.js"></script>
 
 
-
-    <!-- Plugins JS File -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/jquery.hoverIntent.min.js"></script>
-    <script src="assets/js/jquery.waypoints.min.js"></script>
-    <script src="assets/js/superfish.min.js"></script>
-    <script src="assets/js/owl.carousel.min.js"></script>
-    <!-- Main JS File -->
-    <script src="assets/js/main.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const userProfileForm = document.getElementById('userProfileForm');
-            const userDetails = JSON.parse(userProfileForm.dataset.user);
-            console.log('User Details:', userDetails);
-
-            if (userDetails) {
-                document.getElementById('fullName').value = userDetails.fullName || '';
-                document.getElementById('displayName').value = userDetails.displayName || '';
-                document.getElementById('phone').value = userDetails.phone || '';
-                document.getElementById('email').value = userDetails.email || '';
-            }
-
-            document.getElementById('editButton').addEventListener('click', function () {
-                toggleEdit(true);
-            });
-
-            document.getElementById('saveButton').addEventListener('click', function (event) {
-                event.preventDefault();
-                if (validateForm()) {
-                    updateUserProfile();
+            <script>
+                function showCancellationForm(orderId) {
+                    document.getElementById(`cancellationForm_${orderId}`).style.display = 'block';
+                    document.getElementById(`cancelButton_${orderId}`).style.display = 'none';
                 }
-            });
 
-            document.getElementById('userProfileForm').addEventListener('submit', function (event) {
-                event.preventDefault();
-                if (validateForm()) {
-                    updateUserProfile();
+                function hideCancellationForm(orderId) {
+                    document.getElementById(`cancellationForm_${orderId}`).style.display = 'none';
+                    document.getElementById(`cancelButton_${orderId}`).style.display = 'inline-block';
                 }
-            });
-        });
 
-        function toggleEdit(editable) {
-            const fields = ['fullName', 'displayName', 'phone', 'email'];
-            fields.forEach(field => {
-                document.getElementById(field).readOnly = !editable;
-            });
-
-            document.getElementById('editButton').classList.toggle('d-none', editable);
-            document.getElementById('saveButton').classList.toggle('d-none', !editable);
-        }
-
-        function validateForm() {
-            const fullNameInput = document.getElementById('fullName');
-            const displayNameInput = document.getElementById('displayName');
-            const phoneInput = document.getElementById('phone');
-            const fullNameError = document.getElementById('fullNameError');
-            const displayNameError = document.getElementById('displayNameError');
-            const phoneError = document.getElementById('phoneError');
-
-            const nameRegex = /^[A-Za-z\s]+$/;
-            const phoneRegex = /^[1-9][0-9]{9}$/;
-
-            let isValid = true;
-
-            if (!nameRegex.test(fullNameInput.value)) {
-                fullNameError.classList.remove('d-none');
-                fullNameInput.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                fullNameError.classList.add('d-none');
-                fullNameInput.classList.remove('is-invalid');
-            }
-
-            if (!nameRegex.test(displayNameInput.value)) {
-                displayNameError.classList.remove('d-none');
-                displayNameInput.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                displayNameError.classList.add('d-none');
-                displayNameInput.classList.remove('is-invalid');
-            }
-
-            if (!phoneRegex.test(phoneInput.value)) {
-                phoneError.classList.remove('d-none');
-                phoneInput.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                phoneError.classList.add('d-none');
-                phoneInput.classList.remove('is-invalid');
-            }
-
-            return isValid;
-        }
-
-        function updateUserProfile() {
-            const formData = {
-                fullName: document.getElementById('fullName').value,
-                displayName: document.getElementById('displayName').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-            };
-
-            fetch('/account', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Response from server:', data);
-                    if (data.success) {
-                        const successMessage = `You've changed this profile successfully!`;
-                        document.getElementById('successText').textContent = successMessage;
-                        document.getElementById('successMessage').classList.remove('d-none');
-                        // Update the form fields with the new data
-                        document.getElementById('fullName').value = data.fullName;
-                        document.getElementById('displayName').value = data.displayName;
-                        document.getElementById('phone').value = data.phone;
-                        document.getElementById('email').value = data.email;
-                        toggleEdit(false); // Revert the fields to read-only mode
-                    } else {
-                        const errorMessage = `Error updating profile!`;
-                        document.getElementById('errorText').textContent = errorMessage;
-                        document.getElementById('errorMessage').classList.remove('d-none');
+                function submitCancellation(orderId) {
+                    const reason = document.getElementById(`cancellationReason_${orderId}`).value;
+                    if (!reason.trim()) {
+                        alert('Please provide a reason for cancellation.');
+                        return;
                     }
-                })
-                .catch(error => {
-                    console.error('Error updating profile:', error);
-                    const errorMessage = `Error updating profile!`;
-                    document.getElementById('errorText').textContent = errorMessage;
-                    document.getElementById('errorMessage').classList.remove('d-none');
+
+                    // Create a form dynamically
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/account/order-status';
+
+                    const orderIdInput = document.createElement('input');
+                    orderIdInput.type = 'hidden';
+                    orderIdInput.name = 'orderId';
+                    orderIdInput.value = orderId;
+
+                    const reasonInput = document.createElement('input');
+                    reasonInput.type = 'hidden';
+                    reasonInput.name = 'cancellationReason';
+                    reasonInput.value = reason;
+
+                    form.appendChild(orderIdInput);
+                    form.appendChild(reasonInput);
+
+                    // Append the form to the body and submit it
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            </script>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const userProfileForm = document.getElementById('userProfileForm');
+                    const userDetails = JSON.parse(userProfileForm.dataset.user);
+                    console.log('User Details:', userDetails);
+
+                    if (userDetails) {
+                        document.getElementById('fullName').value = userDetails.fullName || '';
+                        document.getElementById('displayName').value = userDetails.displayName || '';
+                        document.getElementById('phone').value = userDetails.phone || '';
+                        document.getElementById('email').value = userDetails.email || '';
+                    }
+
+                    document.getElementById('editButton').addEventListener('click', function () {
+                        toggleEdit(true);
+                    });
+
+                    document.getElementById('saveButton').addEventListener('click', function (event) {
+                        event.preventDefault();
+                        if (validateForm()) {
+                            updateUserProfile();
+                        }
+                    });
+
+                    document.getElementById('userProfileForm').addEventListener('submit', function (event) {
+                        event.preventDefault();
+                        if (validateForm()) {
+                            updateUserProfile();
+                        }
+                    });
                 });
 
-            setTimeout(() => {
-                document.getElementById('successMessage').style.display = 'none';
-                document.getElementById('errorMessage').style.display = 'none';
-            }, 3000);
-        }
-    </script>
+                function toggleEdit(editable) {
+                    const fields = ['fullName', 'displayName', 'phone', 'email'];
+                    fields.forEach(field => {
+                        document.getElementById(field).readOnly = !editable;
+                    });
 
+                    document.getElementById('editButton').classList.toggle('d-none', editable);
+                    document.getElementById('saveButton').classList.toggle('d-none', !editable);
+                }
 
-    <!-- add new address script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const addressForm = document.getElementById('addressForm');
-            const editAddressForm = document.getElementById('editAddressForm');
+                function validateForm() {
+                    const fullNameInput = document.getElementById('fullName');
+                    const displayNameInput = document.getElementById('displayName');
+                    const phoneInput = document.getElementById('phone');
+                    const fullNameError = document.getElementById('fullNameError');
+                    const displayNameError = document.getElementById('displayNameError');
+                    const phoneError = document.getElementById('phoneError');
 
-            // Add new address
-            addressForm.addEventListener('submit', function (event) {
-                event.preventDefault();
+                    const nameRegex = /^[A-Za-z\s]+$/;
+                    const phoneRegex = /^[1-9][0-9]{9}$/;
 
-                if (validateAddressForm()) {
+                    let isValid = true;
+
+                    if (!nameRegex.test(fullNameInput.value)) {
+                        fullNameError.classList.remove('d-none');
+                        fullNameInput.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        fullNameError.classList.add('d-none');
+                        fullNameInput.classList.remove('is-invalid');
+                    }
+
+                    if (!nameRegex.test(displayNameInput.value)) {
+                        displayNameError.classList.remove('d-none');
+                        displayNameInput.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        displayNameError.classList.add('d-none');
+                        displayNameInput.classList.remove('is-invalid');
+                    }
+
+                    if (!phoneRegex.test(phoneInput.value)) {
+                        phoneError.classList.remove('d-none');
+                        phoneInput.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        phoneError.classList.add('d-none');
+                        phoneInput.classList.remove('is-invalid');
+                    }
+
+                    return isValid;
+                }
+
+                function updateUserProfile() {
                     const formData = {
-                        fullName: document.getElementById('modalFullName').value,
-                        streetAddress: document.getElementById('modalStreetAddress').value,
-                        apartment: document.getElementById('modalApartment').value,
-                        town: document.getElementById('modalTown').value,
-                        city: document.getElementById('modalCity').value,
-                        state: document.getElementById('modalState').value,
-                        postcode: document.getElementById('modalPostcode').value,
-                        phone: document.getElementById('modalPhone').value,
-                        email: document.getElementById('modalEmail').value
+                        fullName: document.getElementById('fullName').value,
+                        displayName: document.getElementById('displayName').value,
+                        phone: document.getElementById('phone').value,
+                        email: document.getElementById('email').value,
                     };
 
-                    fetch('/account/address', {
+                    fetch('/account', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1206,84 +1463,160 @@
                     })
                         .then(response => response.json())
                         .then(data => {
-                            handleServerResponse(data, 'Address saved successfully!', 'Error saving address.');
+                            console.log('Response from server:', data);
                             if (data.success) {
-                                $('#addressModal').modal('hide');
-                                const successMessage = `Added new address successfully!`;
-                                document.getElementById('successAddressText').textContent = successMessage;
-                                document.getElementById('successAddressMessage').classList.remove('d-none');
-                                fetchAddresses();
+                                const successMessage = `You've changed this profile successfully!`;
+                                document.getElementById('successText').textContent = successMessage;
+                                document.getElementById('successMessage').classList.remove('d-none');
+                                // Update the form fields with the new data
+                                document.getElementById('fullName').value = data.fullName;
+                                document.getElementById('displayName').value = data.displayName;
+                                document.getElementById('phone').value = data.phone;
+                                document.getElementById('email').value = data.email;
+                                toggleEdit(false); // Revert the fields to read-only mode
                             } else {
-                                const errorMessage = `Error to add new address !`;
-                                document.getElementById('errorAddressText').textContent = errorMessage;
-                                document.getElementById('errorAddressMessage').classList.remove('d-none');
+                                const errorMessage = `Error updating profile!`;
+                                document.getElementById('errorText').textContent = errorMessage;
+                                document.getElementById('errorMessage').classList.remove('d-none');
                             }
                         })
                         .catch(error => {
-                            handleServerError(error, 'Error saving address.');
+                            console.error('Error updating profile:', error);
+                            const errorMessage = `Error updating profile!`;
+                            document.getElementById('errorText').textContent = errorMessage;
+                            document.getElementById('errorMessage').classList.remove('d-none');
                         });
+
                     setTimeout(() => {
-                        document.getElementById('successAddressMessage').style.display = 'none';
-                        document.getElementById('errorAddressMessage').style.display = 'none';
+                        document.getElementById('successMessage').style.display = 'none';
+                        document.getElementById('errorMessage').style.display = 'none';
                     }, 3000);
                 }
-            });
+            </script>
 
-            // Edit address
-            editAddressForm.addEventListener('submit', function (event) {
-                event.preventDefault();
 
-                if (validateAddressForm('edit')) {
-                    const addressId = document.getElementById('editAddressId').value;
-                    const formData = {
-                        fullName: document.getElementById('editFullName').value,
-                        streetAddress: document.getElementById('editStreetAddress').value,
-                        apartment: document.getElementById('editApartment').value,
-                        town: document.getElementById('editTown').value,
-                        city: document.getElementById('editCity').value,
-                        state: document.getElementById('editState').value,
-                        postcode: document.getElementById('editPostcode').value,
-                        phone: document.getElementById('editPhone').value,
-                        email: document.getElementById('editEmail').value
-                    };
+            <!-- add new address script -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const addressForm = document.getElementById('addressForm');
+                    const editAddressForm = document.getElementById('editAddressForm');
 
-                    fetch(`/account/address/update/${addressId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(formData)
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            handleServerResponse(data, 'Address updated successfully!', 'Error updating address.');
-                            if (data.success) {
-                                $('#editAddressModal').modal('hide');
-                                fetchAddresses();
-                                const successMessage = `Address updated successfully!`;
-                                document.getElementById('successAddressText').textContent = successMessage;
-                                document.getElementById('successAddressMessage').classList.remove('d-none');
-                            } else {
-                                const errorMessage = `Error to update!`;
-                                document.getElementById('errorAddressText').textContent = errorMessage;
-                                document.getElementById('errorAddressMessage').classList.remove('d-none');
-                            }
-                        })
-                        .catch(error => {
-                            handleServerError(error, 'Error updating address.');
-                        });
-                    // setTimeout(() => {
-                    //     document.getElementById('successAddressMessage').style.display = 'none';
-                    //     document.getElementById('errorAddressMessage').style.display = 'none';
-                    // }, 3000);
-                }
-            });
+                    // Add new address
+                    addressForm.addEventListener('submit', function (event) {
+                        event.preventDefault();
 
-            // Delete address
-            document.addEventListener('click', function (event) {
-                if (event.target && event.target.classList.contains('btn-delete-address')) {
-                    const addressId = event.target.getAttribute('data-id');
-                    if (confirm('Are you sure you want to delete this address?')) {
+                        if (validateAddressForm()) {
+                            const formData = {
+                                fullName: document.getElementById('modalFullName').value,
+                                streetAddress: document.getElementById('modalStreetAddress').value,
+                                apartment: document.getElementById('modalApartment').value,
+                                town: document.getElementById('modalTown').value,
+                                city: document.getElementById('modalCity').value,
+                                state: document.getElementById('modalState').value,
+                                postcode: document.getElementById('modalPostcode').value,
+                                phone: document.getElementById('modalPhone').value,
+                                email: document.getElementById('modalEmail').value
+                            };
+
+                            fetch('/account/address', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(formData)
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    handleServerResponse(data, 'Address saved successfully!', 'Error saving address.');
+                                    if (data.success) {
+                                        $('#addressModal').modal('hide');
+                                        const successMessage = `Added new address successfully!`;
+                                        document.getElementById('successAddressText').textContent = successMessage;
+                                        document.getElementById('successAddressMessage').classList.remove('d-none');
+                                        fetchAddresses();
+                                    } else {
+                                        const errorMessage = `Error to add new address !`;
+                                        document.getElementById('errorAddressText').textContent = errorMessage;
+                                        document.getElementById('errorAddressMessage').classList.remove('d-none');
+                                    }
+                                })
+                                .catch(error => {
+                                    handleServerError(error, 'Error saving address.');
+                                });
+                            setTimeout(() => {
+                                document.getElementById('successAddressMessage').style.display = 'none';
+                                document.getElementById('errorAddressMessage').style.display = 'none';
+                            }, 3000);
+                        }
+                    });
+
+                    // Edit address
+                    editAddressForm.addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        if (validateAddressForm('edit')) {
+                            const addressId = document.getElementById('editAddressId').value;
+                            const formData = {
+                                fullName: document.getElementById('editFullName').value,
+                                streetAddress: document.getElementById('editStreetAddress').value,
+                                apartment: document.getElementById('editApartment').value,
+                                town: document.getElementById('editTown').value,
+                                city: document.getElementById('editCity').value,
+                                state: document.getElementById('editState').value,
+                                postcode: document.getElementById('editPostcode').value,
+                                phone: document.getElementById('editPhone').value,
+                                email: document.getElementById('editEmail').value
+                            };
+
+                            fetch(`/account/address/update/${addressId}`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(formData)
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    handleServerResponse(data, 'Address updated successfully!', 'Error updating address.');
+                                    if (data.success) {
+                                        $('#editAddressModal').modal('hide');
+                                        fetchAddresses();
+                                        const successMessage = `Address updated successfully!`;
+                                        document.getElementById('successAddressText').textContent = successMessage;
+                                        document.getElementById('successAddressMessage').classList.remove('d-none');
+                                    } else {
+                                        const errorMessage = `Error to update!`;
+                                        document.getElementById('errorAddressText').textContent = errorMessage;
+                                        document.getElementById('errorAddressMessage').classList.remove('d-none');
+                                    }
+                                })
+                                .catch(error => {
+                                    handleServerError(error, 'Error updating address.');
+                                });
+                            // setTimeout(() => {
+                            //     document.getElementById('successAddressMessage').style.display = 'none';
+                            //     document.getElementById('errorAddressMessage').style.display = 'none';
+                            // }, 3000);
+                        }
+                    });
+
+                    // Delete address
+                    document.addEventListener('click', function (event) {
+                        if (event.target && event.target.classList.contains('btn-delete-address')) {
+                            const addressId = event.target.getAttribute('data-id');
+
+                            // Show the custom confirmation modal
+                            $('#confirmDeleteModal').modal('show');
+
+                            // Handle the confirmation
+                            document.getElementById('confirmDelete').onclick = function () {
+                                $('#confirmDeleteModal').modal('hide');
+                                deleteAddress(addressId);
+                            };
+                        }
+                    });
+
+                    function deleteAddress(addressId) {
                         fetch(`/account/address/${addressId}`, {
                             method: 'DELETE',
                             headers: {
@@ -1299,7 +1632,7 @@
                                     document.getElementById('successAddressText').textContent = successMessage;
                                     document.getElementById('successAddressMessage').classList.remove('d-none');
                                 } else {
-                                    const errorMessage = `Error to delete address !`;
+                                    const errorMessage = `Error deleting address!`;
                                     document.getElementById('errorAddressText').textContent = errorMessage;
                                     document.getElementById('errorAddressMessage').classList.remove('d-none');
                                 }
@@ -1307,68 +1640,67 @@
                             .catch(error => {
                                 handleServerError(error, 'Error deleting address.');
                             });
+
                         setTimeout(() => {
                             document.getElementById('successAddressMessage').style.display = 'none';
                             document.getElementById('errorAddressMessage').style.display = 'none';
                         }, 3000);
                     }
-                }
-            });
 
-            function validateAddressForm(prefix = 'modal') {
-                const requiredFields = ['FullName', 'StreetAddress', 'Town', 'City', 'State', 'Postcode', 'Phone', 'Email'];
-                for (let field of requiredFields) {
-                    const element = document.getElementById(`${prefix}${field}`);
-                    if (!element) {
-                        console.error(`Element with ID ${prefix}${field} not found`);
-                        return false;
+                    function validateAddressForm(prefix = 'modal') {
+                        const requiredFields = ['FullName', 'StreetAddress', 'Town', 'City', 'State', 'Postcode', 'Phone', 'Email'];
+                        for (let field of requiredFields) {
+                            const element = document.getElementById(`${prefix}${field}`);
+                            if (!element) {
+                                console.error(`Element with ID ${prefix}${field} not found`);
+                                return false;
+                            }
+                            if (element.value.trim() === '') {
+                                alert(`${field.replace(/([A-Z])/g, ' $1')} is required`);
+                                return false;
+                            }
+                        }
+                        return true;
                     }
-                    if (element.value.trim() === '') {
-                        alert(`${field.replace(/([A-Z])/g, ' $1')} is required`);
-                        return false;
+
+                    function handleServerResponse(data, successMessage, errorMessage) {
+                        if (data.success) {
+                            document.getElementById('successText').innerText = successMessage;
+                            document.getElementById('successMessage').classList.remove('d-none');
+                            setTimeout(() => {
+                                document.getElementById('successMessage').classList.add('d-none');
+                            }, 3000);
+                        } else {
+                            document.getElementById('errorText').innerText = errorMessage;
+                            document.getElementById('errorMessage').classList.remove('d-none');
+                            setTimeout(() => {
+                                document.getElementById('errorMessage').classList.add('d-none');
+                            }, 3000);
+                        }
                     }
-                }
-                return true;
-            }
 
-            function handleServerResponse(data, successMessage, errorMessage) {
-                if (data.success) {
-                    document.getElementById('successText').innerText = successMessage;
-                    document.getElementById('successMessage').classList.remove('d-none');
-                    setTimeout(() => {
-                        document.getElementById('successMessage').classList.add('d-none');
-                    }, 3000);
-                } else {
-                    document.getElementById('errorText').innerText = errorMessage;
-                    document.getElementById('errorMessage').classList.remove('d-none');
-                    setTimeout(() => {
-                        document.getElementById('errorMessage').classList.add('d-none');
-                    }, 3000);
-                }
-            }
+                    function handleServerError(error, errorMessage) {
+                        console.error('Error:', error);
+                        document.getElementById('errorText').innerText = errorMessage;
+                        document.getElementById('errorMessage').classList.remove('d-none');
+                        setTimeout(() => {
+                            document.getElementById('errorMessage').classList.add('d-none');
+                        }, 3000);
+                    }
 
-            function handleServerError(error, errorMessage) {
-                console.error('Error:', error);
-                document.getElementById('errorText').innerText = errorMessage;
-                document.getElementById('errorMessage').classList.remove('d-none');
-                setTimeout(() => {
-                    document.getElementById('errorMessage').classList.add('d-none');
-                }, 3000);
-            }
+                    function fetchAddresses() {
+                        fetch('/account/addresses') // Ensure this endpoint is correct
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Fetched data:', data); // Log the data to inspect its structure
 
-            function fetchAddresses() {
-                fetch('/account/addresses') // Ensure this endpoint is correct
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Fetched data:', data); // Log the data to inspect its structure
-
-                        if (data.success && Array.isArray(data.addresses)) { // Check if `data.addresses` is an array
-                            const addressList = document.getElementById('addressList');
-                            addressList.innerHTML = '';
-                            data.addresses.forEach(address => {
-                                const addressItem = document.createElement('div');
-                                addressItem.className = 'address-item';
-                                addressItem.innerHTML = `
+                                if (data.success && Array.isArray(data.addresses)) { // Check if `data.addresses` is an array
+                                    const addressList = document.getElementById('addressList');
+                                    addressList.innerHTML = '';
+                                    data.addresses.forEach(address => {
+                                        const addressItem = document.createElement('div');
+                                        addressItem.className = 'address-item';
+                                        addressItem.innerHTML = `
             <p><strong>${address.fullName}</strong></p>
             <p>${address.streetAddress},${address.apartment} <br>
                 ${address.town},${address.city} <br>
@@ -1379,48 +1711,48 @@
             <a href="#" class=" btn-edit-address" data-id="${address._id}">Edit</a>
                         <a href="#" class=" btn-delete-address" data-id="${address._id}">Delete</a
           `;
-                                addressList.appendChild(addressItem);
+                                        addressList.appendChild(addressItem);
+                                    });
+
+                                    // Add event listeners for edit buttons
+                                    const editButtons = document.querySelectorAll('.btn-edit-address');
+                                    editButtons.forEach(button => {
+                                        button.addEventListener('click', function () {
+                                            const addressId = this.getAttribute('data-id');
+                                            const address = data.addresses.find(addr => addr._id === addressId);
+                                            if (address) {
+                                                document.getElementById('editAddressId').value = address._id;
+                                                document.getElementById('editFullName').value = address.fullName;
+                                                document.getElementById('editStreetAddress').value = address.streetAddress;
+                                                document.getElementById('editApartment').value = address.apartment;
+                                                document.getElementById('editTown').value = address.town;
+                                                document.getElementById('editCity').value = address.city;
+                                                document.getElementById('editState').value = address.state;
+                                                document.getElementById('editPostcode').value = address.postcode;
+                                                document.getElementById('editPhone').value = address.phone;
+                                                document.getElementById('editEmail').value = address.email;
+
+                                                $('#editAddressModal').modal('show');
+                                            }
+                                        });
+                                    });
+                                } else {
+                                    console.error('Expected an array but got:', data);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching addresses:', error);
                             });
-
-                            // Add event listeners for edit buttons
-                            const editButtons = document.querySelectorAll('.btn-edit-address');
-                            editButtons.forEach(button => {
-                                button.addEventListener('click', function () {
-                                    const addressId = this.getAttribute('data-id');
-                                    const address = data.addresses.find(addr => addr._id === addressId);
-                                    if (address) {
-                                        document.getElementById('editAddressId').value = address._id;
-                                        document.getElementById('editFullName').value = address.fullName;
-                                        document.getElementById('editStreetAddress').value = address.streetAddress;
-                                        document.getElementById('editApartment').value = address.apartment;
-                                        document.getElementById('editTown').value = address.town;
-                                        document.getElementById('editCity').value = address.city;
-                                        document.getElementById('editState').value = address.state;
-                                        document.getElementById('editPostcode').value = address.postcode;
-                                        document.getElementById('editPhone').value = address.phone;
-                                        document.getElementById('editEmail').value = address.email;
-
-                                        $('#editAddressModal').modal('show');
-                                    }
-                                });
-                            });
-                        } else {
-                            console.error('Expected an array but got:', data);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching addresses:', error);
-                    });
-            }
+                    }
 
 
-            fetchAddresses();
+                    fetchAddresses();
 
-        });
+                });
 
 
 
-    </script>
+            </script>
 
 
 
@@ -1429,4 +1761,4 @@
 
 
 
-    <%- include('../layout/footer.ejs') %>
+            <%- include('../layout/footer.ejs') %>

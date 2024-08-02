@@ -1,4 +1,5 @@
-const userModel = require("../../model/userModel"); // Adjust the path as per your project structure
+const userModel = require("../../model/userModel");
+const Order = require("../../model/orderModel"); // Adjust the path as per your project structure
 const bcrypt = require("bcrypt");
 
 //load login page for admin
@@ -59,14 +60,55 @@ const loadHome = async (req, res) => {
 //load order list in admin side
 const loadOrderList = async (req, res) => {
   try {
+    const user = req.session.user || req.user;
+    const userId = user ? user._id : null;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    const orders = await Order.find().populate("items.product").populate("address").populate("user").skip(skip).limit(limit);
+    const totalOrders = await Order.countDocuments();
+    const totalPages = Math.ceil(totalOrders / limit);
     const isAdmin = req.session.admin;
-    return res.render("order-list", { isAdmin });
+    return res.render("order-list", {
+      isAdmin,
+      orders,
+      currentPage: page,
+      totalPages,
+      userId
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-//load order list in admin side
+//update the order status
+const updateOrderStatus = async (req, res) => {
+  try {
+    
+    const { orderId,order_status } = req.body;
+
+    const allowedStatuses = ['Pending', 'Processing', 'Shipped', 'Deliverd','Cancel'];
+    if (!allowedStatuses.includes(order_status)) {
+      return res.status(400).json({ success: false, message: 'Invalid order status' });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(orderId, { order_status: order_status }, { new: true });
+
+    if (!updatedOrder) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    // Redirect back to the order list or send a success response
+    res.redirect("/admin/order-list");
+    // return res.status(200).json({message:"status update successfully",message:true})
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    res.status(500).json({ success: false, message: "Error updating order status" });
+  }
+};
+
+//load order details in admin side
 const loadOrderDeatails = async (req, res) => {
   try {
     const isAdmin = req.session.admin;
@@ -156,4 +198,5 @@ module.exports = {
   updateCustomer,
   adminLogout,
   loadAdmProfile,
+  updateOrderStatus
 };

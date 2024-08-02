@@ -1,59 +1,28 @@
-const mongoose = require("mongoose");
-const {Schema} = mongoose
-const { ObjectId } = Schema.Types
-const orderSchema = new mongoose.Schema({
-  userId: {
-    type: ObjectId,
-    ref: "userModel",
+const mongoose = require('mongoose');
+// const addressModel = require('./addressModel');
+const { Schema } = mongoose;
+const { ObjectId } = Schema.Types;
+
+const orderSchema = new Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'userRegister',
     required: true,
   },
-  address: [
-    {
-      firstName: {
-        type: String,
-        required: true,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
-      streetAddress: {
-        type: String,
-        required: true,
-      },
-      apartment: {
-        type: String,
-      },
-      town: {
-        type: String,
-        required: true,
-      },
-      city: {
-        type: String,
-        required: true,
-      },
-      state: {
-        type: String,
-        required: true,
-      },
-      pin_code: {
-        type: String,
-        required: true,
-      },
-      phone: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  address: {
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Address',
+    required:true
+  },
+  paymentMethod:{
+    type:String,
+    required:true,
+  },
   items: [
     {
-      price: {
-        type: Number,
-        required: true,
-      },
-      product_id: {
+      product: {
         type: ObjectId,
+        ref: 'Product',
         required: true,
       },
       quantity: {
@@ -62,6 +31,29 @@ const orderSchema = new mongoose.Schema({
       },
     },
   ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  deliveryDate:{
+    type:Date
+  },
+  totalPrice:{
+    type:Number,
+    required:true
+  },
+  payment_status:{
+    type:String,
+    enum:['Pending','Completed','Failed'],
+    default:'Pending'
+  },
+  order_status:{
+    type:String,
+    enum:['Pending','Processing','Shipped','Deliverd','Cancel'],
+    default:'Pending'
+  }
 });
 
-module.exports = mongoose.model("Order", orderSchema);
+
+
+module.exports = mongoose.model('Order', orderSchema);

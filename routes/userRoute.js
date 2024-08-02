@@ -38,7 +38,9 @@ userRoute.delete("/wishlist/:productId", auth.isUserAuthenticated, productContro
 
 //checkout and order routes
 userRoute.get("/checkout", auth.isUserAuthenticated, orderController.loadCheckout);
-userRoute.post("/checkout", auth.isUserAuthenticated, orderController.insertAddress);
+userRoute.post("/checkout", auth.isUserAuthenticated, orderController.placeOrder);
+userRoute.get('/checkout/ordered/:orderId',auth.isUserAuthenticated,orderController.orderConfirm)
+userRoute.post('/account/order-status',auth.isUserAuthenticated,orderController.updateStatus)
 
 //contact routes
 userRoute.get("/contact-us", auth.isUserAuthenticated, userController.loadContact);
@@ -50,12 +52,12 @@ userRoute.post("/register", auth.isUserLogout, loginController.insertUser);
 userRoute.get("/verify-otp", loginController.loadVerifyOtp);
 userRoute.post("/verify-otp", loginController.verifyOTP);
 userRoute.get("/resend-otp", loginController.resentOTP);
-userRoute.get("/login", auth.isUserLogout, loginController.loadLogin); // Use isUserLogout for logged-out users
+userRoute.get("/login", auth.isUserLogout, loginController.loadLogin);
 userRoute.post("/login", auth.isUserLogout, loginController.verifyLogin);
 userRoute.get("/logout", auth.isUserAuthenticated, loginController.userLogout);
 
 //account manage. account controller
-// userRoute.get("/profile", auth.isUserAuthenticated, accountController.loadProfile);
+// userRoute.get("/profile", auth.isUserAuthenticated, accountController.loadProfile
 userRoute.get("/account", auth.isUserAuthenticated, accountController.loadProfile);
 userRoute.post("/account", auth.isUserAuthenticated, accountController.updateProfile);
 userRoute.get("/forget-password", accountController.forgetPassword);
@@ -64,16 +66,14 @@ userRoute.get("/reset-password", accountController.resetPasswordPage);
 userRoute.post("/reset-password", accountController.resetPassword);
 
 //manage checkout address, order, dashboard
-// userRoute.post("/account/address",auth.isUserAuthenticated,accountController.addAddress)
-// userRoute.get('/account/address',auth.isUserAuthenticated,accountController.loadAddress)
-// userRoute.patch('/account/address/update/:id',auth.isUserAuthenticated,accountController.editAddress)
-// userRoute.delete('/account/address/:id',auth.isUserAuthenticated,accountController.deleteAddress)
-// userRoute.get('/account/address/:id', auth.isUserAuthenticated, accountController.getAddressById);
 userRoute.post('/account/address', accountController.addAddress);
 userRoute.get('/account/address', accountController.loadAddress);
 userRoute.get('/account/addresses', accountController.getAddress);
 userRoute.patch('/account/address/update/:id', accountController.updateAddress);
 userRoute.delete('/account/address/:id', accountController.deleteAddress);
+
+//place order 
+
 
 // Authentication Routes
 const authRoute = require("./authRoutes"); // Ensure this path is correct

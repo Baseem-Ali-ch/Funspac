@@ -52,6 +52,7 @@ adminRoute.patch("/category-list/:id", isAdminAuthenticated, upload.single("cate
 
 //order management
 adminRoute.get("/order-list", isAdminAuthenticated, adminController.loadOrderList);
+adminRoute.post("/order-list/update-status", isAdminAuthenticated, adminController.updateOrderStatus);
 adminRoute.get("/order-details", isAdminAuthenticated, adminController.loadOrderDeatails);
 
 //user management

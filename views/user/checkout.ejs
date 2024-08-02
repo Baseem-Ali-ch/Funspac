@@ -209,20 +209,22 @@
 
                         <form action="/checkout" method="post">
                             <div class="row">
-                                <div class="col-lg-9">
-                                    <button type="button" class="btn btn-outline-primary-2" data-toggle="modal"
+                                <div class="col-lg-9 mt-2">
+                                    <button type="button" class="btn btn-outline-primary-2" data-toggle=""
                                         data-target="#addressModal">
-                                        Add New Address
+                                        <a href="/account">Add New Address</a>
+
                                     </button>
 
-                                    <div class="address-container">
+                                    <div class="address-container mt-2">
 
                                         <% if (addresses && addresses.length> 0) { %>
-                                            <h6>Select the address</h6>
+                                            <h6 class="mb-2">Select the address</h6>
                                             <% addresses.forEach(addr=> { %>
 
                                                 <div class="address-item">
-                                                    <input type="radio" name="address">
+                                                    <input type="radio" name="address" value="<%= addr._id %>"
+                                                        id="address_<%= addr._id %>">
                                                     <p>
                                                         <strong>
                                                             <%= addr.fullName %>
@@ -232,261 +234,202 @@
                                                                     <%= addr.town %>, <%= addr.city %>, <%= addr.state
                                                                                 %> <br>
                                                                                 <%= addr.postcode %>
+                                                                                    <div
+                                                                                        style="    margin-bottom: -7.8em; margin-left: 41em;">
+                                                                                        <a href="/account">Edit</a>
+
                                                     </p>
+
                                                 </div>
-
-                                                <% }) %>
-                                                    <% } else { %>
-                                                        <p>No address found !. Add a new address</p>
-                                                        <% } %>
                                     </div>
-                                </div><!-- End .col-lg-9 -->
 
-                                <aside class="col-lg-3">
-                                    <div class="summary">
-                                        <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
-                                        <table class="table table-summary">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% let total=0 %>
-                                                    <% cartItems.forEach(item=> { %>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <p>No address found !. Add a new address</p>
+                                            <% } %>
+
+                                </div>
+                            </div><!-- End .col-lg-9 -->
+
+                            <aside class="col-lg-3">
+                                <div class="summary">
+                                    <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+                                    <table class="table table-summary">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% let total=0 %>
+                                                <% cartItems.forEach(item=> { %>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="/product/<%= item.productId._id %>">
+                                                                <%= item.productId.name %>
+                                                            </a>
+
+                                                        </td>
+                                                        <td>
+                                                            <%= item.productId.price * item.quantity %>
+                                                                <% total +=item.productId.price * item.quantity %>
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                                        <tr class="summary-subtotal">
+                                                            <td>
+                                                                Subtotal
+                                                            </td>
+                                                            <td>
+                                                                <%= total %>
+                                                            </td>
+                                                        </tr><!-- End .summary-subtotal -->
                                                         <tr>
-                                                            <td>
-                                                                <a href="/product/<%= item.productId._id %>">
-                                                                    <%= item.productId.name %>
-                                                                </a>
-
-                                                            </td>
-                                                            <td>
-                                                                <%= item.productId.price * item.quantity %>
-                                                                    <% total +=item.productId.price * item.quantity %>
-                                                            </td>
+                                                            <td>Shipping:</td>
+                                                            <td>Free shipping</td>
                                                         </tr>
-                                                        <% }) %>
-                                                            <tr class="summary-subtotal">
-                                                                <td>
-                                                                    Subtotal
-                                                                </td>
-                                                                <td>
-                                                                    <%= total %>
-                                                                </td>
-                                                            </tr><!-- End .summary-subtotal -->
-                                                            <tr>
-                                                                <td>Shipping:</td>
-                                                                <td>Free shipping</td>
-                                                            </tr>
-                                                            <tr class="summary-total">
-                                                                <td>Total:</td>
-                                                                <td>
-                                                                    <%= total %>
-                                                                </td>
-                                                            </tr><!-- End .summary-total -->
-                                            </tbody>
-                                        </table><!-- End .table table-summary -->
+                                                        <tr class="summary-total">
+                                                            <td>Total:</td>
+                                                            <td>
+                                                                <%= total %>
+                                                            </td>
+                                                        </tr><!-- End .summary-total -->
+                                        </tbody>
+                                    </table><!-- End .table table-summary -->
 
-                                        <div class="accordion-summary" id="accordion-payment">
-                                            <div class="card">
-                                                <div class="card-header" id="heading-1">
-                                                    <h2 class="card-title">
-                                                        <a role="button" data-toggle="collapse" href="#collapse-1"
-                                                            aria-expanded="true" aria-controls="collapse-1">
-                                                            Direct bank transfer
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-1" class="collapse show" aria-labelledby="heading-1"
-                                                    data-parent="#accordion-payment">
-                                                    <!-- <div class="card-body">
-                                                        Make your payment directly into our bank account. Please use
-                                                        your Order ID as the payment reference. Your order will not be
-                                                        shipped until the funds have cleared in our account.
-                                                    </div>End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
+                                    <div class="accordion-summary" id="accordion-payment">
 
-                                            <div class="card">
-                                                <div class="card-header" id="heading-2">
-                                                    <h2 class="card-title">
-                                                        <a class="collapsed" role="button" data-toggle="collapse"
-                                                            href="#collapse-2" aria-expanded="false"
-                                                            aria-controls="collapse-2">
-                                                            Check payments
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-2" class="collapse" aria-labelledby="heading-2"
-                                                    data-parent="#accordion-payment">
-                                                    <!-- <div class="card-body">
-                                                        Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.
-                                                        Quisque volutpat mattis eros. Nullam malesuada erat ut turpis.
-                                                    </div>End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
 
-                                            <div class="card">
-                                                <div class="card-header" id="heading-3">
-                                                    <h2 class="card-title">
-                                                        <a class="collapsed" role="button" data-toggle="collapse"
-                                                            href="#collapse-3" aria-expanded="false"
-                                                            aria-controls="collapse-3">
-                                                            Cash on delivery
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-3" class="collapse" aria-labelledby="heading-3"
-                                                    data-parent="#accordion-payment">
-                                                    <!-- <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum
-                                                        dolor sit amet, consectetuer adipiscing elit. Donec odio.
-                                                        Quisque volutpat mattis eros.
-                                                    </div>End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
 
-                                            <div class="card">
-                                                <div class="card-header" id="heading-4">
-                                                    <h2 class="card-title">
-                                                        <a class="collapsed" role="button" data-toggle="collapse"
-                                                            href="#collapse-4" aria-expanded="false"
-                                                            aria-controls="collapse-4">
-                                                            PayPal <small class="float-right paypal-link">What is
-                                                                PayPal?</small>
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-4" class="collapse" aria-labelledby="heading-4"
-                                                    data-parent="#accordion-payment">
-                                                    <!-- <div class="card-body">
-                                                        Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra
-                                                        non, semper suscipit, posuere a, pede. Donec nec justo eget
-                                                        felis facilisis fermentum.
-                                                    </div>End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
 
-                                            <div class="card">
-                                                <div class="card-header" id="heading-5">
-                                                    <h2 class="card-title">
-                                                        <a class="collapsed" role="button" data-toggle="collapse"
-                                                            href="#collapse-5" aria-expanded="false"
-                                                            aria-controls="collapse-5">
-                                                            Credit Card (Stripe)
-                                                            <img src="assets/images/payments-summary.png"
-                                                                alt="payments cards">
-                                                        </a>
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-5" class="collapse" aria-labelledby="heading-5"
-                                                    data-parent="#accordion-payment">
-                                                    <!-- <div class="card-body"> Donec nec justo eget felis facilisis
-                                                        fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                                        elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum
-                                                        dolor sit ame.
-                                                    </div>End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
-                                        </div><!-- End .accordion -->
+                                        <form action="/placeOrder" method="POST">
+                                            <div class="form-group">
+                                                <div class="card">
+                                                    <div class="card-header" id="heading-3">
+                                                        <h2 class="card-title">
+                                                            <input type="radio" name="paymentMethod" id="cod"
+                                                                value="COD" required>
+                                                            <label for="cod">Cash on Delivery</label>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                        <button type="submit" id="submitForm"
-                                            class="btn btn-outline-primary-2 btn-order btn-block">
-                                            <span class="btn-text">Place Order</span>
-                                            <span class="btn-hover-text">Proceed to Checkout</span>
-                                        </button>
-                                    </div><!-- End .summary -->
-                                </aside><!-- End .col-lg-3 -->
-                            </div><!-- End .row -->
-                        </form>
-                    </div><!-- End .container -->
-                </div><!-- End .checkout -->
-            </div><!-- End .page-content -->
-        </main><!-- End .main -->
+                                            <div class="form-group">
+                                                <div class="card">
+                                                    <div class="card-header" id="heading-5">
+                                                        <h2 class="card-title">
+                                                            <input type="radio" name="paymentMethod" id="razorpay"
+                                                                value="Razorpay" required>
+                                                            <label for="razorpay">Razor Pay</label>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-        <footer class="footer">
-            <div class="footer-middle">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget widget-about">
-                                <img src="/assets/images/furnspace logo black.png " class="footer-logo"
-                                    alt="Footer Logo" width="105" height="25">
-                                <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
-                                    magna eros eu erat. </p>
+                                            <!-- Include other form elements such as address selection, etc. -->
 
-                                <div class="social-icons">
-                                    <a href="#" class="social-icon" target="_blank" title="Facebook"><i
-                                            class="icon-facebook-f"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Twitter"><i
-                                            class="icon-twitter"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Instagram"><i
-                                            class="icon-instagram"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Youtube"><i
-                                            class="icon-youtube"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
-                                            class="icon-pinterest"></i></a>
-                                </div><!-- End .soial-icons -->
-                            </div><!-- End .widget about-widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                                            <button type="submit" id="submitForm"
+                                                class="btn btn-outline-primary-2 btn-order btn-block">
+                                                <span class="btn-text">Place Order</span>
+                                                <span class="btn-hover-text">Proceed to Checkout</span>
+                                            </button>
+                                        </form>
+                                    </div><!-- End .accordion -->
 
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
 
-                                <ul class="widget-list">
-                                    <li><a href="about.html">About Molla</a></li>
-                                    <li><a href="#">How to shop on Molla</a></li>
-                                    <li><a href="#">FAQ</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
-                                    <li><a href="login.html">Log in</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
-
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
-
-                                <ul class="widget-list">
-                                    <li><a href="#">Payment Methods</a></li>
-                                    <li><a href="#">Money-back guarantee!</a></li>
-                                    <li><a href="#">Returns</a></li>
-                                    <li><a href="#">Shipping</a></li>
-                                    <li><a href="#">Terms and conditions</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
-
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
-
-                                <ul class="widget-list">
-                                    <li><a href="#">Sign In</a></li>
-                                    <li><a href="cart.html">View Cart</a></li>
-                                    <li><a href="#">My Wishlist</a></li>
-                                    <li><a href="#">Track My Order</a></li>
-                                    <li><a href="#">Help</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                                </div><!-- End .summary -->
+                            </aside><!-- End .col-lg-3 -->
                     </div><!-- End .row -->
+                    </form>
                 </div><!-- End .container -->
-            </div><!-- End .footer-middle -->
+            </div><!-- End .checkout -->
+    </div><!-- End .page-content -->
+    </main><!-- End .main -->
 
-            <div class="footer-bottom">
-                <div class="container">
-                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p>
-                    <!-- End .footer-copyright -->
-                    <figure class="footer-payments">
-                        <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
-                    </figure><!-- End .footer-payments -->
-                </div><!-- End .container -->
-            </div><!-- End .footer-bottom -->
-        </footer><!-- End .footer -->
+    <footer class="footer">
+        <div class="footer-middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget widget-about">
+                            <img src="/assets/images/furnspace logo black.png " class="footer-logo" alt="Footer Logo"
+                                width="105" height="25">
+                            <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
+                                magna eros eu erat. </p>
+
+                            <div class="social-icons">
+                                <a href="#" class="social-icon" target="_blank" title="Facebook"><i
+                                        class="icon-facebook-f"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Twitter"><i
+                                        class="icon-twitter"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Instagram"><i
+                                        class="icon-instagram"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Youtube"><i
+                                        class="icon-youtube"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
+                                        class="icon-pinterest"></i></a>
+                            </div><!-- End .soial-icons -->
+                        </div><!-- End .widget about-widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+
+                            <ul class="widget-list">
+                                <li><a href="about.html">About Molla</a></li>
+                                <li><a href="#">How to shop on Molla</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="contact.html">Contact us</a></li>
+                                <li><a href="login.html">Log in</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+                            <ul class="widget-list">
+                                <li><a href="#">Payment Methods</a></li>
+                                <li><a href="#">Money-back guarantee!</a></li>
+                                <li><a href="#">Returns</a></li>
+                                <li><a href="#">Shipping</a></li>
+                                <li><a href="#">Terms and conditions</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+                            <ul class="widget-list">
+                                <li><a href="#">Sign In</a></li>
+                                <li><a href="cart.html">View Cart</a></li>
+                                <li><a href="#">My Wishlist</a></li>
+                                <li><a href="#">Track My Order</a></li>
+                                <li><a href="#">Help</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-middle -->
+
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p>
+                <!-- End .footer-copyright -->
+                <figure class="footer-payments">
+                    <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
+                </figure><!-- End .footer-payments -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-bottom -->
+    </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
@@ -955,205 +898,50 @@
     </script>
 
 
-    <!-- add new address script -->
+
+
+    //place order
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const addressForm = document.getElementById('addressForm');
+        document.getElementById('submitForm').addEventListener('click', function (event) {
+            event.preventDefault();
 
-            addressForm.addEventListener('submit', function (event) {
-                event.preventDefault();
+            const userId = "<%= user._id %>";
+            // const addressId = document.querySelector('input[name="address"]:checked').value;
+            const addressId = document.querySelector('input[name="address"]:checked')?.value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
-                if (validateAddressForm()) {
-                    const formData = {
-                        fullName: document.getElementById('modalFullName').value,
-                        streetAddress: document.getElementById('streetAddress').value,
-                        apartment: document.getElementById('apartment').value,
-                        town: document.getElementById('town').value,
-                        city: document.getElementById('city').value,
-                        state: document.getElementById('state').value,
-                        postcode: document.getElementById('postcode').value,
-                        phone: document.getElementById('modalPhone').value,
-                        email: document.getElementById('modalEmail').value
-                    };
-
-                    fetch('/account/address', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(formData)
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Response from server:', data);
-                            if (data.success) {
-                                const successMessage = `Address saved successfully!`;
-                                document.getElementById('successText').textContent = successMessage;
-                                document.getElementById('successMessage').classList.remove('d-none');
-                                setTimeout(() => {
-                                    document.getElementById('successMessage').classList.add('d-none');
-                                }, 2000);
-                                $('#addressModal').modal('hide');
-                                fetchAddresses();
-                            } else {
-                                const errorMessage = 'Error saving address.';
-                                document.getElementById('errorText').textContent = errorMessage;
-                                document.getElementById('errorMessage').classList.remove('d-none');
-                                setTimeout(() => {
-                                    document.getElementById('errorMessage').classList.add('d-none');
-                                }, 2000);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error saving address:', error);
-                            const errorMessage = 'Error saving address.';
-                            document.getElementById('errorText').textContent = errorMessage;
-                            document.getElementById('errorMessage').classList.remove('d-none');
-                            setTimeout(() => {
-                                document.getElementById('errorMessage').classList.add('d-none');
-                            }, 2000);
-                        });
-                }
-            });
-
-            function validateAddressForm() {
-                const phoneRegex = /^[1-9][0-9]{9}$/;
-                const phone = document.getElementById('modalPhone').value;
-
-                if (!phoneRegex.test(phone)) {
-                    alert('Phone Number must be 10 digits and cannot start with 0.');
-                    return false;
-                }
-
-                return true;
+            if (!addressId) {
+                alert('Please select an address before placing the order.');
+                return;
             }
 
-            function fetchAddresses() {
-                fetch('/account/address')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const addressList = document.getElementById('addressList');
-                            addressList.innerHTML = '';
-
-                            data.addresses.forEach(address => {
-                                const addressItem = `
-                        <div class="address-item mb-3 p-3 border">
-                            
-                            <h6>${address.fullName}</h6>
-                            <p>${address.phone}, <br> ${address.streetAddress}, ${address.apartment}, ${address.town},<br> ${address.city}, ${address.state}, ${address.postcode}</p>
-                            <button class="btn btn-xm btn-primary edit-button" data-id="${address._id}" data-toggle="modal" data-target="#editAddressModal">Edit</button>
-                            <button class="btn btn-xm btn-danger delete-button" data-id="${address._id}">Delete</button>
-                        </div>
-                    `;
-                                addressList.innerHTML += addressItem;
-                            });
-
-                            // Re-select the previously selected address
-                            const selectedAddressId = localStorage.getItem('selectedAddressId');
-                            if (selectedAddressId) {
-                                console.log('Selected address ID from localStorage:', selectedAddressId);
-                                const radioButton = document.querySelector(`input[name="selectedAddress"][data-id="${selectedAddressId}"]`);
-                                if (radioButton) {
-                                    radioButton.checked = true;
-                                    updateBillingAddress(selectedAddressId);
-                                } else {
-                                    console.log('No radio button found for address ID:', selectedAddressId);
-                                }
-                            }
-
-                            document.querySelectorAll('input[name="selectedAddress"]').forEach(radio => {
-                                radio.addEventListener('change', function () {
-                                    const selectedAddressId = this.getAttribute('data-id');
-                                    localStorage.setItem('selectedAddressId', selectedAddressId);
-                                    updateBillingAddress(selectedAddressId);
-                                });
-                            });
-
-                            document.querySelectorAll('.edit-button').forEach(button => {
-                                button.addEventListener('click', function () {
-                                    const addressId = this.getAttribute('data-id');
-                                    const address = data.addresses.find(addr => addr._id === addressId);
-
-                                    if (address) {
-                                        document.getElementById('editAddressId').value = address._id;
-                                        document.getElementById('editFullName').value = address.fullName;
-                                        document.getElementById('editStreetAddress').value = address.streetAddress;
-                                        document.getElementById('editApartment').value = address.apartment;
-                                        document.getElementById('editTown').value = address.town;
-                                        document.getElementById('editCity').value = address.city;
-                                        document.getElementById('editState').value = address.state;
-                                        document.getElementById('editPostcode').value = address.postcode;
-                                        document.getElementById('editPhone').value = address.phone;
-                                        document.getElementById('editEmail').value = address.email;
-                                    }
-                                });
-                            });
-
-                            document.querySelectorAll('.delete-button').forEach(button => {
-                                button.addEventListener('click', function () {
-                                    const addressId = this.getAttribute('data-id');
-
-                                    fetch(`/account/address/${addressId}`, {
-                                        method: 'DELETE'
-                                    })
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            if (data.success) {
-                                                const successMessage = `Address deleted successfully!`;
-                                                document.getElementById('successText').textContent = successMessage;
-                                                document.getElementById('successMessage').classList.remove('d-none');
-                                                setTimeout(() => {
-                                                    document.getElementById('successMessage').classList.add('d-none');
-                                                }, 2000);
-                                                fetchAddresses();
-                                            } else {
-                                                const errorMessage = 'Error deleting address.';
-                                                document.getElementById('errorText').textContent = errorMessage;
-                                                document.getElementById('errorMessage').classList.remove('d-none');
-                                                setTimeout(() => {
-                                                    document.getElementById('errorMessage').classList.add('d-none');
-                                                }, 2000);
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Error deleting address:', error);
-                                            const errorMessage = 'Error deleting address.';
-                                            document.getElementById('errorText').textContent = errorMessage;
-                                            document.getElementById('errorMessage').classList.remove('d-none');
-                                            setTimeout(() => {
-                                                document.getElementById('errorMessage').classList.add('d-none');
-                                            }, 2000);
-                                        });
-                                });
-                            });
-
-                        } else {
-                            const errorMessage = 'Error fetching address.';
-                            document.getElementById('errorText').textContent = errorMessage;
-                            document.getElementById('errorMessage').classList.remove('d-none');
-                            setTimeout(() => {
-                                document.getElementById('errorMessage').classList.add('d-none');
-                            }, 2000);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching addresses:', error);
-                        const errorMessage = 'Error fetching addresses.';
-                        document.getElementById('errorText').textContent = errorMessage;
-                        document.getElementById('errorMessage').classList.remove('d-none');
-                        setTimeout(() => {
-                            document.getElementById('errorMessage').classList.add('d-none');
-                        }, 2000);
-                    });
-            }
-
-            fetchAddresses();
+            fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    addressId: addressId,
+                    paymentMethod: paymentMethod,
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // alert('Order placed successfully!');
+                        window.location.href = data.redirectUrl;
+                        // Redirect to order confirmation page or display success message
+                    } else {
+                        alert(data.message || 'Error placing order.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error placing order.');
+                });
         });
-
-
     </script>
-
 
 
 
